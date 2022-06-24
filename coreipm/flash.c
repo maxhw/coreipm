@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 200a-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -37,17 +37,17 @@ support and contact details.
 #define IAP_CMD_COPY_RAM_TO_FLASH	51
 #define IAP_CMD_ERASE_SECTORS		52
 #define IAP_CMD_BLANK_CHECK		53
-#define IAP_CMD_READ_PART_ID		54     
+#define IAP_CMD_READ_PART_ID		54
 #define IAP_CMD_BOOT_CODE_VER		55
-#define IAP_CMD_COMPARE			56 
+#define IAP_CMD_COMPARE			56
 #define IAP_CMD_REINVOKE_ISP		57
 
 
 /* IAP Status Codes */
 #define IAP_STAT_CMD_SUCCESS		0  /* command is executed successfully    */
-#define IAP_STAT_INVALID_COMMAND	1     
+#define IAP_STAT_INVALID_COMMAND	1
 #define IAP_STAT_SRC_ADDR_ERROR		2  /* source address is not on a word boundary */
-#define IAP_STAT_DST_ADDR_ERROR		3  /* destination address is not on a 
+#define IAP_STAT_DST_ADDR_ERROR		3  /* destination address is not on a
 					      correct boundary */
 #define IAP_STAT_SRC_ADDR_NOT_MAPPED	4  /* source address is not mapped in the
 					      memory map. count value is taken
@@ -55,15 +55,15 @@ support and contact details.
 #define IAP_STAT_DST_ADDR_NOT_MAPPED	5  /* destination address is not mapped in
 					      the memory map.  count value is taken
 					      into consideration where applicable */
-#define IAP_STAT_COUNT_ERROR		6  /* byte count is not multiple of 4 or 
+#define IAP_STAT_COUNT_ERROR		6  /* byte count is not multiple of 4 or
 					      is not a permitted value */
 #define IAP_STAT_INVALID_SECTOR		7  /* sector number is invalid */
-#define IAP_STAT_SECTOR_NOT_BLANK	8     
+#define IAP_STAT_SECTOR_NOT_BLANK	8
 #define IAP_STAT_SECTOR_NOT_RDY		9  /* sector not ready for write operation. */
 #define IAP_STAT_COMPARE_ERROR		10 /* source and destination data is not same */
 #define IAP_STAT_BUSY			11 /* flash programming hardware interface is busy */
 
-#define FLASH_PAGE_SIZE			4096	/* 2^FLASH_PAGE_SHIFT */ 
+#define FLASH_PAGE_SIZE			4096	/* 2^FLASH_PAGE_SHIFT */
 #define FLASH_PAGE_SHIFT		12	/* these two _PAGE_ values are co-dependent */
 
 typedef void ( * IAP ) ( unsigned int [], unsigned int [] );
@@ -80,10 +80,10 @@ FLASH_SECTOR_TABLE lpc2148_flash_sectors[] =
 
 unsigned char flash_buffer[ FLASH_PAGE_SIZE ];
 
-unsigned int iap_cmd( unsigned int cmd, unsigned int p0, unsigned int p1, 
+unsigned int iap_cmd( unsigned int cmd, unsigned int p0, unsigned int p1,
 	unsigned int p2, unsigned int p3, unsigned int *r0 );
 
-int 
+int
 flash_get_sector_number( unsigned int in_addr )
 {
 	FLASH_SECTOR_TABLE * table_ptr;
@@ -115,24 +115,24 @@ int
 flash_read_part_id( void )
 {
 	unsigned int part_id = 0, rc = 0;
-	
+
 	rc = iap_cmd( IAP_CMD_READ_PART_ID, 0, 0, 0, 0, &part_id);
 	if( rc == IAP_STAT_CMD_SUCCESS ) {
 		switch( part_id ) {
 			case PART_ID_LPC2141:
-				putstr( "2141\n" );			
+				putstr( "2141\n" );
 				break;
 			case PART_ID_LPC2142:
-				putstr( "2142\n" );			
+				putstr( "2142\n" );
 				break;
 			case PART_ID_LPC2144:
-				putstr( "2144\n" );			
+				putstr( "2144\n" );
 				break;
 			case PART_ID_LPC2146:
-				putstr( "2146\n" );			
+				putstr( "2146\n" );
 				break;
 			case PART_ID_LPC2148:
-				putstr( "2148\n" );			
+				putstr( "2148\n" );
 				break;
 			default:
 				putstr( "Unkonwn part number\n" );
@@ -174,11 +174,11 @@ iap_cmd (
 
 	if(r0)
 		*r0 = result[1];
-	
+
 	return result[0];
 }
 
-int 
+int
 flash_block_write(
 	unsigned int flash_addr,
 	unsigned int ram_addr,
@@ -192,22 +192,22 @@ flash_block_write(
 	if( n_sector < 0 ) {
 	      return FWERR_SECTOR_NUM;
 	}
-	
+
 	/* write prep */
  	rc = iap_cmd( IAP_CMD_PREPARE_SECTORS, n_sector, n_sector, 0, 0, 0 );
 
 	if( rc == IAP_STAT_CMD_SUCCESS )
 	{
 		while( 1 ) {
-			rc = iap_cmd( IAP_CMD_COPY_RAM_TO_FLASH, flash_addr, 
+			rc = iap_cmd( IAP_CMD_COPY_RAM_TO_FLASH, flash_addr,
 					ram_addr, len, PRC_CLK, 0 );
 			if( rc != IAP_STAT_BUSY ) {
 				break;
 			}
 		}
 	}
-	
-	if( rc == IAP_STAT_CMD_SUCCESS ) 
+
+	if( rc == IAP_STAT_CMD_SUCCESS )
 		rc = FWERR_NOERR;
 	else
 		rc = FWERR_IAP;
@@ -223,7 +223,7 @@ flash_block_write(
  * 		FWERR_xx	: one or more page writes failed
  */
 
-int 
+int
 flash_write(
 	unsigned int flash_addr,
 	unsigned int ram_addr,
@@ -241,13 +241,13 @@ flash_write(
 	current_page_base = page_aligned_start;
 	offset = flash_addr & ( FLASH_PAGE_SIZE - 1 );
 	source = ram_addr;
-	
+
 	for( i = 0; i < num_pages; i++ ) {
 		copy_size = ( ( len_remaining + offset ) > FLASH_PAGE_SIZE ) ? ( FLASH_PAGE_SIZE - offset ) : len_remaining;
 		// read the area we're going to overwrite
 		memcpy( ( unsigned char * )flash_buffer, ( unsigned char * )current_page_base, FLASH_PAGE_SIZE );
 		// overlay our changes
-		memcpy( ( unsigned char * )( flash_buffer + offset ), ( unsigned char * )source, copy_size ); 
+		memcpy( ( unsigned char * )( flash_buffer + offset ), ( unsigned char * )source, copy_size );
 		flash_erase_sectors( current_page_base, FLASH_PAGE_SIZE );
 		if( ret =  flash_block_write( current_page_base, ( unsigned int )flash_buffer, FLASH_PAGE_SIZE ) ) { // write it back
 			return( ret );
@@ -265,7 +265,7 @@ flash_write(
 		len_remaining -= copy_size;
 	}
 
-	if( !ret ) { 
+	if( !ret ) {
 		for( i = 0; i < len; i++ ) {
 			if( ((unsigned char *)flash_addr)[i] != ((unsigned char *)ram_addr)[i] ) {
 				ret = FWERR_DATA_COMPARE;
@@ -278,7 +278,7 @@ flash_write(
 }
 
 
-int 
+int
 flash_erase_sectors(
 	unsigned int start_addr,
 	int len )
@@ -294,7 +294,7 @@ flash_erase_sectors(
 		rc = iap_cmd( IAP_CMD_PREPARE_SECTORS, start_sector, end_sector, 0, 0, 0 );
 		if( rc == IAP_STAT_CMD_SUCCESS ) {
 			while( 1 ) {
-				rc =  iap_cmd(IAP_CMD_ERASE_SECTORS, 
+				rc =  iap_cmd(IAP_CMD_ERASE_SECTORS,
 						start_sector, end_sector, PRC_CLK, 0, 0 );
 				if(rc != IAP_STAT_BUSY)
 					break;

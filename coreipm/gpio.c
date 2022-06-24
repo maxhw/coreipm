@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -57,21 +57,21 @@ void gpio_led_off_noreset( unsigned led_mask );
 
 /* LEDs, switches, backplane address detection, etc, etc.. */
 
-void gpio_initialize( void ) 
+void gpio_initialize( void )
 {
 	led_state = 0;
 	gpio_led_off( GPIO_LED_ALL );
 }
 
 /* gpio_get_hardware_setting()
- * 
+ *
  * 	Returns a value that is a mapping of configuration switches.
  * 	Currently:
  * 		1 if jumper J8 is unjumpered, and
  * 		0 if jumper J8 is jumpered
  *
  * 	NOTE: MCB2140 dependent
- */ 
+ */
 int gpio_get_hardware_setting( void )
 {
 	// get P1.20 (J8) setting
@@ -111,9 +111,9 @@ void gpio_led_on( unsigned led_mask )
 
 	/* turn off timers if any */
 	timer_remove_callout_queue( &led_blink );
-	
+
 	led_state |= led_mask;
-/*	
+/*
 	if( led_state & GPIO_LED_0 ) iopin |= LED_0;
 	if( led_state & GPIO_LED_1 ) iopin |= LED_1;
 	if( led_state & GPIO_LED_2 ) iopin |= LED_2;
@@ -122,7 +122,7 @@ void gpio_led_on( unsigned led_mask )
 	if( led_state & GPIO_LED_5 ) iopin |= LED_5;
 	if( led_state & GPIO_LED_6 ) iopin |= LED_6;
 	if( led_state & GPIO_LED_7 ) iopin |= LED_7;
-	
+
 	iopin_set( iopin );
 */
 	module_led_on( led_state );
@@ -135,7 +135,7 @@ void gpio_led_on_noreset( unsigned led_mask )
 	long long iopin = 0;
 
 	led_state |= led_mask;
-/*	
+/*
 	if( led_state & GPIO_LED_0 ) iopin |= LED_0;
 	if( led_state & GPIO_LED_1 ) iopin |= LED_1;
 	if( led_state & GPIO_LED_2 ) iopin |= LED_2;
@@ -144,7 +144,7 @@ void gpio_led_on_noreset( unsigned led_mask )
 	if( led_state & GPIO_LED_5 ) iopin |= LED_5;
 	if( led_state & GPIO_LED_6 ) iopin |= LED_6;
 	if( led_state & GPIO_LED_7 ) iopin |= LED_7;
-	
+
 	iopin_set( iopin );
 */
 	module_led_on( led_state );
@@ -217,7 +217,7 @@ void gpio_toggle_activity_led( void )
 	}
 }
 
-void gpio_led_blink ( unsigned led_mask, 
+void gpio_led_blink ( unsigned led_mask,
 		unsigned on_period, 	/* in 100ms */
 		unsigned off_period, 	/* in 100ms */
 		unsigned duration )		/* in 100ms - length of time we'll blink, 0 = forever */
@@ -229,7 +229,7 @@ void gpio_led_blink ( unsigned led_mask,
 
 	if( on_period )
 		led_blink.on_period = on_period;
-	else 
+	else
 		led_blink.on_period = 1;
 
 	if( off_period )
@@ -239,7 +239,7 @@ void gpio_led_blink ( unsigned led_mask,
 
 	led_blink.led_mask = led_mask;
 	led_blink.duration = duration;
-	timer_add_callout_queue( &led_blink, on_period, gpio_led_blink_callback, 0 ); 
+	timer_add_callout_queue( &led_blink, on_period, gpio_led_blink_callback, 0 );
 }
 
 void
@@ -257,19 +257,19 @@ void gpio_led_blink_callback( unsigned char *arg)
 		gpio_led_off_noreset( led_blink.led_mask );
 		led_blink.state = 0;
 		if( !led_blink.duration ) {
-			timer_add_callout_queue( &led_blink, led_blink.off_period, gpio_led_blink_callback, 0 ); 
+			timer_add_callout_queue( &led_blink, led_blink.off_period, gpio_led_blink_callback, 0 );
 		} else if( led_blink.duration > led_blink.on_period ) {
 			led_blink.duration -= led_blink.on_period;
-			timer_add_callout_queue( &led_blink, led_blink.off_period, gpio_led_blink_callback, 0 ); 
+			timer_add_callout_queue( &led_blink, led_blink.off_period, gpio_led_blink_callback, 0 );
 		}
 	} else {
 		gpio_led_on_noreset( led_blink.led_mask );
 		led_blink.state = 1;
 		if( !led_blink.duration ) {
-			timer_add_callout_queue( &led_blink, led_blink.on_period, gpio_led_blink_callback, 0 ); 
+			timer_add_callout_queue( &led_blink, led_blink.on_period, gpio_led_blink_callback, 0 );
 		} else if( led_blink.duration > led_blink.off_period ) {
 			led_blink.duration -= led_blink.on_period;
-			timer_add_callout_queue( &led_blink, led_blink.on_period, gpio_led_blink_callback, 0 ); 
+			timer_add_callout_queue( &led_blink, led_blink.on_period, gpio_led_blink_callback, 0 );
 		} else {
 			gpio_led_off_noreset( led_blink.led_mask );
 			led_blink.state = 0;

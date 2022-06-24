@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -68,7 +68,7 @@ typedef struct watchdog_info {
 	unsigned long pre_timeout_interval_ticks;
 	/* The timeout use expiration flags retain their state across system
 	 * resets and power cycles, as long as the BMC remains powered. */
-	uchar timer_use_exp_fl;  
+	uchar timer_use_exp_fl;
 	uchar init_countdown_lsb;
 	uchar init_countdown_msb;
 	unsigned long init_countdown_ticks;
@@ -77,7 +77,7 @@ typedef struct watchdog_info {
 	uchar timer_use_exp_fl_clr;
 } WATCHDOG_INFO;
 
-	
+
 struct {
 	uchar fru_dev_id;
 	uchar i2c_address;
@@ -119,7 +119,7 @@ ipmi_initialize( void )
 	/* Initialize the channel tables */
 	channel_table[IPMI_CH_NUM_PRIMARY_IPMB].protocol = IPMI_CH_PROTOCOL_IPMB;
 	channel_table[IPMI_CH_NUM_PRIMARY_IPMB].medium = IPMI_CH_MEDIUM_IPMB;
-	
+
 	channel_table[IPMI_CH_NUM_CONSOLE].protocol = IPMI_CH_PROTOCOL_TMODE;
 	channel_table[IPMI_CH_NUM_CONSOLE].medium = IPMI_CH_MEDIUM_SERIAL;
 
@@ -138,13 +138,13 @@ ipmi_get_next_seq( uchar *seq )
 
 	/* return the first free sequence number */
 	for( i = 0; i < 16; i++ ) {
-		if( !seq_array[i] ) { 
+		if( !seq_array[i] ) {
 			seq_array[i] = 1;
 			*seq = i;
 			return( 1 );
 		}
 	}
-	return( 0 );   	
+	return( 0 );
 }
 
 void
@@ -154,20 +154,20 @@ ipmi_seq_free( uchar seq )
 }
 
 
-/* 
+/*
  * ipmi_process_pkt()
- * 
+ *
  * 	We received a packet from an IPMI interface, this could be
  * 	a request or a response to a request we sent.
- * 	
- * 	For a request:  
+ *
+ * 	For a request:
  * 	1) check formatting and checksums.
  * 	2) check responder slave address to determine if this request
- * 	needs to be routed. 
- * 	3) If the request is local, check if the LUN is valid. 
- * 	A management controller that gets a request to an invalid 
- * 	(unimplemented) LUN must return an error completion code using 
- * 	that LUN as the responder’s LUN (RsLUN) in the response.
+ * 	needs to be routed.
+ * 	3) If the request is local, check if the LUN is valid.
+ * 	A management controller that gets a request to an invalid
+ * 	(unimplemented) LUN must return an error completion code using
+ * 	that LUN as the responderâ€™s LUN (RsLUN) in the response.
  * 	4) If everything OK call ipmi_process_request()
  * 	5) If ipmi_process_request() has a response ready, set ws state.
  * 	Otherwise if this is a delayed response ( completion code ==
@@ -179,15 +179,15 @@ ipmi_seq_free( uchar seq )
  * 	3) free the ws
  *
  * 	NOTE: ws->len_in integrity should be checked by the caller.
- * 
+ *
  */
 void
-ipmi_process_pkt( IPMI_WS * ws ) 
+ipmi_process_pkt( IPMI_WS * ws )
 {
 	IPMI_PKT	*pkt;
 	uchar		cksum, completion_code = CC_NORMAL;
 	uchar		responder_slave_addr, requester_slave_addr;
-	
+
 	IPMI_IPMB_HDR *ipmb_hdr = ( IPMI_IPMB_HDR * )&( ws->pkt_in );
 
 	dputstr( DBG_IPMI | DBG_INOUT, "ipmi_process_pkt: ingress\n" );
@@ -199,18 +199,18 @@ ipmi_process_pkt( IPMI_WS * ws )
 		case IPMI_CH_PROTOCOL_IPMB:	/* used for IPMB, serial/modem Basic Mode, and LAN */
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_pkt: IPMB protocol\n" );
 
-			if( ws->flags & WS_FL_GENERAL_CALL ) { 
+			if( ws->flags & WS_FL_GENERAL_CALL ) {
 				/* this is a broadcast request */
 
 				/* Per IPMI spec:
-				 * 1) The device that has the matching physical 
+				 * 1) The device that has the matching physical
 				 * slave address information shall respond with
-				 * the same data it would return from a ‘regular’
-				 * (non-broadcast) ‘Get Device ID’ command.
+				 * the same data it would return from a â€˜regularâ€™
+				 * (non-broadcast) â€˜Get Device IDâ€™ command.
 				 * 2) In order to speed the discovery process on
 				 * the IPMB, a controller should drop off the bus
 				 * as soon as it sees that the rsSA in the command
-				 * doesn’t match its rsSA. */
+				 * doesnâ€™t match its rsSA. */
 
 				/* ignore if not our address */
 				if( module_get_i2c_address( I2C_ADDRESS_LOCAL ) != ws->pkt_in[0] ) {
@@ -218,9 +218,9 @@ ipmi_process_pkt( IPMI_WS * ws )
 					ws_free( ws );
 					return;
 				}
-				
-			} 
-			
+
+			}
+
 			/* this is an interface that includes checksums -> verify payload integrity */
 			/* need to check both header_checksum & data_checksum for requests. A response
 			 * is directly bridged an we let the original requester worry about checksums */
@@ -235,7 +235,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 					break;
 				}
 
-				cksum = ipmi_calculate_checksum( &(((IPMI_IPMB_REQUEST *)(ws->pkt_in))->requester_slave_addr), 
+				cksum = ipmi_calculate_checksum( &(((IPMI_IPMB_REQUEST *)(ws->pkt_in))->requester_slave_addr),
 						ws->len_in - 3 );
 				if( ws->pkt_in[ws->len_in - 1] != cksum ) { /* data checksum is the last byte */
 					dputstr( DBG_IPMI | DBG_ERR, "ipmi_process_pkt: Faulty data checksum\n" );
@@ -243,9 +243,9 @@ ipmi_process_pkt( IPMI_WS * ws )
 					break;
 				}
 			}
-			
+
 			/* TODO: check responder_slave_address to route this request if required */
-			/* NOTE: BMC LUN 10b is used for delivering messages to 
+			/* NOTE: BMC LUN 10b is used for delivering messages to
 			 * the System Interface. The BMC automatically routes any
 			 * messages it receives via LUN 10b to the Receive Message Queue.
 			 */
@@ -258,7 +258,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 				if( ipmb_hdr->lun == 2 ) {
 					/* route this to the system interface without processing ) */
 				}
-				
+
 				if( ipmb_hdr->netfn % 2 ) {
 					/* an odd netfn indicates a response */
 					ipmb_req = NULL;
@@ -272,17 +272,17 @@ ipmi_process_pkt( IPMI_WS * ws )
 					pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command );
 					pkt->hdr.req_data_len = ws->len_in - 7;
 				}
-				
+
 				pkt->resp = ( IPMI_CMD_RESP * )&( ipmb_resp->completion_code );
 				pkt->hdr.netfn = ipmb_hdr->netfn;
-	
+
 				/* check if responder_lun is valid */
 				if( ipmb_req->responder_lun + 1 > NUM_LUN )
 					completion_code = CC_INVALID_CMD;
 			}
-			
+
 			break;
-			
+
 		case IPMI_CH_PROTOCOL_TMODE:		/* Terminal Mode */
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_pkt: Terminal Mode protocol\n" );
 			pkt->req = ( IPMI_CMD_REQ * )&( ( ( IPMI_TERMINAL_MODE_REQUEST * )( ws->pkt_in ) )->command );
@@ -296,7 +296,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 				completion_code = CC_INVALID_CMD;
 
 			break;
-			
+
 		case IPMI_CH_PROTOCOL_ICMB:		/* ICMB v1.0 */
 		case IPMI_CH_PROTOCOL_SMB:		/* IPMI on SMSBus */
 		case IPMI_CH_PROTOCOL_KCS:		/* KCS System Interface Format */
@@ -309,7 +309,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 			completion_code = CC_NOT_SUPPORTED;
 			break;
 	} /* end switch(incoming_protocol) */
-	
+
 	if( pkt->hdr.netfn % 2 ) {
 		/* an odd netfn indicates a response */
 		ipmi_process_response( pkt, completion_code );
@@ -318,13 +318,13 @@ ipmi_process_pkt( IPMI_WS * ws )
 
 		return;
 	}
-	
+
 	if( completion_code == CC_NORMAL )
 		ipmi_process_request( pkt );
 
-	/* ipmi_process_request fills in the |completion_code|data| portion 
+	/* ipmi_process_request fills in the |completion_code|data| portion
 	 * and also sets pkt->hdr.resp_data_len */
-	
+
 	/* send back response */
 	if( completion_code != CC_DELAYED_COMPLETION ) {
 		ws->outgoing_protocol = ws->incoming_protocol;
@@ -333,7 +333,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 			case IPMI_CH_PROTOCOL_IPMB: {
 				IPMI_IPMB_RESPONSE *ipmb_resp = ( IPMI_IPMB_RESPONSE * )&( ws->pkt_out );
 				IPMI_IPMB_REQUEST *ipmb_req = ( IPMI_IPMB_REQUEST * )&( ws->pkt_in );
-				
+
 //				ipmb_resp->requester_slave_addr = ipmb_req->requester_slave_addr;
 				requester_slave_addr = ipmb_req->requester_slave_addr;
 				ipmb_resp->netfn = ipmb_req->netfn + 1;
@@ -346,16 +346,16 @@ ipmi_process_pkt( IPMI_WS * ws )
 				/* The location of data_checksum field is bogus.
 				 * It's used as a placeholder to indicate that a checksum follows the data field.
 				 * The location of the data_checksum depends on the size of the data preceeding it.*/
-				ipmb_resp->data_checksum = 
-					ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr, 
-						pkt->hdr.resp_data_len + 4 ); 
-				ws->len_out = sizeof(IPMI_IPMB_RESPONSE) 
+				ipmb_resp->data_checksum =
+					ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr,
+						pkt->hdr.resp_data_len + 4 );
+				ws->len_out = sizeof(IPMI_IPMB_RESPONSE)
 					- IPMB_RESP_MAX_DATA_LEN  +  pkt->hdr.resp_data_len;
 				/* Assign the checksum to it's proper location */
 				*( (uchar *)ipmb_resp + ws->len_out - 1 ) = ipmb_resp->data_checksum;
-				}			
+				}
 				break;
-			
+
 			case IPMI_CH_PROTOCOL_TMODE: {		/* Terminal Mode */
 				IPMI_TERMINAL_MODE_RESPONSE *tm_resp = ( IPMI_TERMINAL_MODE_RESPONSE * )&( ws->pkt_out );
 				IPMI_TERMINAL_MODE_REQUEST *tm_req = ( IPMI_TERMINAL_MODE_REQUEST * )&( ws->pkt_in );
@@ -368,7 +368,7 @@ ipmi_process_pkt( IPMI_WS * ws )
 					- TERM_MODE_RESP_MAX_DATA_LEN + pkt->hdr.resp_data_len;
 				}
 				break;
-			
+
 			case IPMI_CH_PROTOCOL_ICMB:		/* ICMB v1.0 */
 			case IPMI_CH_PROTOCOL_SMB:		/* IPMI on SMSBus */
 			case IPMI_CH_PROTOCOL_KCS:		/* KCS System Interface Format */
@@ -389,10 +389,10 @@ ipmi_process_pkt( IPMI_WS * ws )
 
 /*
  * ipmi_calculate_checksum()
- * 
+ *
  * 	8-bit checksum algorithm: Initialize checksum to 0. For each byte,
- * 	checksum = (checksum + byte) modulo 256. Then checksum = - checksum. 
- * 	When the checksum and the bytes are added together, modulo 256, 
+ * 	checksum = (checksum + byte) modulo 256. Then checksum = - checksum.
+ * 	When the checksum and the bytes are added together, modulo 256,
  * 	the result should be 0.
  */
 uchar
@@ -400,11 +400,11 @@ ipmi_calculate_checksum( unsigned char *ptr, int numchar )
 {
 	char checksum = 0;
 	int i;
-	
+
 	for( i = 0; i < numchar; i++ ) {
 		checksum += *ptr++;
 	}
-	
+
 	return( -checksum );
 }
 
@@ -422,17 +422,17 @@ ipmi_process_response( IPMI_PKT *pkt, unsigned char completion_code )
 	resp_ws = ( IPMI_WS * )pkt->hdr.ws;
 	if( resp_ws->incoming_protocol == IPMI_CH_PROTOCOL_IPMB ) {
 		seq = ((IPMI_IPMB_REQUEST *)(resp_ws->pkt_in))->req_seq;
-	
+
 		/* using the seq#, check to see if there is an outstanding target request ws
 		 * corresponding to this response */
-		target_ws = ws_get_elem_seq( seq, resp_ws ); 
+		target_ws = ws_get_elem_seq( seq, resp_ws );
 	} else {
 		/* currently unsupported */
 		/* in instances where seq number is not used then the interface is waiting
 		 * for the command to complete and there is a single outstanding ws */
 		// target_ws = bridging_ws;
 	}
-	
+
 	if( !target_ws ) {
 		//call module response handler here
 		module_process_response( req_ws, seq, completion_code );
@@ -455,25 +455,25 @@ ipmi_process_response( IPMI_PKT *pkt, unsigned char completion_code )
 		ws_free( target_ws );
 		return;
 	}
-	
-	memcpy( req_ws->pkt.resp, target_ws->pkt.resp, WS_BUF_LEN ); 
+
+	memcpy( req_ws->pkt.resp, target_ws->pkt.resp, WS_BUF_LEN );
 							   // TODO: make sure pkt-> pointers are set properly
 	req_ws->len_out = target_ws->len_in;
-	
+
 	ws_free( resp_ws );
 	ws_free( target_ws );
-	
+
 	/* send back response */
 	req_ws->outgoing_protocol = req_ws->incoming_protocol;
 	req_ws->outgoing_medium = req_ws->incoming_medium;
-	
+
 	switch( req_ws->outgoing_protocol ) {
 		case IPMI_CH_PROTOCOL_IPMB: {
 			IPMI_IPMB_RESPONSE *ipmb_resp = ( IPMI_IPMB_RESPONSE * )&( req_ws->pkt_out );
 			IPMI_IPMB_REQUEST *ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_in );
-			
+
 //			ipmb_resp->requester_slave_addr = ipmb_req->requester_slave_addr;
-			requester_slave_addr = ipmb_req->requester_slave_addr;			
+			requester_slave_addr = ipmb_req->requester_slave_addr;
 			ipmb_resp->netfn = ipmb_req->netfn + 1;
 			ipmb_resp->requester_lun = ipmb_req->requester_lun;
 			ipmb_resp->header_checksum = -( *( char * )ipmb_resp + requester_slave_addr );
@@ -484,16 +484,16 @@ ipmi_process_response( IPMI_PKT *pkt, unsigned char completion_code )
 			/* The location of data_checksum field is bogus.
 			 * It's used as a placeholder to indicate that a checksum follows the data field.
 			 * The location of the data_checksum depends on the size of the data preceeding it.*/
-			ipmb_resp->data_checksum = 
-				ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr, 
-					pkt->hdr.resp_data_len + 4 ); 
-			req_ws->len_out = sizeof(IPMI_IPMB_RESPONSE) 
+			ipmb_resp->data_checksum =
+				ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr,
+					pkt->hdr.resp_data_len + 4 );
+			req_ws->len_out = sizeof(IPMI_IPMB_RESPONSE)
 				- IPMB_RESP_MAX_DATA_LEN  +  pkt->hdr.resp_data_len;
 			/* Assign the checksum to it's proper location */
-			*( (uchar *)ipmb_resp + req_ws->len_out) = ipmb_resp->data_checksum; 
-			}			
+			*( (uchar *)ipmb_resp + req_ws->len_out) = ipmb_resp->data_checksum;
+			}
 			break;
-		
+
 		case IPMI_CH_PROTOCOL_TMODE: {		/* Terminal Mode */
 			IPMI_TERMINAL_MODE_RESPONSE *tm_resp = ( IPMI_TERMINAL_MODE_RESPONSE * )&( req_ws->pkt_out );
 			IPMI_TERMINAL_MODE_REQUEST *tm_req = ( IPMI_TERMINAL_MODE_REQUEST * )&( req_ws->pkt_in );
@@ -506,7 +506,7 @@ ipmi_process_response( IPMI_PKT *pkt, unsigned char completion_code )
 				- TERM_MODE_RESP_MAX_DATA_LEN + pkt->hdr.resp_data_len;
 			}
 			break;
-		
+
 		case IPMI_CH_PROTOCOL_ICMB:		/* ICMB v1.0 */
 		case IPMI_CH_PROTOCOL_SMB:		/* IPMI on SMSBus */
 		case IPMI_CH_PROTOCOL_KCS:		/* KCS System Interface Format */
@@ -517,7 +517,7 @@ ipmi_process_response( IPMI_PKT *pkt, unsigned char completion_code )
 			dputstr( DBG_IPMI | DBG_ERR, "ipmi_process_pkt: unsupported protocol\n" );
 			break;
 	}
-	
+
 	ws_set_state( req_ws, WS_ACTIVE_MASTER_WRITE );
 }
 
@@ -552,7 +552,7 @@ ipmi_process_request( IPMI_PKT *pkt )
 			ipmi_default_response( pkt );
 			break;
 	}
-	
+
 	dputstr( DBG_IPMI | DBG_INOUT, "ipmi_process_request: egress\n" );
 }
 
@@ -581,12 +581,12 @@ ipmi_default_response( IPMI_PKT *pkt )
 /*======================================================================*/
 /*======================================================================*/
 /*
- *   IPM Device “Global” Commands
+ *   IPM Device â€œGlobalâ€ Commands
  *
  *   Mandatory Commands
  *   	Get Device ID
  *   	Get Self Test Results
- *   	Broadcast ‘Get Device ID’ 
+ *   	Broadcast â€˜Get Device IDâ€™
  */
 /*======================================================================*/
 /*======================================================================*/
@@ -607,20 +607,20 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 
 	switch( pkt->req->command )
 	{
-		case IPMI_CMD_GET_DEVICE_ID: 
+		case IPMI_CMD_GET_DEVICE_ID:
 		    {
 			/* Broadcast Get Device ID is over IPMB channels only.
 			 * Request is formatted as an entire IPMB application
-			 * request message, from the RsSA field through the 
+			 * request message, from the RsSA field through the
 			 * second checksum, with the message prefixed with the
-			 * broadcast slave address, 00h. Response format is 
-			 * same as the regular ‘Get Device ID’ response. */
-			    
-			GET_DEVICE_ID_CMD_RESP *gdi_resp = 
+			 * broadcast slave address, 00h. Response format is
+			 * same as the regular â€˜Get Device IDâ€™ response. */
+
+			GET_DEVICE_ID_CMD_RESP *gdi_resp =
 				(GET_DEVICE_ID_CMD_RESP *)(pkt->resp);
-			
+
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_GET_DEVICE_ID\n" );
-			
+
 			gdi_resp->completion_code = CC_NORMAL;
 			gdi_resp->device_id = 0x0;
 			gdi_resp->device_sdr_provided = 1; 	/* 1 = device provides Device SDRs */
@@ -629,7 +629,7 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 			gdi_resp->major_fw_rev = 0x01;
 			gdi_resp->minor_fw_rev = 0x00;
 			gdi_resp->ipmi_version = 0x02;
-			gdi_resp->add_dev_support = 
+			gdi_resp->add_dev_support =
 				DEV_SUP_IPMB_EVENT_GEN |
 				DEV_SUP_FRU_INVENTORY |
 				DEV_SUP_SDR_REPOSITORY |
@@ -646,7 +646,7 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 		    }
 		    pkt->hdr.resp_data_len = 15;
 		    break;
-		    
+
 		case IPMI_CMD_COLD_RESET:
     		    {
 			IPMI_CMD_RESP *generic_resp = ( IPMI_CMD_RESP *)(pkt->resp);
@@ -670,10 +670,10 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 		    }
 		    break;
 
-		case IPMI_CMD_GET_SELF_TEST_RESULTS: 
+		case IPMI_CMD_GET_SELF_TEST_RESULTS:
 		    {
 			GET_SELF_TEST_RESULTS_CMD_RESP *gstr_resp =
-				(GET_SELF_TEST_RESULTS_CMD_RESP *)(pkt->resp);				
+				(GET_SELF_TEST_RESULTS_CMD_RESP *)(pkt->resp);
 
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_GET_SELF_TEST_RESULTS\n" );
 
@@ -682,26 +682,26 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 			gstr_resp->result1 = SELFTEST_RESULT_NOT_IMPLEMENTED;
 			gstr_resp->result2 = 0;
 			gstr_resp->result3 = 0;
-		    }	
+		    }
 		    pkt->hdr.resp_data_len = 3;
 		    break;
-		    
-		case IPMI_CMD_RESET_WATCHDOG_TIMER: 
+
+		case IPMI_CMD_RESET_WATCHDOG_TIMER:
 		    {
 		 	/* The Reset Watchdog Timer command is used for starting
 			 * and restarting the Watchdog Timer from the initial
 			 * countdown value that was specified in the Set Watchdog
-			 * Timer command. If a pre-timeout interrupt has been 
+			 * Timer command. If a pre-timeout interrupt has been
 			 * configured, the Reset Watchdog Timer command will not
-			 * restart the timer once the pre-timeout interrupt 
+			 * restart the timer once the pre-timeout interrupt
 			 * interval has been reached. The only way to stop the
 			 * timer once it has reached this point is via the Set
-			 * Watchdog Timer command. 
+			 * Watchdog Timer command.
 			 * If the counter is loaded with zero and the Reset
 			 * Watchdog command is issued to start the timer, the
 			 * associated timer events occur immediately. */
 
-			RESET_WATCHDOG_TIMER_CMD_RESP *resp = 
+			RESET_WATCHDOG_TIMER_CMD_RESP *resp =
 				(RESET_WATCHDOG_TIMER_CMD_RESP *)(pkt->resp);
 
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_RESET_WATCHDOG_TIMER\n" );
@@ -730,23 +730,23 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 					break;
 			}
 			pkt->hdr.resp_data_len = 0;
-		    }			
+		    }
 		    break;
 
-		case IPMI_CMD_SET_WATCHDOG_TIMER: 
+		case IPMI_CMD_SET_WATCHDOG_TIMER:
 		    {
 			/* The Set Watchdog Timer command is used for initializing
 			 * and configuring the watchdog timer. The command is
 			 * also used for stopping the timer.
 			 * If the timer is already running, the Set Watchdog Timer
-			 * command stops the timer (unless the “don’t stop” bit is
+			 * command stops the timer (unless the â€œdonâ€™t stopâ€ bit is
 			 * set) and clears the Watchdog pre-timeout interrupt flag
 			 * (see Get Message Flags command). BMC hard resets,
 			 * system hard resets, and the Cold Reset command also
-			 * stop the timer and clear the flag. */ 
-			SET_WATCHDOG_TIMER_CMD_REQ *swd_req = 
+			 * stop the timer and clear the flag. */
+			SET_WATCHDOG_TIMER_CMD_REQ *swd_req =
 				(SET_WATCHDOG_TIMER_CMD_REQ *)(pkt->req);
-			SET_WATCHDOG_TIMER_CMD_RESP *resp = 
+			SET_WATCHDOG_TIMER_CMD_RESP *resp =
 				(SET_WATCHDOG_TIMER_CMD_RESP *)(pkt->resp);
 
 			unsigned long init_countdown_ticks = ( swd_req->init_countdown_msb << 8 ) |
@@ -805,21 +805,21 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 		    }
 		    break;
 
-		case IPMI_CMD_GET_WATCHDOG_TIMER: 
+		case IPMI_CMD_GET_WATCHDOG_TIMER:
 		    {
 			GET_WATCHDOG_TIMER_CMD_RESP *gwd_resp =
-				( GET_WATCHDOG_TIMER_CMD_RESP *)(pkt->resp);	
-			unsigned long ticks;			
+				( GET_WATCHDOG_TIMER_CMD_RESP *)(pkt->resp);
+			unsigned long ticks;
 
 			dputstr( DBG_IPMI | DBG_LVL1, "ipmi_process_app_req: IPMI_CMD_GET_WATCHDOG_TIMER\n" );
 
-			gwd_resp->completion_code = CC_NORMAL;	
+			gwd_resp->completion_code = CC_NORMAL;
 			gwd_resp->dont_log = wd_timer.dont_log;
 			gwd_resp->dont_stop_timer = wd_timer.timer_running;
-			gwd_resp->timer_use = wd_timer.timer_use;			
-			gwd_resp->pre_timeout_intr = wd_timer.pre_timeout_intr;	
-			gwd_resp->timeout_action = wd_timer.timeout_action;	
-			gwd_resp->pre_timeout_interval = wd_timer.pre_timeout_interval;	
+			gwd_resp->timer_use = wd_timer.timer_use;
+			gwd_resp->pre_timeout_intr = wd_timer.pre_timeout_intr;
+			gwd_resp->timeout_action = wd_timer.timeout_action;
+			gwd_resp->pre_timeout_interval = wd_timer.pre_timeout_interval;
 			gwd_resp->timer_use_exp_fl = wd_timer.timer_use_exp_fl;
 			gwd_resp->init_countdown_lsb = wd_timer.init_countdown_lsb;
 			gwd_resp->init_countdown_msb = wd_timer.init_countdown_msb;
@@ -827,12 +827,12 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 			gwd_resp->present_countdown_lsb = ticks & 0xff;
 			gwd_resp->present_countdown_msb = ( ticks >> 8 ) & 0xff;
 
-			/* The initial countdown value and present countdown values 
+			/* The initial countdown value and present countdown values
 			 * should match immediately after the countdown is initialized
 			 * via a Set Watchdog Timer command and after a Reset Watchdog
 			 * Timer has been executed.
-			 * Note that internal delays in the BMC may require software to 
-			 * delay up to 100ms before seeing the countdown value change 
+			 * Note that internal delays in the BMC may require software to
+			 * delay up to 100ms before seeing the countdown value change
 			 * and be reflected in the Get Watchdog Timer command. */
 			pkt->hdr.resp_data_len = sizeof( GET_WATCHDOG_TIMER_CMD_RESP ) - 1;
 		    }
@@ -853,12 +853,12 @@ ipmi_process_app_req( IPMI_PKT *pkt )
 		    }
 		    break;
 	} /* switch( pkt->req->command ) */
-	
+
 	dputstr( DBG_IPMI | DBG_INOUT, "ipmi_process_app_req: egress\n" );
 }
 
 void
-ipmi_wd_expired(uchar * arg) 
+ipmi_wd_expired(uchar * arg)
 {
 	dputstr( DBG_IPMI | DBG_INOUT, "ipmi_wd_expired: ingress\n" );
 
@@ -877,7 +877,7 @@ ipmi_wd_expired(uchar * arg)
 			default:
 				break;
 		}
-		
+
 		if( wd_timer.pre_timeout_interval_ticks ) {
 			/* add to callout queue for the remaining time */
 			timer_add_callout_queue( (void *)&wd_timer,
@@ -887,7 +887,7 @@ ipmi_wd_expired(uchar * arg)
 		} /* otherwise run the timeout actions below */
 	}
 
-	switch( wd_timer.timeout_action ) { 
+	switch( wd_timer.timeout_action ) {
 		/* TODO: fill in as required, log if required */
 		case WD_TIMEOUT_ACTION_NONE:
 			break;
@@ -975,9 +975,9 @@ ipmi_process_nvstore_req( IPMI_PKT *pkt )
  *
  *    The FRU Inventory data contains information such as the serial number,
  *    part number, asset tag, and short descriptive string for the FRU. The
- *    contents of a FRU Inventory Record are specified in the Platform 
+ *    contents of a FRU Inventory Record are specified in the Platform
  *    Management FRU Information Storage Definition.
- *    	
+ *
  */
 /*======================================================================*/
 
@@ -987,18 +987,18 @@ ipmi_process_nvstore_req( IPMI_PKT *pkt )
  * 	Area in this device, in bytes.
  *
  * 	Note that Reserved FRU Device ID 254 does not represent any Managed
- * 	FRU and is used only in “Get FRU Inventory Area Info,” “Read FRU Data”
- * 	and “Write FRU Data” commands directed to the Shelf Manager for
- * 	accessing logical Shelf FRU Information. See Section 3.6.4.4,  	
- * 	“Accessing Shelf FRU Information” of the PICMG® 3.0 Revision 2.0
- * 	AdvancedTCA® Base Specificationfor more details.
- * 	
+ * 	FRU and is used only in â€œGet FRU Inventory Area Info,â€ â€œRead FRU Dataâ€
+ * 	and â€œWrite FRU Dataâ€ commands directed to the Shelf Manager for
+ * 	accessing logical Shelf FRU Information. See Section 3.6.4.4,
+ * 	â€œAccessing Shelf FRU Informationâ€ of the PICMGÂ® 3.0 Revision 2.0
+ * 	AdvancedTCAÂ® Base Specificationfor more details.
+ *
  * 	If the device is on the i2c bus we grab a ws and configure it for an
  * 	i2c master read and put it on the work queue and return with completion
  * 	code of CC_DELAYED_COMPLETION.
- * 	
- * 	When the master read completes the completion function 
- * 	fru_inventory_area_info_callback() gets called which processes the 
+ *
+ * 	When the master read completes the completion function
+ * 	fru_inventory_area_info_callback() gets called which processes the
  * 	data read and completes this transaction.
  *
  */
@@ -1027,25 +1027,25 @@ ipmi_get_fru_inventory_area_info( IPMI_PKT *pkt )
 		resp->completion_code = CC_REQ_DATA_NOT_AVAIL;
 		pkt->hdr.resp_data_len = 0;
 	}
-	
-	return;	
+
+	return;
 }
 
 /* ipmi_read_fru_data()
- * 
- * The command returns the specified data from the FRU Inventory Info area. 
- * This is effectively a ‘low level’ direct interface to a non-volatile storage
- * area. This means that the interface does not interpret or check any 
- * semantics or formatting for the data being accessed. The offset used in 
- * this command is a ‘logical’ offset that may or may not correspond to the 
- * physical address used in device that provides the non-volatile storage. 
- * For example, FRU information could be kept in FLASH at physical address 
+ *
+ * The command returns the specified data from the FRU Inventory Info area.
+ * This is effectively a â€˜low levelâ€™ direct interface to a non-volatile storage
+ * area. This means that the interface does not interpret or check any
+ * semantics or formatting for the data being accessed. The offset used in
+ * this command is a â€˜logicalâ€™ offset that may or may not correspond to the
+ * physical address used in device that provides the non-volatile storage.
+ * For example, FRU information could be kept in FLASH at physical address
  * 1234h, however offset 0000h would still be used with this command to access
- * the start of the FRU information. IPMI FRU device data (devices that are 
- * formatted per [FRU]) as well as processor and DIMM FRU data always starts 
+ * the start of the FRU information. IPMI FRU device data (devices that are
+ * formatted per [FRU]) as well as processor and DIMM FRU data always starts
  * from offset 0000h unless otherwise noted.
  * Note that while the offsets are 16-bit values, allowing FRU devices of up
- * to 64K words, the count to read, count returned, and count written fields 
+ * to 64K words, the count to read, count returned, and count written fields
  * are only 8-bits. This is in recognition of the limitations on the sizes of
  * messages. For example,IPMB messages are limited to 32-bytes total.
  *
@@ -1053,9 +1053,9 @@ ipmi_get_fru_inventory_area_info( IPMI_PKT *pkt )
  * If the device is on the i2c bus we grab a ws and configure it for an
  * i2c master read and put it on the work queue and return with completion
  * code of CC_DELAYED_COMPLETION.
- * 	
- * When the master read completes the completion function 
- * fru_inventory_area_info_callback() gets called which processes the 
+ *
+ * When the master read completes the completion function
+ * fru_inventory_area_info_callback() gets called which processes the
  * data read and completes this transaction.
  *
  */
@@ -1069,9 +1069,9 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
 	int	i, fru_inventory_offset, found = 0;
 	IPMI_WS *ws;
 
-	fru_inventory_offset = ( req->fru_inventory_offset_msb << 8 ) | 
+	fru_inventory_offset = ( req->fru_inventory_offset_msb << 8 ) |
 		req->fru_inventory_offset_lsb;
-	
+
 	/* if the fru information is cached we already have this info */
 	for( i = 0; i < FRU_INVENTORY_CACHE_ARRAY_SIZE; i++ ) {
 		if( fru_inventory_cache[i].fru_dev_id == req->fru_dev_id ) {
@@ -1079,27 +1079,27 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
 			break;
 		}
 	}
-	
+
 	if( found ) {
 		if( fru_inventory_offset > fru_inventory_cache[i].fru_inventory_area_size ) {
 			resp->completion_code = CC_RQST_DATA_LEN_INVALID;
-			resp->count_returned = 0;			
+			resp->count_returned = 0;
 			pkt->hdr.resp_data_len = 1;
 			return;
 		}
-		
-		if( ( fru_inventory_offset + req->count_to_read ) > 
+
+		if( ( fru_inventory_offset + req->count_to_read ) >
 				fru_inventory_cache[i].fru_inventory_area_size ) {
-			resp->count_returned = fru_inventory_cache[i].fru_inventory_area_size - 
+			resp->count_returned = fru_inventory_cache[i].fru_inventory_area_size -
 				fru_inventory_offset;
 		} else {
 			resp->count_returned = req->count_to_read;
 		}
-		
+
 		/* we have a payload limit for IPMB */
 		if( resp->count_returned > 20 ) /* TODO check size */
 			resp->count_returned = 20;
-		
+
 		memcpy( &( resp->data ), fru_inventory_cache[i].fru_data + fru_inventory_offset,
 			resp->count_returned );
 
@@ -1114,7 +1114,7 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
-	
+
 	for( i = 0, found = 0; i < FRU_LOCATOR_TABLE_SIZE; i++ ) {
 		if( fru_locator_table[i].fru_dev_id == req->fru_dev_id ) {
 			found = 1;
@@ -1127,7 +1127,7 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
-	
+
 	resp->completion_code = CC_DELAYED_COMPLETION;
 
 	ws->addr_out = fru_locator_table[i].i2c_address; /* protocol dependent */
@@ -1135,7 +1135,7 @@ ipmi_read_fru_data( IPMI_PKT *pkt )
        	ws->outgoing_medium = IPMI_CH_MEDIUM_IPMB;
 	ws->bridged_ws = pkt->hdr.ws;
 	ws->ipmi_completion_function = fru_read_complete;
-	ws_set_state( ws, WS_ACTIVE_MASTER_READ );				
+	ws_set_state( ws, WS_ACTIVE_MASTER_READ );
 }
 
 void
@@ -1152,12 +1152,12 @@ fru_read_complete( void *ws, int status )
 	req_ws->outgoing_protocol = req_ws->incoming_protocol;
 	req_ws->outgoing_medium = req_ws->incoming_medium;
 	pkt->hdr.resp_data_len = fru_ws->len_in; // TODO Check size
-	
+
 	switch( req_ws->outgoing_protocol ) {
 		case IPMI_CH_PROTOCOL_IPMB: {
 			IPMI_IPMB_RESPONSE *ipmb_resp = ( IPMI_IPMB_RESPONSE * )&( req_ws->pkt_out );
 			IPMI_IPMB_REQUEST *ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_in );
-			
+
 			memcpy(ipmb_resp->data, fru_ws->pkt_in, IPMB_RESP_MAX_DATA_LEN ); //TODO check size
 //			ipmb_resp->requester_slave_addr = ipmb_req->requester_slave_addr;
 			requester_slave_addr = ipmb_req->requester_slave_addr;
@@ -1172,16 +1172,16 @@ fru_read_complete( void *ws, int status )
 			/* The location of data_checksum field is bogus.
 			 * It's used as a placeholder to indicate that a checksum follows the data field.
 			 * The location of the data_checksum depends on the size of the data preceeding it.*/
-			ipmb_resp->data_checksum = 
-				ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr, 
-					pkt->hdr.resp_data_len + 4 ); 
-			req_ws->len_out = sizeof(IPMI_IPMB_RESPONSE) 
+			ipmb_resp->data_checksum =
+				ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr,
+					pkt->hdr.resp_data_len + 4 );
+			req_ws->len_out = sizeof(IPMI_IPMB_RESPONSE)
 				- IPMB_RESP_MAX_DATA_LEN  +  pkt->hdr.resp_data_len;
 			/* Assign the checksum to it's proper location */
-			*( (uchar *)ipmb_resp + req_ws->len_out) = ipmb_resp->data_checksum; 
-			}			
+			*( (uchar *)ipmb_resp + req_ws->len_out) = ipmb_resp->data_checksum;
+			}
 			break;
-		
+
 		case IPMI_CH_PROTOCOL_TMODE: {		/* Terminal Mode */
 			IPMI_TERMINAL_MODE_RESPONSE *tm_resp = ( IPMI_TERMINAL_MODE_RESPONSE * )&( req_ws->pkt_out );
 			IPMI_TERMINAL_MODE_REQUEST *tm_req = ( IPMI_TERMINAL_MODE_REQUEST * )&( req_ws->pkt_in );
@@ -1196,7 +1196,7 @@ fru_read_complete( void *ws, int status )
 				- TERM_MODE_RESP_MAX_DATA_LEN + pkt->hdr.resp_data_len;
 			}
 			break;
-		
+
 		case IPMI_CH_PROTOCOL_ICMB:		/* ICMB v1.0 */
 		case IPMI_CH_PROTOCOL_SMB:		/* IPMI on SMSBus */
 		case IPMI_CH_PROTOCOL_KCS:		/* KCS System Interface Format */
@@ -1207,9 +1207,9 @@ fru_read_complete( void *ws, int status )
 			dputstr( DBG_IPMI | DBG_ERR, "ipmi_process_pkt: unsupported protocol\n" );
 			break;
 	}
-	
+
 	ws_free( fru_ws );
-	ws_set_state( req_ws, WS_ACTIVE_MASTER_WRITE );	
+	ws_set_state( req_ws, WS_ACTIVE_MASTER_WRITE );
 }
 
 
@@ -1235,7 +1235,7 @@ init_fru_cache( void )
 /*
  *    SEL Device Commands
  *	For System Event Log Devices
- *	
+ *
  *    Mandatory Commands
  *    	Get SEL Info
  *    	Get SEL Entry
@@ -1250,7 +1250,7 @@ init_fru_cache( void )
 
 /*======================================================================*/
 /* BMC MESSAGE BRIDGING
- 
+
 Message Bridging Mechanism by Source and Destination
 								BMC tracks
 						Delivery	pending
@@ -1267,7 +1267,7 @@ Interface to IPMB
 
 Response from IPMB to any channel except 	BMC LUN 00b 	yes
 System Interface
- 
+
 Request from any channel (except System 	Send Message 	yes
 Interface) to PCI Management Bus
 
@@ -1286,7 +1286,7 @@ Response from Serial to LAN 			BMC LUN 00b 	yes
 
 
 /*======================================================================*/
-/* 
+/*
  * BMC Device and Messaging Commands
  */
 /*======================================================================*/
@@ -1300,17 +1300,17 @@ IPMB. With IPMI 1.5, these mechanisms have been extended to support delivering I
 active connections / sessions on any IPMI Messaging media connected to the BMC.
 There are three mechanisms for bridging messages between different media connected to the BMC, depending on
 what the target of the message is:
-• BMC LUN 10b is used for delivering messages to the System Interface. The BMC automatically routes any
+â€¢ BMC LUN 10b is used for delivering messages to the System Interface. The BMC automatically routes any
 messages it receives via LUN 10b to the Receive Message Queue.
-• Send Message command from System Interface is used for delivering messages to other channels, such as
-the IPMB. The messages appear on the channel as if they’ve come from BMC LUN 10b. Thus, if the
+â€¢ Send Message command from System Interface is used for delivering messages to other channels, such as
+the IPMB. The messages appear on the channel as if theyâ€™ve come from BMC LUN 10b. Thus, if the
 message is a request message, the response will go to BMC LUN 10b and the BMC will automatically place
 the response into the Receive Message Queue for retrieval. System software is responsible for matching the
-response up with the original request, thus the ‘No Tracking’ setting in the Send Message command is used.
-• Send Message command with response tracking. This format of Send Message command is used with
+response up with the original request, thus the â€˜No Trackingâ€™ setting in the Send Message command is used.
+â€¢ Send Message command with response tracking. This format of Send Message command is used with
 response tracking for bridging request messages to all other channels except when the System Interface is the
 source or destination of the message.
-*/ 
+*/
 void
 ipmi_send_message_cmd( IPMI_PKT *pkt )
 {
@@ -1319,7 +1319,7 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 	unsigned short destination_protocol, destination_medium;
 	IPMI_WS *target_ws;
 	uchar seq;
-	
+
 	dputstr( DBG_IPMI | DBG_INOUT, "ipmi_send_message_cmd: ingress\n" );
 
 	if( !( target_ws = ws_alloc() ) ) {
@@ -1328,9 +1328,9 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 		return;
 	}
 
-	/* Two things to check: 1) the target should be a valid 
-	 * channel 2) Bridging is only specified for delivering 
-	 * messages between different channels */	
+	/* Two things to check: 1) the target should be a valid
+	 * channel 2) Bridging is only specified for delivering
+	 * messages between different channels */
 	if( ( req->channel_number != IPMI_CH_NUM_PRIMARY_IPMB )
 	 || ( req->channel_number != IPMI_CH_NUM_CONSOLE )
 	 || ( req->channel_number != IPMI_CH_NUM_SYS_INTERFACE )
@@ -1347,12 +1347,12 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 		default:
 			break;
 	}
-	
+
 	/*
-        Each interface has a channel number that is used when 
+        Each interface has a channel number that is used when
         configuring the channel and for routing messages between
-        channels. Only the channel number assignments for the 
-        primary IPMB and the System Interface are fixed, the 
+        channels. Only the channel number assignments for the
+        primary IPMB and the System Interface are fixed, the
         assignment of other channel numbers can vary on a per-platform
         basis. Software uses a Get Channel Info command to determine
         what types of channels are available and what channel number
@@ -1369,10 +1369,10 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 	/* copy the request data payload to the outgoing packet */
 	memcpy( target_ws->pkt_out, &( req->message_data ), sizeof( SEND_MESSAGE_CMD_REQ) );
 
-	/* indicate which ws we should use to send back the response to the 
+	/* indicate which ws we should use to send back the response to the
 	 * bridged command */
 	target_ws->bridged_ws = pkt->hdr.ws; /* used to find the send message ws */
-	
+
 	/* completion function is called when target_ws is successfully sent */
 	target_ws->ipmi_completion_function = ipmi_send_message_cmd_complete;
 	target_ws->outgoing_medium = destination_medium;
@@ -1383,7 +1383,7 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 			ipmi_get_next_seq( &seq );
 			( ( IPMI_IPMB_REQUEST * )( target_ws->pkt_out ) )->req_seq = seq;
 			target_ws->seq_out = seq;
-			/* set completion code so that we immediately send 
+			/* set completion code so that we immediately send
 			 * a response to the Send Message command */
 			resp->completion_code = CC_NORMAL;
 			pkt->hdr.resp_data_len = 0;
@@ -1391,12 +1391,12 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 		case IPMI_CH_PROTOCOL_TMODE:
 			resp->completion_code = CC_DEST_UNAVAILABLE;
 			pkt->hdr.resp_data_len = 0;
-			/* TODO: not supported at this time - fix. We need this to bridge 
+			/* TODO: not supported at this time - fix. We need this to bridge
 			 * console & sys i/f
 			if( tmode_bridging_ws ) {
-				// someone is using the channel, can't process right now 
+				// someone is using the channel, can't process right now
 				resp->completion_code = CC_RQST_DATA_LEN_INVALID;
-				resp->count_returned = 0;			
+				resp->count_returned = 0;
 				pkt->hdr.resp_data_len = 1;
 				return;
 			}
@@ -1413,12 +1413,12 @@ ipmi_send_message_cmd( IPMI_PKT *pkt )
 	dputstr( DBG_IPMI | DBG_LVL1, "ipmi_send_message_cmd: sending message\n" );
 
 	/* dispatch the target_ws: change ws state, work list processing will do the rest */
-	ws_set_state( target_ws, WS_ACTIVE_MASTER_WRITE );				
+	ws_set_state( target_ws, WS_ACTIVE_MASTER_WRITE );
 }
 
 /*  This para from "- IPMI - IPMI v1.5 Addenda, Errata, and Clarifications
 Intelligent Platform Management Interface Specification v1.5, revision 1.1
-Addendum Document Revision 5 1/29/04". 
+Addendum Document Revision 5 1/29/04".
 
  When forwarding a response from IPMB to a different channel, only one header should be present in the response.
 When a request message is bridged to another channel by encapsulating it in a Send Message command (from a source
@@ -1435,10 +1435,10 @@ IPMB from a LAN channel. The BMC will immediately send a response to the Send Me
 The BMC will extract the encapsulated Get Device ID message content and format it as a Get Device ID request for
 IPMB. The target device on IPMB responds with a Get Device ID response message in IPMB format. The BMC takes
 the tracking information that was stored when the Send Message command was issued, and uses it to create a Get
-Device ID response in LAN format. The Responder’s address information in that response will be that of the BMC, not
+Device ID response in LAN format. The Responderâ€™s address information in that response will be that of the BMC, not
 of the device on IPMB that the request was targeted to.
  */
- 
+
 
 /* completion function is called when target_ws is successfully sent */
 void
@@ -1457,10 +1457,10 @@ ipmi_send_message_cmd_complete( void *target_ws, int status )
 			req_ws = (( IPMI_WS *)( target_ws ))->bridged_ws ;
 			ws_free( target_ws );
 
-			if( !req_ws ) 
+			if( !req_ws )
 				break;
-			
-			/* if this is bridge req there is a pending response */ 
+
+			/* if this is bridge req there is a pending response */
 			/* send back response */
 			req_ws->outgoing_protocol = req_ws->incoming_protocol;
 			req_ws->outgoing_medium = req_ws->incoming_medium;
@@ -1468,7 +1468,7 @@ ipmi_send_message_cmd_complete( void *target_ws, int status )
 				case IPMI_CH_PROTOCOL_IPMB: {
 					IPMI_IPMB_RESPONSE *ipmb_resp = ( IPMI_IPMB_RESPONSE * )&( req_ws->pkt_out );
 					IPMI_IPMB_REQUEST *ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_in );
-					
+
 //					ipmb_resp->requester_slave_addr = ipmb_req->requester_slave_addr;
 					requester_slave_addr = ipmb_req->requester_slave_addr;
 					ipmb_resp->netfn = ipmb_req->netfn + 1;
@@ -1482,14 +1482,14 @@ ipmi_send_message_cmd_complete( void *target_ws, int status )
 					/* The location of data_checksum field is bogus.
 					 * It's used as a placeholder to indicate that a checksum follows the data field.
 					 * The location of the data_checksum depends on the size of the data preceeding it.*/
-					ipmb_resp->data_checksum = 
-						ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr, 4 ); 
+					ipmb_resp->data_checksum =
+						ipmi_calculate_checksum( &ipmb_resp->responder_slave_addr, 4 );
 					req_ws->len_out = sizeof(IPMI_IPMB_RESPONSE) - IPMB_RESP_MAX_DATA_LEN;
 					/* Assign the checksum to it's proper location */
 					*( (uchar *)ipmb_resp + req_ws->len_out) = ipmb_resp->data_checksum;
-					}			
+					}
 					break;
-				
+
 				case IPMI_CH_PROTOCOL_TMODE: {		/* Terminal Mode */
 					IPMI_TERMINAL_MODE_RESPONSE *tm_resp = ( IPMI_TERMINAL_MODE_RESPONSE * )&( req_ws->pkt_out );
 					IPMI_TERMINAL_MODE_REQUEST *tm_req = ( IPMI_TERMINAL_MODE_REQUEST * )&( req_ws->pkt_in );
@@ -1502,7 +1502,7 @@ ipmi_send_message_cmd_complete( void *target_ws, int status )
 						- TERM_MODE_RESP_MAX_DATA_LEN;
 					}
 					break;
-				
+
 				case IPMI_CH_PROTOCOL_ICMB:		/* ICMB v1.0 */
 				case IPMI_CH_PROTOCOL_SMB:		/* IPMI on SMSBus */
 				case IPMI_CH_PROTOCOL_KCS:		/* KCS System Interface Format */
@@ -1513,7 +1513,7 @@ ipmi_send_message_cmd_complete( void *target_ws, int status )
 					dputstr( DBG_IPMI | DBG_ERR, "ipmi_send_message_cmd_complete: unsupported protocol\n" );
 					break;
 			}
-			
+
 			ws_set_state( req_ws, WS_ACTIVE_MASTER_WRITE );
 
 			break;

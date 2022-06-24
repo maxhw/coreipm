@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -39,12 +39,12 @@ support and contact details.
 
 
 
-void iopin_initialize( void ) 
+void iopin_initialize( void )
 {
 
 	/* Initialize Pin Connect Block */
-	PINSEL0 =  
-		PS0_P0_0_TXD_UART_0 |	
+	PINSEL0 =
+		PS0_P0_0_TXD_UART_0 |
 		PS0_P0_1_RXD_UART_0 |
 		PS0_P0_2_SCL_I2C_0  |
 		PS0_P0_3_SDA_I2C_0  |
@@ -59,9 +59,9 @@ void iopin_initialize( void )
 		PS0_P0_12_GPIO      |
 		PS0_P0_13_GPIO      |
 		PS0_P0_14_SDA_I2C_1 |
-		PS0_P0_15_AD_1_5;		
-	
-	PINSEL1 =  
+		PS0_P0_15_AD_1_5;
+
+	PINSEL1 =
 		PS1_P0_16_EINT_0    |
 		PS1_P0_17_GPIO      |
 		PS1_P0_18_GPIO      |
@@ -74,26 +74,26 @@ void iopin_initialize( void )
 		PS1_P0_28_AD_0_1    |
 		PS1_P0_29_AD_0_2    |
 		PS1_P0_30_AD_0_3    |
-		PS1_P0_31_AD_1_5;		
+		PS1_P0_31_AD_1_5;
 
-	PINSEL2 |= 
+	PINSEL2 |=
 		PS2_P1_16_25_GPIO   |	// Pins P1.25-16 are used as GPIO pins.
 		PS2_P1_26_36_DEBUG;	// Pins P1.36-26 are used as a Debug port.
 
 	/* Set the default value & direction of each GPIO port pin, setting the bit makes it an output.
 	 * Bit 0 - 31 in IO0DIR/IO0SET corresponds to P0.0 - P0.31.
-	 * Bit 0 - 31 in IO1DIR/IO1SET corresponds to P1.0 - P1.31. */ 
+	 * Bit 0 - 31 in IO1DIR/IO1SET corresponds to P1.0 - P1.31. */
 
 	iopin_clear( PAYLOAD_POWER );	// start with payload power off
 
 	IODIR0 = ( unsigned int ) (
-		P1		|	
+		P1		|
 		PAYLOAD_POWER	|
 		GPIO_2		|
 		GPIO_3		|
 		LED_1		|
-		BLUE_LED ); 
-	
+		BLUE_LED );
+
 	IODIR1 = ( unsigned int ) ( 0 );
 
 }

@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -91,14 +91,14 @@ Available addresses are therefore:
 #define	I2STAT_MASTER_DATA_RCVD_NOT_ACKED	0x58
 
 /* Slave receiver mode*/
-#define	I2STAT_SLAW_RCVD_ACKED			0x60	/* Own SLA+W has been received; 
+#define	I2STAT_SLAW_RCVD_ACKED			0x60	/* Own SLA+W has been received;
 							   ACK has been returned. */
 #define	I2STAT_ARB_LOST_SLAW_RCVD_ACKED		0x68
 #define	I2STAT_GENERAL_CALL_RCVD_ACKED		0x70
 #define	I2STAT_ARB_LOST_GENERAL_CALL_RCVD_ACKED	0x78
 #define	I2STAT_SLAVE_DATA_RCVD_ACKED		0x80
 #define	I2STAT_SLAVE_DATA_RCVD_NOT_ACKED	0x88	/* Previously addressed with own SLV
-							   address; DATA has been received; 
+							   address; DATA has been received;
 							   ACK has been returned. */
 #define	I2STAT_GENERAL_CALL_DATA_RCVD_ACKED	0x90
 #define	I2STAT_GENERAL_CALL_DATA_RCVD_NOT_ACKED	0x98
@@ -119,7 +119,7 @@ Available addresses are therefore:
 #define CH_POLICY_1_ONLY	0x1
 #define CH_POLICY_ALL		0x2
 
-/* Channel health */	
+/* Channel health */
 #define I2C_CH_STATE_DISABLED		0x0
 #define I2C_CH_STATE_ENABLED_FUNCTIONAL	0x1
 #define I2C_CH_STATE_ENABLED_DEGRADED	0x2

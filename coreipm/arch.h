@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -30,14 +30,14 @@ support and contact details.
 #endif
 
 // Interrupt Enable register (VICIntEnable) bit allocation
-					// Bit   
-#define IER_USB		0x400000	// [22]  
-#define IER_ADC1	0x200000	// [21]  
-#define IER_BOD		0x100000	// [20]  
-#define IER_I2C1	0x080000	// [19]  
-#define IER_ADC0	0x040000	// [18]  
-#define IER_EINT3	0x020000	// [17]  
-#define IER_EINT2	0x010000	// [16]  
+					// Bit
+#define IER_USB		0x400000	// [22]
+#define IER_ADC1	0x200000	// [21]
+#define IER_BOD		0x100000	// [20]
+#define IER_I2C1	0x080000	// [19]
+#define IER_ADC0	0x040000	// [18]
+#define IER_EINT3	0x020000	// [17]
+#define IER_EINT2	0x010000	// [16]
 
 #define IER_EINT1	0x008000	// [15]
 #define IER_EINT0	0x004000	// [14]
@@ -58,13 +58,13 @@ support and contact details.
 #define IER_WDT		0x000001	// [00]
 
 /* INTERRUPT SOURCES */
-#define IS_USB		22  
-#define IS_ADC1		21  
-#define IS_BOD		20  
-#define IS_I2C1		19  
-#define IS_ADC0		18  
-#define IS_EINT3	17  
-#define IS_EINT2	16  
+#define IS_USB		22
+#define IS_ADC1		21
+#define IS_BOD		20
+#define IS_I2C1		19
+#define IS_ADC0		18
+#define IS_EINT3	17
+#define IS_EINT2	16
 
 #define IS_EINT1	15
 #define IS_EINT0	14
@@ -89,9 +89,9 @@ support and contact details.
 
 
 /* INTERRUPT DISABLE/ENABLE MACROS
- * 
+ *
  * Usage:
- * 
+ *
  * 	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
  * 	DISABLE_INTERRUPTS;
  * 	.
@@ -100,8 +100,8 @@ support and contact details.
  */
 #define CURRENT_INTERRUPT_MASK	VICIntEnable
 //#define DISABLE_INTERRUPTS	( VICIntEnClr = 0xFFFFFFFF )		// disable all interrupts handled by VIC
-//#define ENABLE_INTERRUPTS(mask)	( VICIntEnable = mask ) 
-#define DISABLE_INTERRUPTS	
+//#define ENABLE_INTERRUPTS(mask)	( VICIntEnable = mask )
+#define DISABLE_INTERRUPTS
 #define ENABLE_INTERRUPTS(mask)
 
 /*======================================================================*/

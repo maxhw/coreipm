@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 200a-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -47,7 +47,7 @@ and ending with the last byte (data byte N). Once the SPI host issues this comma
 expander1 will access the I2C-bus slave device and start sending the I2C-bus data
 bytes.
 When the I2C-bus write transaction has successfully finished, and interrupt is generated
-on the INT pin, and the ‘transaction completed’ status can be read in I2CStat.
+on the INT pin, and the â€˜transaction completedâ€™ status can be read in I2CStat.
 Note that the third byte sent by the host is the device I2C-bus slave address. The
 expander will ignore the least significant bit so a write will always be performed
 even if the least significant bit is a 1.
@@ -63,7 +63,7 @@ Read N bytes from I2C-bus slave device
 Once the host issues this command, the expander will start an I2C-bus read
 transaction on the I2C-bus to the specified slave address. Once the data is received, the
 expander will place this data in the receiver buffer, and will generate an interrupt on
-the INT pin. The ‘transaction completed’ status can be read in the I2CStat. Note that the
+the INT pin. The â€˜transaction completedâ€™ status can be read in the I2CStat. Note that the
 data is not returned until a read buffer command is performed.
 */
 #define EXP_CMD_I2C_READ		0x01
@@ -78,8 +78,8 @@ I2C-bus read after write
 Once the host issues this command, the expander will start a write transaction on
 the I2C-bus to the specified slave address. Once the data is written, the expander
 will read data from the specified slave, place the data in the Receiver Buffer and generate
-an interrupt on the INT pin. The ‘transaction completed’ status can be read in I2CStat.
-Note that the data is not returned until a ‘read buffer’ command is performed.
+an interrupt on the INT pin. The â€˜transaction completedâ€™ status can be read in I2CStat.
+Note that the data is not returned until a â€˜read bufferâ€™ command is performed.
 */
 #define EXP_CMD_I2C_READ_AFTER_WRITE	0x02
 
@@ -91,7 +91,7 @@ Read buffer
 +---------+--------+-----+--------+
 When the host issues a Read Buffer command, the expander will return the data in
 the read buffer on the MISO pin. Note that the Read Buffer will be overwritten if an
-additional ‘Read N bytes’ or a ‘Read after write’ command is executed before the Read
+additional â€˜Read N bytesâ€™ or a â€˜Read after writeâ€™ command is executed before the Read
 Buffer command.
 */
 #define EXP_CMD_READ_BUFFER		0x06
@@ -223,7 +223,7 @@ address
 /*
 Programmable IO port configuration register (IOConfig)
 ------------------------------------------------------
-Pins GPIO0 to GPIO3 may be configured by software to one of two types. These are: 
+Pins GPIO0 to GPIO3 may be configured by software to one of two types. These are:
 push-pull, and input-only. Two configuration bits per pin, located in the
 IOConfig register, select the IO type for each pin. For SC18IS601, GPIO3 is
 non-existent.
@@ -240,7 +240,7 @@ IOx.1	IOx.0 	Pin configuration
 I/O pins state register (IOState)
 ---------------------------------
 When read, this register returns the actual state of all programmable and
-quasi-bidirectional I/O pins. When written, each register bit will be 
+quasi-bidirectional I/O pins. When written, each register bit will be
 transferred to the corresponding I/O pin programmed as output.
 
 IOState - I/O pins state register (address 0x01) bit description
@@ -260,9 +260,9 @@ Bit 	Symbol 	Description
 /*
 I2C-bus address register (I2CAdr)
 ---------------------------------
-The contents of the register represents the device’s own I2C-bus address. The most
+The contents of the register represents the deviceâ€™s own I2C-bus address. The most
 significant bit corresponds to the first bit received from the I2C-bus after a START
-condition. The least significant bit is not used, but should be programmed with a ‘0’.
+condition. The least significant bit is not used, but should be programmed with a â€˜0â€™.
 I2CAdr is not needed for device operation, but should be configured so that its address
 does not conflict with an I2C-bus device address used by the bus master.
 */
@@ -301,8 +301,8 @@ time-out oscillator frequency can be determined using the following formula:
 
 frequency = CLKIN / 128
 
-This oscillator is fed into a 16-bit down counter. The down counter’s lower nine bits are
-loaded with ‘1’, while the upper seven bits are loaded with the contents of I2CTO.
+This oscillator is fed into a 16-bit down counter. The down counterâ€™s lower nine bits are
+loaded with â€˜1â€™, while the upper seven bits are loaded with the contents of I2CTO.
 */
 
 /*
@@ -327,7 +327,7 @@ the expander and an I2C-bus slave device.
 				        slave has not acknowledged the byte that
 					has just been transmitted by the expander.
 					An interrupt is generated on INT. */
-#define EXP_I2C_BUSY		0xF3 /* I2C-bus busy. The expander is busy 
+#define EXP_I2C_BUSY		0xF3 /* I2C-bus busy. The expander is busy
 					performing an I2C-bus transaction, no
 				       	new transaction should be initiated by
 				       	the host. No interrupt is generated. */

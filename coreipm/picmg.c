@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -102,7 +102,7 @@ void picmg_get_ipmb_link_info( IPMI_PKT * );
 
 
 /*======================================================================*/
-/*    AdvancedTCAÆ and PICMGÆ specific request commands
+/*    AdvancedTCA¬Æ and PICMG¬Æ specific request commands
  *
  *    Mandatory Commands
  * 	Get PICMG Properties
@@ -127,8 +127,8 @@ picmg_process_command( IPMI_PKT *pkt )
 {
 #ifdef PICMG
 	PICMG_CMD_RESP	*resp = ( PICMG_CMD_RESP * )pkt->resp;
-	/* Ignore checking PICMG Identifier for the time being. 
-	 * Indicates that this is a PICMGÆ-defined group
+	/* Ignore checking PICMG Identifier for the time being.
+	 * Indicates that this is a PICMG¬Æ-defined group
 	 * extension command. A value of 00h shall be used.
 	 */
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_process_command: ingress\n" );
@@ -230,7 +230,7 @@ picmg_process_command( IPMI_PKT *pkt )
 			resp->completion_code = CC_INVALID_CMD;
 			resp->picmg_id = PICMG_ID;
 			pkt->hdr.resp_data_len = 0;
-    			break;	
+    			break;
 	} /* end switch */
 #endif
 }
@@ -247,19 +247,19 @@ picmg_get_picmg_properties( IPMI_PKT *pkt )
 	resp->picmg_id = PICMG_ID;
 	resp->picmg_extension_ver_minor = 1;
 	resp->picmg_extension_ver_major = 2;
-	/* PICMG Extension Version. Indicates the version of PICMGÆ extensions 
+	/* PICMG Extension Version. Indicates the version of PICMG¬Æ extensions
 	   implemented by the IPM Controller.
 	   [7:4] = BCD encoded minor version
 	   [3:0] = BCD encoded major version
-	   This implementation is compliant with version 2.1 of the PICMGÆ 
-	   extensions. IPM Controllers implementing the extensions as 
-	   defined by this specification shall report a value of 12h.The 
+	   This implementation is compliant with version 2.1 of the PICMG¬Æ
+	   extensions. IPM Controllers implementing the extensions as
+	   defined by this specification shall report a value of 12h.The
 	   value 00h is reserved. */
 	resp->max_fru_dev_id = MAX_FRU_DEV_ID;
 	/* Max FRU Device ID. The numerically largest FRU Device ID for the
 	   Managed FRUs implemented by this IPM Controller, excluding FRU
 	   Device IDs reserved at the top of the range for special purposes,
-	   as detailed in Table 3-10, ìReserved FRU Device IDs.î */
+	   as detailed in Table 3-10, ‚ÄúReserved FRU Device IDs.‚Äù */
 	resp->ipmc_fru_dev_id = 0;
 	/* FRU Device ID for IPM Controller. Indicates a FRU Device ID for the
 	   FRU containing the IPM Controller. IPM Controllers implementing the
@@ -270,25 +270,25 @@ picmg_get_picmg_properties( IPMI_PKT *pkt )
 
 /*
  * picmg_get_address_info()
- * 
+ *
  Each IPM Controller that supports an alternative interface besides IPMB also
- implements two variations of the command. Variation one is that support for 
- Request data bytes 2 - 5 are not required. The second variation is that 
- Request bytes 3 - 5 are not required. When the IPM Controller receives the 
- message without byte 2 and beyond, it defaults FRU Device ID to the FRU number 
- that holds the IPM Controller (always 0 under this specification). When bytes 
- 3 - 5 are missing, the IPM Controller returns address information about the 
- local IPM Controller and the FRU located at the FRU Device ID. This provides 
- a method for the host interface to retrieve information such as the deviceís 
- IPMB address. This data is needed for the host interface to do a ìSend Messageî
- or ìGet Messageî.
+ implements two variations of the command. Variation one is that support for
+ Request data bytes 2 - 5 are not required. The second variation is that
+ Request bytes 3 - 5 are not required. When the IPM Controller receives the
+ message without byte 2 and beyond, it defaults FRU Device ID to the FRU number
+ that holds the IPM Controller (always 0 under this specification). When bytes
+ 3 - 5 are missing, the IPM Controller returns address information about the
+ local IPM Controller and the FRU located at the FRU Device ID. This provides
+ a method for the host interface to retrieve information such as the device‚Äôs
+ IPMB address. This data is needed for the host interface to do a ‚ÄúSend Message‚Äù
+ or ‚ÄúGet Message‚Äù.
  */
 void
 picmg_get_address_info( IPMI_PKT *pkt )
 {
 	GET_ADDRESS_INFO_CMD_REQ	*req = ( GET_ADDRESS_INFO_CMD_REQ * )pkt->req;
 	GET_ADDRESS_INFO_CMD_RESP	*resp = ( GET_ADDRESS_INFO_CMD_RESP * )pkt->resp;
-	unsigned		cmd_len = pkt->hdr.req_data_len + 1; 
+	unsigned		cmd_len = pkt->hdr.req_data_len + 1;
 	unsigned char		cc = CC_NORMAL, fru, i, found = 0;
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_get_address_info: ingress\n" );
@@ -305,8 +305,8 @@ picmg_get_address_info( IPMI_PKT *pkt )
 			}
 		}
 	} else if ( cmd_len < 4 ) {
-		/*  variation 2: the IPM Controller returns address information 
-		 *  about the local IPM Controller and the FRU located at the 
+		/*  variation 2: the IPM Controller returns address information
+		 *  about the local IPM Controller and the FRU located at the
 		 *  FRU Device ID.
 		 */
 		for( i = 0; i < NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES; i++ ) {
@@ -318,14 +318,14 @@ picmg_get_address_info( IPMI_PKT *pkt )
 	} else {
 		/* full command - implemented only for shelf controllers */
 
-		/* req->addr_key is is the address to look-up in the table. This field is 
-		   required if Address Key Type is present. This holds a Hardware Address, 
+		/* req->addr_key is is the address to look-up in the table. This field is
+		   required if Address Key Type is present. This holds a Hardware Address,
 		   IPMB address, or Site Number depending on what is in the Address Key Type. */
 
-		switch( req->addr_key_type ) {	
+		switch( req->addr_key_type ) {
 			/* Address Key Type. This defines the type of address
 			   that is being provided in the Address Key field. */
-			
+
 			case AKT_HW_ADDR:
 				/* Hardware Address. This is an address
 				   assigned with hardware signals from
@@ -337,7 +337,7 @@ picmg_get_address_info( IPMI_PKT *pkt )
 					}
 				}
 				break;
-				
+
 			case AKT_IPMB0_ADDR:	/* IPMB-0 Address */
 				for( i = 0; i < NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES; i++ ) {
 					if( picmg_address_info_table[i].ipmb0_addr == req->addr_key ) {
@@ -346,12 +346,12 @@ picmg_get_address_info( IPMI_PKT *pkt )
 					}
 				}
 				break;
-				
-			case AKT_PHYS_ADDR:	
-				/* Physical Address. This is an address that 
+
+			case AKT_PHYS_ADDR:
+				/* Physical Address. This is an address that
 				   defines the physical location of a FRU; consists
 				   of Site Type and Site Number. */
-				/* req->site_type is required is also required 
+				/* req->site_type is required is also required
 				   to further qualify the match if Address Key
 				   Type is a Physical Address. */
 				for( i = 0; i < NUM_PICMG_ADDRESS_INFO_TABLE_ENTRIES; i++ ) {
@@ -361,7 +361,7 @@ picmg_get_address_info( IPMI_PKT *pkt )
 					}
 				}
 				break;
-			case AKT_RESERVED:	/* Reserved for PICMGÆ 2.9. */
+			case AKT_RESERVED:	/* Reserved for PICMG¬Æ 2.9. */
 			default:
 				break;
 		}
@@ -370,15 +370,15 @@ picmg_get_address_info( IPMI_PKT *pkt )
 	/* fill in the response */
 	if( found ) {
 		resp->completion_code = CC_NORMAL;	/* Completion Code. */
-		resp->picmg_id = PICMG_ID;	/* PICMG Identifier. Indicates that this 
-					   is a PICMGÆ-defined group extension
+		resp->picmg_id = PICMG_ID;	/* PICMG Identifier. Indicates that this
+					   is a PICMG¬Æ-defined group extension
 					   command. A value of 00h shall be used. */
 		resp->hw_addr = picmg_address_info_table[i].hw_addr;		/* Hardware Address. */
 		resp->ipmb0_addr = picmg_address_info_table[i].ipmb0_addr;
 		/* IPMB-0 Address. Indicates the IPMB address for IPMB-0, if implemented. For
 		   PICMG 2.9. a value of FFh indicates that IPMB-0 is not implemented. */
-		resp->reserved = 0xFF;		/* Reserved. Shall have a value of FFh. 
-					   Other values reserved in PICMGÆ 2.9. */
+		resp->reserved = 0xFF;		/* Reserved. Shall have a value of FFh.
+					   Other values reserved in PICMG¬Æ 2.9. */
 		resp->fru_dev_id =  picmg_address_info_table[i].fru_dev_id;
 		resp->site_id = picmg_address_info_table[i].site_id;
 		resp->site_type = SITE_TYPE_ATCA;			/* Site Type. */
@@ -393,7 +393,7 @@ picmg_get_address_info( IPMI_PKT *pkt )
    Called at power-up
    - validate the Hardware Address
    - turn on BLUE LED
-   - set state to M1 
+   - set state to M1
    - register function to detect Handle Switch state changes
 */
 void
@@ -429,7 +429,7 @@ picmg_m1_state( unsigned fru_id )
 
 	/* turn on the BLUE LED */
 	gpio_led_on( GPIO_FRU_LED_BLUE );
-	
+
 	/* announce presence in the shelf by sending a hot swap event msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
 	msg.evt_msg_rev = IPMI_EVENT_MESSAGE_REVISION;
@@ -449,18 +449,18 @@ picmg_m1_state( unsigned fru_id )
 	}
 }
 
-/* 
+/*
    Once the Insertion Criteria Met condition exists, the FRU transitions to the
    M2 state if the "locked" bit is not set.
    - announce presence in the Shelf
-   - blink BLUE LED at Long Blink rate to indicate to the operator that the 
+   - blink BLUE LED at Long Blink rate to indicate to the operator that the
      new FRU has contacted the Shelf Manager and is waiting to be activated.
-     
+
    While in M2, the FRU awaits permission from the Shelf Manager to transition
    to M3 (Activation In Progress).
 
    Note: this function may be called in interrupt context.
-  
+
 */
 void
 picmg_m2_state( unsigned fru_id )
@@ -472,8 +472,8 @@ picmg_m2_state( unsigned fru_id )
 	fru[fru_id].state = FRU_STATE_M2_ACTIVATION_REQUEST;
 
 	/* blink blue LED at long blink rate */
-	gpio_led_blink( GPIO_FRU_LED_BLUE, LONG_BLINK_ON, LONG_BLINK_OFF, 0 );	
-	
+	gpio_led_blink( GPIO_FRU_LED_BLUE, LONG_BLINK_ON, LONG_BLINK_OFF, 0 );
+
 	/* announce presence in the shelf by sending a hot swap event msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
 	msg.evt_msg_rev = IPMI_EVENT_MESSAGE_REVISION;
@@ -483,7 +483,7 @@ picmg_m2_state( unsigned fru_id )
 	msg.evt_data1 = 0xa << 4 | FRU_STATE_M2_ACTIVATION_REQUEST;
 	msg.evt_data2 = STATE_CH_NORMAL << 4 | FRU_STATE_M1_INACTIVE;
 	msg.evt_data3 = controller_fru_dev_id;
-	
+
 	/* dispatch message */
 	ipmi_send_event_req( ( unsigned char * )&msg, sizeof( FRU_HOT_SWAP_EVENT_MSG_REQ ), 0 );
 }
@@ -499,20 +499,20 @@ picmg_m2_state( unsigned fru_id )
    wishes to deactivate. The BLUE LED begins to blink at the Short Blink rate, indicating to the
    operator that deactivation has been requested. Since the FRU might be carrying a high availability
    function that cannot be shut down, the Shelf/System Manager determines if it is valid for the FRU
-   to deactivate. Normally, the request is granted and the Shelf Manager sends a ìSet FRU Activation
-   (Deactivate FRU)î command to allow the FRU to begin deactivation. During the time the FRU is
-   in the M5 state, the Payload functionality is not impacted. That is, from the Payloadís perspective,
+   to deactivate. Normally, the request is granted and the Shelf Manager sends a ‚ÄúSet FRU Activation
+   (Deactivate FRU)‚Äù command to allow the FRU to begin deactivation. During the time the FRU is
+   in the M5 state, the Payload functionality is not impacted. That is, from the Payload‚Äôs perspective,
    M4 and M5 are equivalent.
    When the FRU receives the deactivation command, it moves on to the M6 state, and does whatever
-   steps are necessary to shut down the FRUís Payload gracefully. The BLUE LED continues to blink
+   steps are necessary to shut down the FRU‚Äôs Payload gracefully. The BLUE LED continues to blink
    at the Short Blink rate. Prior to transitioning to the M1 state, the FRU must power down all Payload
    functions and stop using at least its E-Keying-governed interfaces. It is the responsibility of the
-   IPM Controller representing the FRU to do these tasks. The Shelf Manager does not send ìSet
-   Power Levelî or ìSet Port Stateî commands to the IPM Controller since the Shelf Manager does
+   IPM Controller representing the FRU to do these tasks. The Shelf Manager does not send ‚ÄúSet
+   Power Level‚Äù or ‚ÄúSet Port State‚Äù commands to the IPM Controller since the Shelf Manager does
    not know when the IPM Controller no longer needs the resources.
-   Once the FRUís Payload is powered down, it transitions to the M1 state and sends the event to the
+   Once the FRU‚Äôs Payload is powered down, it transitions to the M1 state and sends the event to the
    Shelf Manager. The BLUE LED is turned on. When the Shelf Manager receives the M6 to M1
-   transition event, it reclaims the FRUís power budget, removes the FRU from the SDR Repository,
+   transition event, it reclaims the FRU‚Äôs power budget, removes the FRU from the SDR Repository,
    and if the FRU is a Front Board, it disables all Ports on other Front Boards that share an interface
    with this Front Board.
    At some point after the FRU enters M1, it most likely is extracted from the Shelf. Most of the time,
@@ -525,15 +525,15 @@ void
 picmg_handle_switch_state_change( uchar state, uchar fru_id )
 {
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_handle_switch_state_change: ingress\n" );
-	
+
 	/* if the Insertion Criteria Met condition exists then we can go to M2 state */
 	if( gpio_get_handle_switch_state() == HANDLE_SWITCH_CLOSED ) {
 		picmg_m2_state( fru_id );
-	} 
+	}
 
 	/* clear locked bit */
 	fru[fru_id].locked = 0;
-	
+
 	if( state == HANDLE_SWITCH_CLOSED ) {	// Handle closed
 		switch( fru[fru_id].state ) {
 			case FRU_STATE_M0_NOT_INSTALLED:
@@ -586,31 +586,31 @@ picmg_handle_switch_state_change( uchar state, uchar fru_id )
 }
 
 /*
-   When the FRU receives the 
-   ìSet FRU Activation (Activate FRU)î command, it sets the Deactivation-Locked
-   bit of the Activation Policy to 1b (true). This is done to enable the approach 
-   to Extraction Criteria Met that is discussed in Section 3.2.4.1.2, ìTypical 
-   FRU extractionî.
+   When the FRU receives the
+   ‚ÄúSet FRU Activation (Activate FRU)‚Äù command, it sets the Deactivation-Locked
+   bit of the Activation Policy to 1b (true). This is done to enable the approach
+   to Extraction Criteria Met that is discussed in Section 3.2.4.1.2, ‚ÄúTypical
+   FRU extraction‚Äù.
    Once the FRU reaches the M3 state, it sends the M2 to M3 event to the Shelf
-   Manager and waits for the Shelf Manager to begin power and/or cooling 
-   negotiation (see Section 3.9, ìShelf power and coolingî). At this point, the
+   Manager and waits for the Shelf Manager to begin power and/or cooling
+   negotiation (see Section 3.9, ‚ÄúShelf power and cooling‚Äù). At this point, the
    BLUE LED is turned off. The Shelf Manager determines the proper power allocation
-   and sends a ìSet Power Levelî command to inform the FRU of the power budget it
-   has been allocated. The M3 state is also the place where the Shelf Manager 
+   and sends a ‚ÄúSet Power Level‚Äù command to inform the FRU of the power budget it
+   has been allocated. The M3 state is also the place where the Shelf Manager
    computes the E-Keying requirement; however, the FRU can transition to M4 prior
    to having received its EKeying. Though E-Keys are computed in M3, the E-keys
-   may be read earlier in the FRUís life cycle (i.e., in either M2 or M3). When 
-   the Shelf Manager figures out which E-Keying to enable for the FRU, it sends 
-   ìSet Port Stateî command(s) to inform the FRU of the enabled and disabled Ports
-   (see Section 3.7, ìElectronic Keyingî).
-   The FRU determines when it begins using the power budget, enabling the Port 
-   interfaces, and when it transitions to the M4 state. It might transition to M4 
-   as soon as power is applied or it might wait until it has received all of its 
-   Port enables or disables. When the FRUís activation is complete, it sends an 
+   may be read earlier in the FRU‚Äôs life cycle (i.e., in either M2 or M3). When
+   the Shelf Manager figures out which E-Keying to enable for the FRU, it sends
+   ‚ÄúSet Port State‚Äù command(s) to inform the FRU of the enabled and disabled Ports
+   (see Section 3.7, ‚ÄúElectronic Keying‚Äù).
+   The FRU determines when it begins using the power budget, enabling the Port
+   interfaces, and when it transitions to the M4 state. It might transition to M4
+   as soon as power is applied or it might wait until it has received all of its
+   Port enables or disables. When the FRU‚Äôs activation is complete, it sends an
    M3 to M4 event to inform the Shelf Manager that it is now active.
-   Once a FRU has reached the M4 state, the Shelf Managerís job becomes monitoring
-   the FRU for health related events and, for each Front Board, managing changes 
-   to the E-Keying based on insertion or extraction of other Front Boards that 
+   Once a FRU has reached the M4 state, the Shelf Manager‚Äôs job becomes monitoring
+   the FRU for health related events and, for each Front Board, managing changes
+   to the E-Keying based on insertion or extraction of other Front Boards that
    share an interface with that Front Board.
    */
 void
@@ -646,7 +646,7 @@ picmg_set_fru_activation( IPMI_PKT *pkt )
 				pkt->hdr.resp_data_len = 0;
 				break;
 		}
-	} 
+	}
 	else {
 		cc = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
@@ -673,7 +673,7 @@ picmg_m3_state( unsigned fru_id )
 	gpio_led_off( GPIO_FRU_LED_BLUE );
 
 	fru[fru_id].deactivation_locked = 1;
-		
+
 	/* send transition msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
 	msg.evt_msg_rev = IPMI_EVENT_MESSAGE_REVISION;
@@ -695,7 +695,7 @@ picmg_m4_state( unsigned fru_id )
 	FRU_HOT_SWAP_EVENT_MSG_REQ msg;
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_m4_state: ingress\n" );
-	
+
 	fru[fru_id].state = FRU_STATE_M4_ACTIVE;
 
 	/* architecture dependent - adjust power level */
@@ -712,8 +712,8 @@ picmg_m4_state( unsigned fru_id )
 					   OEM code in Event Data 3)
 					   [3:0] = Current State  */
 	msg.evt_data2 = 0;		/* Event Data 2
-					   [7:4] = Cause of state change. 
-					   See Table 3-20, ìCause of State Change values,î 
+					   [7:4] = Cause of state change.
+					   See Table 3-20, ‚ÄúCause of State Change values,‚Äù
 					   for values.
 					   [3:0] = Previous State */
 	msg.evt_data3 = 0;		/* Event Data 3
@@ -733,11 +733,11 @@ picmg_m5_state( unsigned fru_id )
 	FRU_HOT_SWAP_EVENT_MSG_REQ msg;
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_m5_state: ingress\n" );
-	
+
 	fru[fru_id].state = FRU_STATE_M5_DEACTIVATION_REQUEST;
 
 	/* blink blue LED at short blink rate */
-	gpio_led_blink( GPIO_FRU_LED_BLUE, SHORT_BLINK_ON, SHORT_BLINK_OFF, 0 );	
+	gpio_led_blink( GPIO_FRU_LED_BLUE, SHORT_BLINK_ON, SHORT_BLINK_OFF, 0 );
 
 	/* send transition msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
@@ -750,8 +750,8 @@ picmg_m5_state( unsigned fru_id )
 					   OEM code in Event Data 3)
 					   [3:0] = Current State  */
 	msg.evt_data2 = 0;		/* Event Data 2
-					   [7:4] = Cause of state change. 
-					   See Table 3-20, ìCause of State Change values,î 
+					   [7:4] = Cause of state change.
+					   See Table 3-20, ‚ÄúCause of State Change values,‚Äù
 					   for values.
 					   [3:0] = Previous State */
 	msg.evt_data3 = 0;		/* Event Data 3
@@ -771,14 +771,14 @@ picmg_m6_state( unsigned fru_id )
 	FRU_HOT_SWAP_EVENT_MSG_REQ msg;
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_m5_state: ingress\n" );
-	
+
 	/* set state */
 	fru[fru_id].state = FRU_STATE_M6_DEACTIVATION_IN_PROGRESS;
-	
+
 	/* architecture dependent - turn payload power off */
 
 	/* turn blue LED on */
-	gpio_led_on( GPIO_FRU_LED_BLUE );	
+	gpio_led_on( GPIO_FRU_LED_BLUE );
 
 	/* send transition msg to shelf controler */
 	msg.command = IPMI_SE_PLATFORM_EVENT;
@@ -791,8 +791,8 @@ picmg_m6_state( unsigned fru_id )
 					   OEM code in Event Data 3)
 					   [3:0] = Current State  */
 	msg.evt_data2 = 0;		/* Event Data 2
-					   [7:4] = Cause of state change. 
-					   See Table 3-20, ìCause of State Change values,î 
+					   [7:4] = Cause of state change.
+					   See Table 3-20, ‚ÄúCause of State Change values,‚Äù
 					   for values.
 					   [3:0] = Previous State */
 	msg.evt_data3 = 0;		/* Event Data 3
@@ -813,7 +813,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 	SET_POWER_LEVEL_CMD_REQ		*req = ( SET_POWER_LEVEL_CMD_REQ * )pkt->req;
 	SET_POWER_LEVEL_CMD_RESP	*resp = ( SET_POWER_LEVEL_CMD_RESP * )pkt->resp;
 	unsigned		power_level;
-	
+
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_set_power_level: ingress\n" );
 
 	resp->completion_code = CC_NORMAL;
@@ -821,7 +821,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 	pkt->hdr.resp_data_len = sizeof( SET_POWER_LEVEL_CMD_RESP ) - 1;
 
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
-		
+
 		switch( req->power_level ) {
 			case 0:
 				/* arch dependent - power off */
@@ -832,7 +832,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 			default:
 				if( req->set_present_level == 1 )
 					fru[req->fru_dev_id].power_level_steady_state = req->power_level;
-				
+
 				/* if activation in progress, change state to M4 */
 				if( fru[req->fru_dev_id].state == FRU_STATE_M4_ACTIVE ) {
 					picmg_m4_state( req->fru_dev_id );
@@ -840,7 +840,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 					/* architecture dependent - adjust power level */
 					// SET_POWER(fru[req->fru_dev_id].power_level_steady_state)
 				}
-				
+
 				break;
 		}
 	} else {
@@ -850,7 +850,7 @@ picmg_set_power_level( IPMI_PKT *pkt )
 }
 
 /*
-The ìSet FRU Activation Policyî command modifies the way a FRUís operational state transitions
+The ‚ÄúSet FRU Activation Policy‚Äù command modifies the way a FRU‚Äôs operational state transitions
 behave. The policy bits indicate whether the FRU is Locked or not and whether the FRU is
 Deactivation-Locked or not. Conceptually, the Locked bit is like a software equivalent of the
 Handle Switch. Similar to the situation with the hardware Handle Switch, the FRU cannot proceed
@@ -880,7 +880,7 @@ picmg_set_fru_activation_policy( IPMI_PKT *pkt )
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
-	}	
+	}
 }
 
 void
@@ -902,7 +902,7 @@ picmg_get_fru_activation_policy( IPMI_PKT *pkt )
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
-	}	
+	}
 }
 
 
@@ -957,7 +957,7 @@ picmg_get_fru_led_properties( IPMI_PKT *pkt )
 	resp->completion_code = CC_NORMAL;
 	resp->picmg_id = PICMG_ID;
 	pkt->hdr.resp_data_len = sizeof( GET_LED_PROPERTIES_CMD_RESP ) - 1;
-	
+
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
 		resp->gen_status_led_prop = fru[req->fru_dev_id].gen_status_led_prop;
 		resp->app_spec_led_count = fru[req->fru_dev_id].app_spec_led_count;
@@ -974,7 +974,7 @@ picmg_get_led_color_capabilities( IPMI_PKT *pkt )
 	GET_COLOR_CAPABILITIES_CMD_RESP		*resp = ( GET_COLOR_CAPABILITIES_CMD_RESP * )pkt->resp;
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_get_led_color_capabilities: ingress\n" );
-	
+
 	resp->completion_code = CC_NORMAL;
 	resp->picmg_id = PICMG_ID;
 	pkt->hdr.resp_data_len = sizeof( GET_COLOR_CAPABILITIES_CMD_RESP ) - 1;
@@ -991,9 +991,9 @@ picmg_get_led_color_capabilities( IPMI_PKT *pkt )
 
 /*
 This command is sent by the Shelf Manager to the IPM Controller to inform the
-device that it should ìlockî in its desired power and cooling levels.
+device that it should ‚Äúlock‚Äù in its desired power and cooling levels.
 Another step the IPM Controller takes when it receives the Compute Power Properties
-is that it prepares for the receipt of the ìGet Power Levelî command.
+is that it prepares for the receipt of the ‚ÄúGet Power Level‚Äù command.
 */
 void
 picmg_compute_power_properties( IPMI_PKT *pkt )
@@ -1006,11 +1006,11 @@ picmg_compute_power_properties( IPMI_PKT *pkt )
 	resp->completion_code = CC_NORMAL;
 	resp->picmg_id = PICMG_ID;
 	pkt->hdr.resp_data_len = sizeof( COMPUTE_POWER_PROPERTIES_CMD_RESP ) - 1;
-	
+
 	if ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) {
 		resp->num_slots = 1;
 		resp->ipm_location = 0;
-		// Compute power properties - Implementation dependent 
+		// Compute power properties - Implementation dependent
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
@@ -1043,40 +1043,40 @@ picmg_get_power_level( IPMI_PKT *pkt )
 	All other values reserved.
 	*/
 
-	/* Dynamic Power Configuration. Set to 1b if the FRU supports dynamic 
-	   reconfiguration of power (i.e., the Payload service is uninterrupted 
+	/* Dynamic Power Configuration. Set to 1b if the FRU supports dynamic
+	   reconfiguration of power (i.e., the Payload service is uninterrupted
 	   when power levels are altered). */
 	resp->dyn_power_config = fru[req->fru_dev_id].dyn_power_config;
 
 	// The following fields are Implementation dependent and should be filled accordingly
 
-	/* Power Level. When requesting ìSteady state power draw levelsî, 
-	   this represents the power level of the FRU. When requesting desired power 
+	/* Power Level. When requesting ‚ÄúSteady state power draw levels‚Äù,
+	   this represents the power level of the FRU. When requesting desired power
 	   levels, this represents the power level the FRU would like to have. */
 	// resp->power_level = fru[req->fru_dev_id].power_level[req->power_type];
 
 	/* Delay to Stable Power. This byte shall be written as 00h when Power
-	   Type is ìSteady state power draw levelsî or ìDesired steady state draw levelsî. 
+	   Type is ‚ÄúSteady state power draw levels‚Äù or ‚ÄúDesired steady state draw levels‚Äù.
 	   Otherwise, this byte shall contain the amount of time before power transitions
 	   from the early power levels to the normal levels. This value is returned in tenths
 	   of a second. */
 	resp->delay_to_stable_power = fru[req->fru_dev_id].delay_to_stable_power;
-	
-	/* Power Multiplier. This defines the number of tenths of a Watt by 
+
+	/* Power Multiplier. This defines the number of tenths of a Watt by
 	   which to multiply all values held in bytes 6 and beyond. This is
 	   included to allow a FRU that spans multiple locations to specify
 	   higher power draws. For instance, if this byte holds a 50, then bytes 6
 	   and beyond specify 5 W increments. */
 	resp->power_multiplier = fru[req->fru_dev_id].power_multiplier;
-	
+
 	/* Power Draw[1..N]. The first entry reflects the lowest level of power
-	   (minimum power level) used by the FRUís Payload.  Power Draw[Max]. 
-	   The last entry reflects the highest level of power used by the FRUís
+	   (minimum power level) used by the FRU‚Äôs Payload.  Power Draw[Max].
+	   The last entry reflects the highest level of power used by the FRU‚Äôs
 	   Payload. Everything is powered full capacity. Any bytes past the 6th
-	   byte are optional. The maximum value of N is 25 (which corresponds 
+	   byte are optional. The maximum value of N is 25 (which corresponds
 	   to a Max value of 20) due to IPMI message size restrictions. */
 	/* resp->power_draw[20]; */
-	
+
 }
 
 void
@@ -1108,31 +1108,31 @@ picmg_set_fru_led_state( IPMI_PKT *pkt )
 	resp->completion_code = CC_NORMAL;
 	pkt->hdr.resp_data_len = sizeof( SET_FRU_LED_STATE_CMD_RESP ) - 1;
 
-	if( ( req->fru_dev_id > MAX_FRU_DEV_ID ) || 
+	if( ( req->fru_dev_id > MAX_FRU_DEV_ID ) ||
 			( ( req->led_id > 3) && ( req->led_id != 0xff ) ) ) {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
-	
-	/* LED ID assignments (as defined in Section 2.2.8, ìLEDsî */
-	/* 
+
+	/* LED ID assignments (as defined in Section 2.2.8, ‚ÄúLEDs‚Äù */
+	/*
 	 * LED_BLUE		0x00
 	 * LED1			0x01
 	 * LED2			0x02
 	 * LED3			0x03
-	 * LED_TEST_ALL		0xff	Lamp Test (All LEDs under 
+	 * LED_TEST_ALL		0xff	Lamp Test (All LEDs under
 	 * 				management control are addressed)
 	 */
 	if( LED_TEST_ALL == req->led_id ) {
 		led_mask = GPIO_FRU_LED_BLUE | GPIO_FRU_LED1 | GPIO_FRU_LED2 | GPIO_FRU_LED3;
 
-		fru[req->fru_dev_id].led_state[FRU_LED_BLUE].override_led_state_func = 
+		fru[req->fru_dev_id].led_state[FRU_LED_BLUE].override_led_state_func =
 			fru[req->fru_dev_id].led_state[FRU_LED1].override_led_state_func =
 			fru[req->fru_dev_id].led_state[FRU_LED2].override_led_state_func =
 			fru[req->fru_dev_id].led_state[FRU_LED3].override_led_state_func = req->led_function;
-		fru[req->fru_dev_id].led_state[FRU_LED_BLUE].override_state_on_duration = 
-			fru[req->fru_dev_id].led_state[FRU_LED1].override_state_on_duration = 
+		fru[req->fru_dev_id].led_state[FRU_LED_BLUE].override_state_on_duration =
+			fru[req->fru_dev_id].led_state[FRU_LED1].override_state_on_duration =
 			fru[req->fru_dev_id].led_state[FRU_LED2].override_state_on_duration =
 			fru[req->fru_dev_id].led_state[FRU_LED3].override_state_on_duration = req->on_duration;
 		fru[req->fru_dev_id].led_state[FRU_LED_BLUE].override_state_color =
@@ -1173,9 +1173,9 @@ picmg_set_fru_led_state( IPMI_PKT *pkt )
 			break;
 		case 0xFB:
 			/* FBh = LAMP TEST state. Turn on LED(s) specified in byte
-			 * 3 for duration specified in byte 5 (in hundreds of 
+			 * 3 for duration specified in byte 5 (in hundreds of
 			 * milliseconds) then return to the highest priority state. */
-			gpio_led_blink( led_mask, req->on_duration/10, req->led_function/10, 1 ); 
+			gpio_led_blink( led_mask, req->on_duration/10, req->led_function/10, 1 );
 			break;
 		case 0xFC:
 			/* FCh = LED state restored to Local Control state, the FRU_LED_STATE struct
@@ -1190,9 +1190,9 @@ picmg_set_fru_led_state( IPMI_PKT *pkt )
 					gpio_led_on( led_mask );
 				} else {
 					/* LED is blinking */
-					gpio_led_blink( led_mask, 
+					gpio_led_blink( led_mask,
 						fru[req->fru_dev_id].led_state[req->led_id].local_control_on_duration/10,
-						fru[req->fru_dev_id].led_state[req->led_id].local_control_led_func/10, 0 ); 
+						fru[req->fru_dev_id].led_state[req->led_id].local_control_led_func/10, 0 );
 				}
 			}
 			break;
@@ -1201,7 +1201,7 @@ picmg_set_fru_led_state( IPMI_PKT *pkt )
 			/* FDh-FEh Reserved */
 			break;
 		case 0xFF:
-			/* FFh = LED on override */ 
+			/* FFh = LED on override */
 			gpio_led_on( led_mask );
 			break;
 		default:
@@ -1209,19 +1209,19 @@ picmg_set_fru_led_state( IPMI_PKT *pkt )
 			 * is specified by the value of this byte and the on
 			 * duration is specified by the value of byte 5. Both
 			 * values specify the time in tens of milliseconds
-			 * (10 ms ñ2.5 s) */
-			gpio_led_blink( led_mask, req->on_duration/10, req->led_function/10, 0 ); 
+			 * (10 ms ‚Äì2.5 s) */
+			gpio_led_blink( led_mask, req->on_duration/10, req->led_function/10, 0 );
 			break;
 	}
-			
+
 	/* On-duration: LED on-time in tens of milliseconds if (1 = Byte 4 = FAh)
-	   Lamp Test time in hundreds of milliseconds if (Byte 4 = FBh. 
+	   Lamp Test time in hundreds of milliseconds if (Byte 4 = FBh.
 	   Lamp Test time value must be less than 128. Other values when Byte 4
 	   = FBh are reserved. Otherwise, this field is ignored and shall be set to 0h. */
 
 	/* Color when illuminated. This byte sets the override color when
-	   LED Function is 01hñFAh and FFh. This byte sets the Local Control
-	   color when LED Function is FCh. This byte may be ignored during 
+	   LED Function is 01h‚ÄìFAh and FFh. This byte sets the Local Control
+	   color when LED Function is FCh. This byte may be ignored during
 	   Lamp Test or may be used to control the color during the lamp test when
 	   LED Function is FBh. */
 
@@ -1240,7 +1240,7 @@ picmg_get_fru_led_state( IPMI_PKT *pkt )
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
-	resp->completion_code = CC_NORMAL;	
+	resp->completion_code = CC_NORMAL;
 	resp->picmg_id = PICMG_ID;
 	resp->led_states = fru[req->fru_dev_id].led_state[req->led_id].led_states;
 	resp->local_control_led_func = fru[req->fru_dev_id].led_state[req->led_id].local_control_led_func;
@@ -1292,7 +1292,7 @@ picmg_get_device_locator_rec_id( IPMI_PKT *pkt )
 
 	resp->record_id_LSB = fru[ req->fru_dev_id ].record_id_LSB;
 	resp->record_id_MSB = fru[ req->fru_dev_id ].record_id_MSB;
-	
+
 	resp->picmg_id = PICMG_ID;
 	resp->completion_code = CC_NORMAL;
 	pkt->hdr.resp_data_len = sizeof( GET_DEVICE_LOCATOR_RECORD_ID_CMD_RESP ) - 1;
@@ -1311,13 +1311,13 @@ picmg_set_port_state( IPMI_PKT *pkt )
 
 	// search for an entry that matches interface & channel_number
 	for( i = 0; i < NUM_LINK_INFO_ENTRIES; i++ ) {
-		if( link_info_table[i].entry_in_use 
-		  && ( link_info_table[i].link_info.interface == req->link_info.interface ) 
+		if( link_info_table[i].entry_in_use
+		  && ( link_info_table[i].link_info.interface == req->link_info.interface )
 		  && ( link_info_table[i].link_info.channel_number == req->link_info.channel_number ) ) {
 			found++;
-		} 	
+		}
 	}
-	
+
 	if( !found ) {
 		// use a free entry
 		for( i = 0; i < NUM_LINK_INFO_ENTRIES; i++ ) {
@@ -1326,8 +1326,8 @@ picmg_set_port_state( IPMI_PKT *pkt )
 			       link_info_table[i].entry_in_use = 1;
 			}
 		}
-	}	
-	
+	}
+
 	if( found ) {
 		link_info_table[i].link_info.link_grouping_id = req->link_info.link_grouping_id;
 		link_info_table[i].link_info.link_type_extension = req->link_info.link_type_extension;
@@ -1340,10 +1340,10 @@ picmg_set_port_state( IPMI_PKT *pkt )
 		resp->completion_code = CC_NORMAL;
 		pkt->hdr.resp_data_len = sizeof( PICMG_CMD_RESP ) - 1;
 	} else {
-		// did not find an entry and no free entries in link_info_table 
+		// did not find an entry and no free entries in link_info_table
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
 		pkt->hdr.resp_data_len = 0;
-	}		
+	}
 }
 
 void
@@ -1352,18 +1352,18 @@ picmg_get_port_state( IPMI_PKT *pkt )
 	GET_PORT_STATE_CMD_REQ	*req = ( GET_PORT_STATE_CMD_REQ * )pkt->req;
 	GET_PORT_STATE_CMD_RESP	*resp = ( GET_PORT_STATE_CMD_RESP * )pkt->resp;
 	int	i, found = 0;
-	
+
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_get_port_state: ingress\n" );
 
 	resp->picmg_id = PICMG_ID;
-	
+
 	// search for an entry that matches interface & channel_number
 	for( i = 0; i < NUM_LINK_INFO_ENTRIES; i++ ) {
-		if( link_info_table[i].entry_in_use 
-		  && ( link_info_table[i].link_info.interface == req->interface ) 
+		if( link_info_table[i].entry_in_use
+		  && ( link_info_table[i].link_info.interface == req->interface )
 		  && ( link_info_table[i].link_info.channel_number == req->channel_number ) ) {
 			found++;
-		} 	
+		}
 	}
 
 	if( found ) {
@@ -1397,19 +1397,19 @@ picmg_get_fan_speed_properties( IPMI_PKT *pkt )
 		/* Minimum Speed Level. This field describes the minimum setting that
 		   is accepted by the Set Fan Level command. */
 		resp->min_speed_level = fru_fan[req->fru_dev_id].min_speed_level;
-		
+
 		/* Maximum Speed Level. This field describes the maximum setting that
-		   is accepted by the Set Fan Level command. */	
+		   is accepted by the Set Fan Level command. */
 		resp->max_speed_level = fru_fan[req->fru_dev_id].max_speed_level;
-		
-		/* Normal Operating Level. This field represents the default 
+
+		/* Normal Operating Level. This field represents the default
 		   normal fan speed recommended by the fan manufacturer. */
 		resp->norm_operating_level = fru_fan[req->fru_dev_id].norm_operating_level;
-		
+
 		/* Fan Tray Properties. This field holds properties of the Fan Tray.
-		   [Bit 7] ñ Local Control Mode Supported.  This bit is set to 1b if the Fan
+		   [Bit 7] ‚Äì Local Control Mode Supported.  This bit is set to 1b if the Fan
 		   Tray supports automatic adjustment of the fan speed.
-		   [Bits 6:0] ñ Reserved. */
+		   [Bits 6:0] ‚Äì Reserved. */
 		resp->fan_tray_prop = fru_fan[req->fru_dev_id].fan_tray_prop;
 	} else {
 		resp->completion_code = CC_PARAM_OUT_OF_RANGE;
@@ -1430,12 +1430,12 @@ picmg_set_fan_level( IPMI_PKT *pkt )
 
 	dprintf( DBG_IPMI | DBG_INOUT, "picmg_set_fan_level: ingress\n" );
 
-	/* For Fan Level to be accepted, its value shall be: 
+	/* For Fan Level to be accepted, its value shall be:
 	   1) greater than or equal to Minimum Speed Level and
-	   less than or equal to Maximum Speed Level, or 
+	   less than or equal to Maximum Speed Level, or
 	   2) FEh (Emergency Shut Down) or 3) FFh (Local Control). */
-	if ( ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) && 
-			( (req->fan_level >= fru_fan[req->fru_dev_id].min_speed_level ) || 
+	if ( ( req->fru_dev_id < MAX_FRU_DEV_ID + 1 ) &&
+			( (req->fan_level >= fru_fan[req->fru_dev_id].min_speed_level ) ||
 			  (req->fan_level <= fru_fan[req->fru_dev_id].max_speed_level ) ) ) {
 		switch (req->fan_level ) {
 			case 0xFE:
@@ -1476,8 +1476,8 @@ picmg_get_fan_level( IPMI_PKT *pkt )
 		/* Override Fan Level indicates the fan level that the Shelf Manager
 		   has selected, which must be in the range Minimum Speed Level to
 		   Maximum Speed Level, or equal to FEh or FFh.
-		   FEh = Fan has been placed in ìEmergency Shut Downî by the 
-		   Shelf Manager 
+		   FEh = Fan has been placed in ‚ÄúEmergency Shut Down‚Äù by the
+		   Shelf Manager
 		   FFh = Fan operating in Local Control mode */
 		switch( fru_fan[req->fru_dev_id].fan_control ) {
 			case FAN_CONTROL_LOCAL:
@@ -1486,18 +1486,18 @@ picmg_get_fan_level( IPMI_PKT *pkt )
 			case FAN_CONTROL_OVERRIDE:
 				resp->override_fan_level = fru_fan[req->fru_dev_id].override_fan_level;
 				break;
-			case FAN_CONTROL_SHUTDOWN:	
+			case FAN_CONTROL_SHUTDOWN:
 				resp->override_fan_level = 0xFE;
 				break;
 		}
-		
+
 		/* Local Control Fan Level - This byte is optional if the Fan Tray does
 		   not support Local Control. When present, this byte always indicates
 		   the Local Control fan level as determined by the Fan Tray controller.
-		   When Local Control is supported, the actual fan level is: 
+		   When Local Control is supported, the actual fan level is:
 		   1) the value of this byte if Override Fan Level is FFh, or
-		   2) the larger of this byte and Override Fan Level, or 
-		   3) Emergency Shut Down if either Override Fan Level or this byte 
+		   2) the larger of this byte and Override Fan Level, or
+		   3) Emergency Shut Down if either Override Fan Level or this byte
 		      has a value FEh. */
 		resp->local_control_fan_level = fru_fan[req->fru_dev_id].local_control_fan_level;
 	} else {
@@ -1505,7 +1505,7 @@ picmg_get_fan_level( IPMI_PKT *pkt )
 		pkt->hdr.resp_data_len = 0;
 		return;
 	}
-	
+
 	resp->picmg_id = PICMG_ID;
 	resp->completion_code = CC_NORMAL;
 	pkt->hdr.resp_data_len = sizeof( GET_FAN_LEVEL_CMD_RESP ) - 1;
@@ -1517,7 +1517,7 @@ over a bused resource to and from a Board. A single command is used for all the 
 operations on all the bus types. The command values have different interpretations depending on
 whether the command is being sent from the Shelf Manager to a Board, or from a Board to the
 Shelf Manager.
-A Board wishing to use a bus sends a ìBused Resource Control (Request)î command to the Shelf
+A Board wishing to use a bus sends a ‚ÄúBused Resource Control (Request)‚Äù command to the Shelf
 Manager. If the Shelf Manager does not wish to grant the bus to the Board (e.g., for security
 reasons), it sends a Deny Status response to the Board. If the bus is available, the Shelf Manager
 returns a Status of Grant.
@@ -1531,7 +1531,7 @@ picmg_bused_resource_control( IPMI_PKT *pkt )
 }
 
 /*
-The ìGet IPMB Link Infoî command provides the mapping between the IPMB-0
+The ‚ÄúGet IPMB Link Info‚Äù command provides the mapping between the IPMB-0
 Link Number and the IPMB-0 Sensor Number. When provided an IPMB-0 Link Number, the
 command returns the IPMB-0 Sensor Number that is monitoring the associated IPMB-0 Link.
 Conversely, when provided the IPMB-0 Sensor Number, the command returns the associated

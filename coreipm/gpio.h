@@ -6,26 +6,26 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
 
 /* LED bit masks */
-#define GPIO_LED_0	0x01	
+#define GPIO_LED_0	0x01
 #define GPIO_LED_1	0x02
 #define GPIO_LED_2	0x04
 #define GPIO_LED_3	0x08
@@ -51,7 +51,7 @@ void gpio_led_off( unsigned led_mask );
 void gpio_all_leds_on( void );
 void gpio_all_leds_off( void );
 void gpio_toggle_activity_led( void );
-void gpio_led_blink( unsigned led_mask, 
+void gpio_led_blink( unsigned led_mask,
 	unsigned on_period, unsigned off_period, unsigned duration );
 void gpio_power_off( void );
 void gpio_power_on( void );

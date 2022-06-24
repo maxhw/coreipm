@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -36,7 +36,7 @@ support and contact details.
 #include "i2c.h"
 #include "event.h"
 #include "debug.h"
-#include "arch.h" 
+#include "arch.h"
 #include "ws.h"
 #include "stdio.h"
 #include "req.h"
@@ -99,35 +99,35 @@ unsigned discovery_cmd_retry_timer_handle;
 
 void module_init2( void );
 void cmd_complete( IPMI_WS *ws, int status );
-void send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state, 
+void send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state,
 		void( *completion_function )( void *, int ) );
-void send_get_device_id( uchar ipmi_ch, uchar dev_addr, 
+void send_get_device_id( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr, 
+void send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_read_fru_data( uchar ipmi_ch, uchar dev_addr, unsigned short offset, 
+void send_read_fru_data( uchar ipmi_ch, uchar dev_addr, unsigned short offset,
 		uchar count, void( *completion_function )( void *, int ) );
-void send_fru_control( uchar ipmi_ch, uchar dev_addr, uchar action, 
+void send_fru_control( uchar ipmi_ch, uchar dev_addr, uchar action,
 		void( *completion_function )( void *, int ) );
-void send_get_picmg_properties( uchar ipmi_ch, uchar dev_addr, 
+void send_get_picmg_properties( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_sensor_reading( uchar ipmi_ch, uchar dev_addr, uchar sensor_number, 
+void send_get_sensor_reading( uchar ipmi_ch, uchar dev_addr, uchar sensor_number,
 		void( *completion_function )( void *, int ) );
-void send_get_device_sdr_info( uchar ipmi_ch, uchar dev_addr, uchar operation, 
+void send_get_device_sdr_info( uchar ipmi_ch, uchar dev_addr, uchar operation,
 		void( *completion_function )( void *, int ) );
-void send_get_device_sdr( uchar ipmi_ch, uchar dev_addr, uchar rec_id, 
+void send_get_device_sdr( uchar ipmi_ch, uchar dev_addr, uchar rec_id,
 		void( *completion_function )( void *, int ) );
-void send_reserve_device_sdr_repository( uchar ipmi_ch, uchar dev_addr, 
+void send_reserve_device_sdr_repository( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_fru_led_properties( uchar ipmi_ch, uchar dev_addr, 
+void send_get_fru_led_properties( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_led_color_capabilities( uchar ipmi_ch, uchar dev_addr, uchar led_id, 
+void send_get_led_color_capabilities( uchar ipmi_ch, uchar dev_addr, uchar led_id,
 		void( *completion_function )( void *, int ) );
-void send_get_fru_led_state( uchar ipmi_ch, uchar dev_addr, 
+void send_get_fru_led_state( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_device_locator_record_id( uchar ipmi_ch, uchar dev_addr, 
+void send_get_device_locator_record_id( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
-void send_get_fru_control_capabilities( uchar ipmi_ch, uchar dev_addr, 
+void send_get_fru_control_capabilities( uchar ipmi_ch, uchar dev_addr,
 		void( *completion_function )( void *, int ) );
 
 void dump_outgoing( IPMI_WS *req_ws );
@@ -149,7 +149,7 @@ void discovery_cmd_retry( uchar *arg );
 #define IPMBL_TABLE_SIZE	27
 #define NUM_SLOTS		IPMBL_TABLE_SIZE
 
-uchar IPMBL_TABLE[IPMBL_TABLE_SIZE] = { 
+uchar IPMBL_TABLE[IPMBL_TABLE_SIZE] = {
 	0x70, 0x8A, 0x72, 0x8E, 0x92, 0x90, 0x74, 0x8C, 0x76, 0x98, 0x9C,
 	0x9A, 0xA0, 0xA4, 0x88, 0x9E, 0x86, 0x84, 0x78, 0x94, 0x7A, 0x96,
 	0x82, 0x80, 0x7C, 0x7E, 0xA2 };
@@ -162,7 +162,7 @@ typedef struct slot_info {
 SLOT_INFO slot_info[NUM_SLOTS] = {
 	{BP_0, 0}, {BP_1, 0}, {BP_2, 0}, {BP_3, 0}, {BP_4, 0}, {BP_5, 0},
        	{BP_6, 0}, {BP_7, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},
-		 {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, 
+		 {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},
 		 {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0}, {0, 0},
 		 {0, 0}, {0, 0}, {0, 0}
 };
@@ -294,7 +294,7 @@ poll_slots( void )
 			slot_info[i].amc_available = 0;
 		else
 			slot_info[i].amc_available = 1;
-			
+
 	}
 }
 
@@ -302,30 +302,30 @@ poll_slots( void )
 
 3.6.1 Typical Module insertion
 
-When the Moduleís Management Power is enabled, the BLUE LED turns on as soon 
+When the Module‚Äôs Management Power is enabled, the BLUE LED turns on as soon
 as possible.
 
 When the Module Handle in the Module is closed, the MMC sends a Module Hot Swap
-(Module Handle Closed) event message to the Carrier IPMC, as described in 
-Table†3-8, ìModule Hot Swap event message.î
+(Module Handle Closed) event message to the Carrier IPMC, as described in
+Table¬†3-8, ‚ÄúModule Hot Swap event message.‚Äù
 
-The Carrier IPMC sends a ìSet FRU LED Stateî command to the MMC with a request
+The Carrier IPMC sends a ‚ÄúSet FRU LED State‚Äù command to the MMC with a request
 to perform long blinks of the BLUE LED, indicating to the operator that the new
 Module is waiting to be activated.
 
-The Carrier IPMC reads the Moduleís Module Current Requirements record and 
+The Carrier IPMC reads the Module‚Äôs Module Current Requirements record and
 AdvancedMC Point-to-Point Connectivity record.
 
 If the Module FRU Information is invalid or if the Carrier cannot provide the
 necessary Payload Power then:
 
-The Carrier IPMC sends a ìSet FRU LED Stateî command to the MMC requesting the
-ìonî state for the BLUE LED. The FRU remains in M1.
+The Carrier IPMC sends a ‚ÄúSet FRU LED State‚Äù command to the MMC requesting the
+‚Äúon‚Äù state for the BLUE LED. The FRU remains in M1.
 
-On receipt of the ìSet FRU Activation (Activate FRU)î command by the Carrier 
-IPMC, designating a particular Module, the Carrier IPMC sends an M2 to M3 
+On receipt of the ‚ÄúSet FRU Activation (Activate FRU)‚Äù command by the Carrier
+IPMC, designating a particular Module, the Carrier IPMC sends an M2 to M3
 transition event message to the Shelf Manager on behalf of the Module and sends
-a ìset FRU LED Stateî command to the MMC with a request to turn off the BLUE LED.
+a ‚Äúset FRU LED State‚Äù command to the MMC with a request to turn off the BLUE LED.
 
 The Carrier IPMC enables Payload Power (PWR) for the Module.
 */
@@ -348,7 +348,7 @@ module_init( void )
 void
 module_init2( void )
 {
-	
+
 	// get our IPMB-L address
 	mcmc_ipmbl_address = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 
@@ -361,17 +361,17 @@ module_init2( void )
  * STATE CHANGE HANDLING
  *==============================================================*/
 /*
-REQ 3.55 When the Module Handle transitions to closed, the MMC shall 
+REQ 3.55 When the Module Handle transitions to closed, the MMC shall
 send a Module Hot Swap (Module Handle Closed) event message as described
-in Table†3-8, ìModule Hot Swap event message.î
+in Table¬†3-8, ‚ÄúModule Hot Swap event message.‚Äù
 
 REQ 3.56 When the Module Handle state transitions to open, the MMC shall
 send a Module Hot Swap (Module Handle Opened) event message as described
-in Table†3-8, ìModule Hot Swap event message.î
+in Table¬†3-8, ‚ÄúModule Hot Swap event message.‚Äù
 
-REQ 3.57MMCs shall periodically re-send Module Hot Swap event messages 
-until either a Command Completed Normally (00h) Completion Code has been 
-returned from the Carrier IPMC or the Module wants to send a new Module 
+REQ 3.57MMCs shall periodically re-send Module Hot Swap event messages
+until either a Command Completed Normally (00h) Completion Code has been
+returned from the Carrier IPMC or the Module wants to send a new Module
 Hot Swap event message.
 */
 
@@ -379,27 +379,27 @@ Hot Swap event message.
 /*
 3.6.2 Typical Module extraction
 
-The operator can initiate deactivation by pulling the Module Handle, which 
+The operator can initiate deactivation by pulling the Module Handle, which
 changes the state of the Module Handle to open. When the Module Handle in
-the Module is opened, the MMC in the Module sends a Module Hot Swap (Handle 
-Opened) event message to the Carrier IPMC (as described in Section†3-8, 
-ìModule Hot Swap event message.î )
+the Module is opened, the MMC in the Module sends a Module Hot Swap (Handle
+Opened) event message to the Carrier IPMC (as described in Section¬†3-8,
+‚ÄúModule Hot Swap event message.‚Äù )
 
-The IPMC in the Carrier sends a ìSet FRU LED Stateî command to the MMC 
-in the Module with a request to perform short blinks of the BLUE LED. 
+The IPMC in the Carrier sends a ‚ÄúSet FRU LED State‚Äù command to the MMC
+in the Module with a request to perform short blinks of the BLUE LED.
 This indicates to the operator that the Module is waiting to be deactivated.
 
-The Carrier IPMC now issues ìSet AMC Port State (Disable)î command(s) 
-for all Ports on the Module and for all Ports that connect to the Module. 
+The Carrier IPMC now issues ‚ÄúSet AMC Port State (Disable)‚Äù command(s)
+for all Ports on the Module and for all Ports that connect to the Module.
 This will disable all Ports associated with the Module about to be removed.
 
-When the Carrier IPMC has transitioned the Module to M6 state, the Carrier 
-IPMC sends a ìFRU Control (Quiesce)î command to the Module and awaits a 
+When the Carrier IPMC has transitioned the Module to M6 state, the Carrier
+IPMC sends a ‚ÄúFRU Control (Quiesce)‚Äù command to the Module and awaits a
 Module Hot Swap (Quiesced) event message from the MMC.
 
-Next, the Carrier IPMC disables the Moduleís Payload Power.
-the Carrier IPMC sends a ìSet FRU LED Stateî command to the MMC with a 
-request to turn on the BLUE LED. This indicates to the operator that 
+Next, the Carrier IPMC disables the Module‚Äôs Payload Power.
+the Carrier IPMC sends a ‚ÄúSet FRU LED State‚Äù command to the MMC with a
+request to turn on the BLUE LED. This indicates to the operator that
 the Module is ready to be safely extracted.
 
 The operator removes the Module.
@@ -416,10 +416,10 @@ Module MMC req. mandatory commands
 IPMI commands
 -------------
 Get Device ID
-Broadcast ìGet Device IDî[1]
+Broadcast ‚ÄúGet Device ID‚Äù[1]
 Set Event Receiver
 Get Event Receiver
-Platform Event (a.k.a. ìEvent Messageî)
+Platform Event (a.k.a. ‚ÄúEvent Message‚Äù)
 Get Device SDR Info
 Get Device SDR
 Reserve Device SDR Repository
@@ -445,56 +445,56 @@ Get Clock State
 */
 /*
 3.9.1.4 Set AMC Port State command
-The ìSet AMC Port Stateî command is used to enable or disable Ports associated with an
+The ‚ÄúSet AMC Port State‚Äù command is used to enable or disable Ports associated with an
 AdvancedMC Channel using Link Descriptor information from an AdvancedMC point-topoint
 connectivity record. The AMC specification does not mandate that drivers for LVDS
-Ports have the physical ability to be disabled or enabled. The ìSet AMC Port Stateî
+Ports have the physical ability to be disabled or enabled. The ‚ÄúSet AMC Port State‚Äù
 command contains Link information. The Link information could be used by Modules that
 provide a configurable interface. The Module could configure the interface to match the type
-used in the ìSet AMC Port Stateî command allowing for the creation of Modules that can be
+used in the ‚ÄúSet AMC Port State‚Äù command allowing for the creation of Modules that can be
 configured to support a variety of Fabric Interfaces. The MMC might receive this command
 at any time as other Modules are inserted into or extracted from the Carrier.
 
 
 3.9.1.5 Get AMC Port State command
-The ìGet AMC Port Stateî command provides a way to query the current Link, if any, on an
+The ‚ÄúGet AMC Port State‚Äù command provides a way to query the current Link, if any, on an
 AdvancedMC Channel. In the request, the AdvancedMC Channel ID is provided to the
 MMC. The MMC returns a response containing the state of that Link.
 
 3.9.2 Clock E-Keying
-By default, all AMC clocks and on-Carrier clock resources are in the 
+By default, all AMC clocks and on-Carrier clock resources are in the
 disabled state when the AMC Module or Carrier is initially activated.
 
 Requirements
-REQ 3.182 Carriers and Modules shall support the ìSet Clock Stateî command
-defined in Table†3-44, ì Set Clock State commandî for all implemented clocks.
+REQ 3.182 Carriers and Modules shall support the ‚ÄúSet Clock State‚Äù command
+defined in Table¬†3-44, ‚Äú Set Clock State command‚Äù for all implemented clocks.
 
-REQ 3.186 Carriers and Modules shall support the ìGet Clock Stateî command 
-defined in Table†3-45, ì Get Clock State command.î If the designated clock 
-resource has no clock enabled, Carriers and Modules shall indicate the clock 
-as ìDisabledî in the Clock State field.
+REQ 3.186 Carriers and Modules shall support the ‚ÄúGet Clock State‚Äù command
+defined in Table¬†3-45, ‚Äú Get Clock State command.‚Äù If the designated clock
+resource has no clock enabled, Carriers and Modules shall indicate the clock
+as ‚ÄúDisabled‚Äù in the Clock State field.
 
 3.10 Module Payload control
-The ìFRU Control Capabilitiesî Command provides a way to query which 
-specific options an AdvancedMC supports in the ìFRU Controlî command. These
+The ‚ÄúFRU Control Capabilities‚Äù Command provides a way to query which
+specific options an AdvancedMC supports in the ‚ÄúFRU Control‚Äù command. These
 capabilities are expected to be static throughout the life of the AdvancedMC.
-The ìFRU Control (Cold Reset)î variant is mandatory, so the corresponding 
-bit is marked reserved and the System Manager can assume that it is always 
+The ‚ÄúFRU Control (Cold Reset)‚Äù variant is mandatory, so the corresponding
+bit is marked reserved and the System Manager can assume that it is always
 supported.
 
-REQ 3.53 The ìGet Sensor Readingî command shall be implemented in the 
-MMC to enable the Carrier IPMC to determine the current state of the 
-Module. The Carrier IPMC can issue this command at any time to get 
+REQ 3.53 The ‚ÄúGet Sensor Reading‚Äù command shall be implemented in the
+MMC to enable the Carrier IPMC to determine the current state of the
+Module. The Carrier IPMC can issue this command at any time to get
 the sensor status. This command can also be used by a Carrier when it
-regains contact with a Module after a loss of contact (see Section†
-3.6.8, ìCommunication lost.î )
+regains contact with a Module after a loss of contact (see Section¬†
+3.6.8, ‚ÄúCommunication lost.‚Äù )
 */
 
 void
 send_amc_set_port_state( uchar ipmi_ch, uchar dev_addr, void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	SET_AMC_PORT_STATE_CMD_REQ *req;
@@ -503,16 +503,16 @@ send_amc_set_port_state( uchar ipmi_ch, uchar dev_addr, void( *completion_functi
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( SET_AMC_PORT_STATE_CMD_REQ * )pkt->req;	
+	req = ( SET_AMC_PORT_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( SET_AMC_PORT_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_SET_AMC_PORT_STATE;
 	req->picmg_id = 0;
 	req->link_grp_id = 0;		/* Link Grouping ID */
@@ -535,13 +535,13 @@ send_amc_set_port_state( uchar ipmi_ch, uchar dev_addr, void( *completion_functi
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -567,7 +567,7 @@ void
 send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state, void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	SET_FRU_LED_STATE_CMD_REQ *req;
@@ -576,16 +576,16 @@ send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state, void( *c
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( SET_FRU_LED_STATE_CMD_REQ * )pkt->req;	
+	req = ( SET_FRU_LED_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( SET_FRU_LED_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_SET_FRU_LED_STATE;
 	req->picmg_id = 0;
 	req->fru_dev_id = 0;
@@ -609,7 +609,7 @@ send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state, void( *c
 			break;
 	}
 	req->color = 0xff;		// use default color
-	
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_GROUP_EXTENSION_REQ;
 	ipmb_req->requester_lun = 0;
@@ -621,13 +621,13 @@ send_set_fru_led_state( uchar ipmi_ch, uchar dev_addr, uchar led_state, void( *c
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &( ipmb_req->requester_slave_addr ), 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &( ipmb_req->requester_slave_addr ),
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -667,7 +667,7 @@ void
 send_get_device_id( uchar ipmi_ch, uchar dev_addr, void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GENERIC_CMD_REQ *req;
@@ -676,16 +676,16 @@ send_get_device_id( uchar ipmi_ch, uchar dev_addr, void( *completion_function )(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GENERIC_CMD_REQ * )pkt->req;	
+	req = ( GENERIC_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GENERIC_CMD_REQ ) - 1;
-	
+
 	req->command = IPMI_CMD_GET_DEVICE_ID;
 
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
@@ -699,13 +699,13 @@ send_get_device_id( uchar ipmi_ch, uchar dev_addr, void( *completion_function )(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -722,7 +722,7 @@ void
 send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr, void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_FRU_INVENTORY_AREA_INFO_CMD_REQ *req;
@@ -731,16 +731,16 @@ send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr, void( *completi
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_FRU_INVENTORY_AREA_INFO_CMD_REQ * )pkt->req;	
+	req = ( GET_FRU_INVENTORY_AREA_INFO_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_FRU_INVENTORY_AREA_INFO_CMD_REQ ) - 1;
-	
+
 	req->command = IPMI_STO_CMD_GET_FRU_INVENTORY_AREA_INFO;
 
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
@@ -754,13 +754,13 @@ send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr, void( *completi
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -775,14 +775,14 @@ send_get_fru_inventory_area_info( uchar ipmi_ch, uchar dev_addr, void( *completi
 
 
 void
-send_read_fru_data( uchar ipmi_ch, 
-		uchar dev_addr, 
-		unsigned short offset, 
-		uchar count, 
+send_read_fru_data( uchar ipmi_ch,
+		uchar dev_addr,
+		unsigned short offset,
+		uchar count,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	READ_FRU_DATA_CMD_REQ *req;
@@ -791,16 +791,16 @@ send_read_fru_data( uchar ipmi_ch,
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( READ_FRU_DATA_CMD_REQ * )pkt->req;	
+	req = ( READ_FRU_DATA_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( READ_FRU_DATA_CMD_REQ ) - 1;
-	
+
 	req->command = IPMI_STO_CMD_READ_FRU_DATA;
 	req->fru_dev_id = 0;
 	req->fru_inventory_offset_lsb = ( uchar )offset;
@@ -818,13 +818,13 @@ send_read_fru_data( uchar ipmi_ch,
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -839,13 +839,13 @@ send_read_fru_data( uchar ipmi_ch,
 
 
 void
-send_fru_control( uchar ipmi_ch, 
-		uchar dev_addr, 
-		uchar action, 
+send_fru_control( uchar ipmi_ch,
+		uchar dev_addr,
+		uchar action,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	FRU_CONTROL_CMD_REQ *req;
@@ -854,11 +854,11 @@ send_fru_control( uchar ipmi_ch,
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( FRU_CONTROL_CMD_REQ * )pkt->req;	
+	req = ( FRU_CONTROL_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
@@ -868,7 +868,7 @@ send_fru_control( uchar ipmi_ch,
 	req->picmg_id = 0;
 	req->fru_dev_id = 0;
 	req->fru_control_options = action;
-	
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -880,13 +880,13 @@ send_fru_control( uchar ipmi_ch,
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -901,12 +901,12 @@ send_fru_control( uchar ipmi_ch,
 
 
 void
-send_get_picmg_properties( uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_picmg_properties( uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_PICMG_PROPERTIES_CMD_REQ *req;
@@ -915,19 +915,19 @@ send_get_picmg_properties( uchar ipmi_ch,
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_PICMG_PROPERTIES_CMD_REQ * )pkt->req;	
+	req = ( GET_PICMG_PROPERTIES_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_PICMG_PROPERTIES_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_PICMG_PROPERTIES;
 	req->picmg_id = 0;
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -939,13 +939,13 @@ send_get_picmg_properties( uchar ipmi_ch,
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -960,14 +960,14 @@ send_get_picmg_properties( uchar ipmi_ch,
 
 
 void
-send_get_sensor_reading( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
-		uchar sensor_number, 
+send_get_sensor_reading(
+		uchar ipmi_ch,
+		uchar dev_addr,
+		uchar sensor_number,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_SENSOR_READING_CMD_REQ *req;
@@ -976,19 +976,19 @@ send_get_sensor_reading(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_SENSOR_READING_CMD_REQ * )pkt->req;	
+	req = ( GET_SENSOR_READING_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_SENSOR_READING_CMD_REQ ) - 1;
-	
+
 	req->command = IPMI_SE_CMD_GET_SENSOR_READING;
 	req->sensor_number = sensor_number;
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_EVENT_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1000,13 +1000,13 @@ send_get_sensor_reading(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1020,18 +1020,18 @@ send_get_sensor_reading(
 }
 
 void
-send_get_device_sdr_info( 
+send_get_device_sdr_info(
 		uchar ipmi_ch,
 		uchar dev_addr,
-		uchar operation, /* 1b = Get SDR count. This returns 
+		uchar operation, /* 1b = Get SDR count. This returns
 				   the total number of SDRs in the device.
-				   0b = Get Sensor count. This returns the 
+				   0b = Get Sensor count. This returns the
 				   number of sensors implemented on LUN this
 				   command was addressed to */
-		void( *completion_function )( void *, int ) ) 
+		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_DEVICE_SDR_INFO_CMD *req;
@@ -1040,19 +1040,19 @@ send_get_device_sdr_info(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_DEVICE_SDR_INFO_CMD * )pkt->req;	
+	req = ( GET_DEVICE_SDR_INFO_CMD * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_DEVICE_SDR_INFO_CMD ) - 1;
-	
+
 	req->command = IPMI_SE_CMD_GET_DEVICE_SDR_INFO;
 	req->operation = operation;
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_EVENT_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1064,13 +1064,13 @@ send_get_device_sdr_info(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1083,15 +1083,15 @@ send_get_device_sdr_info(
 	ws_set_state( req_ws, WS_ACTIVE_MASTER_WRITE );
 }
 
-void	
-send_get_device_sdr( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
-		uchar rec_id, 
+void
+send_get_device_sdr(
+		uchar ipmi_ch,
+		uchar dev_addr,
+		uchar rec_id,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_DEVICE_SDR_CMD *req;
@@ -1100,28 +1100,28 @@ send_get_device_sdr(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_DEVICE_SDR_CMD * )pkt->req;	
+	req = ( GET_DEVICE_SDR_CMD * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_DEVICE_SDR_CMD ) - 1;
-	
+
 	req->command = IPMI_SE_CMD_GET_DEVICE_SDR;
 	req->reservation_id_lsb = 0;    /* Reservation ID. LS Byte. Only required
 				   	   for partial reads with a non-zero
-				   	   ëOffset into recordí field. Use 0000h
+				   	   ‚ÄòOffset into record‚Äô field. Use 0000h
 				   	   for reservation ID otherwise. */
 	req->reservation_id_msb = 0;	/* Reservation ID. MS Byte. */
-	req->record_id_lsb = 0;		/* Record ID of record to Get, LS Byte. 
+	req->record_id_lsb = 0;		/* Record ID of record to Get, LS Byte.
 					   0000h returns the first record. */
 	req->record_id_msb = 0;		/* Record ID of record to Get, MS Byte */
 	req->offset = 0;		/* Offset into record */
 	req->bytes_to_read = 0xff;	/* Bytes to read. FFh means read entire record. */
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_EVENT_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1133,13 +1133,13 @@ send_get_device_sdr(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1153,13 +1153,13 @@ send_get_device_sdr(
 }
 
 void
-send_reserve_device_sdr_repository( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_reserve_device_sdr_repository(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GENERIC_CMD_REQ *req;
@@ -1168,18 +1168,18 @@ send_reserve_device_sdr_repository(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GENERIC_CMD_REQ * )pkt->req;	
+	req = ( GENERIC_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GENERIC_CMD_REQ ) - 1;
-	
+
 	req->command = IPMI_SE_CMD_RSV_DEVICE_SDR_REPOSITORY;
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_EVENT_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1191,13 +1191,13 @@ send_reserve_device_sdr_repository(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1211,13 +1211,13 @@ send_reserve_device_sdr_repository(
 }
 
 void
-send_get_fru_led_properties( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_fru_led_properties(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_LED_PROPERTIES_CMD_REQ *req;
@@ -1226,20 +1226,20 @@ send_get_fru_led_properties(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_LED_PROPERTIES_CMD_REQ * )pkt->req;	
+	req = ( GET_LED_PROPERTIES_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_LED_PROPERTIES_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_FRU_LED_PROPERTIES;
 	req->picmg_id = 0;
-	req->fru_dev_id = 0; 
-		
+	req->fru_dev_id = 0;
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1251,13 +1251,13 @@ send_get_fru_led_properties(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1271,14 +1271,14 @@ send_get_fru_led_properties(
 }
 
 void
-send_get_led_color_capabilities( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
-		uchar led_id, 
+send_get_led_color_capabilities(
+		uchar ipmi_ch,
+		uchar dev_addr,
+		uchar led_id,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_LED_COLOR_CAPABILITIES_CMD_REQ *req;
@@ -1287,21 +1287,21 @@ send_get_led_color_capabilities(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_LED_COLOR_CAPABILITIES_CMD_REQ * )pkt->req;	
+	req = ( GET_LED_COLOR_CAPABILITIES_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_LED_COLOR_CAPABILITIES_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_LED_COLOR;
 	req->picmg_id = 0;
-	req->fru_dev_id = 0; 
+	req->fru_dev_id = 0;
 	req->led_id = led_id;
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1313,13 +1313,13 @@ send_get_led_color_capabilities(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1334,13 +1334,13 @@ send_get_led_color_capabilities(
 
 
 void
-send_get_fru_led_state( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_fru_led_state(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_FRU_LED_STATE_CMD_REQ *req;
@@ -1349,22 +1349,22 @@ send_get_fru_led_state(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_FRU_LED_STATE_CMD_REQ * )pkt->req;	
+	req = ( GET_FRU_LED_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_FRU_LED_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_FRU_LED_STATE;
 	req->picmg_id = 0;
 	req->fru_dev_id = 0;		/* FRU Device ID. */
 	req->led_id = 0;		/* LED ID - FFh Reserved */
 
-		
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1376,13 +1376,13 @@ send_get_fru_led_state(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1397,13 +1397,13 @@ send_get_fru_led_state(
 
 
 void
-send_get_device_locator_record_id( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_device_locator_record_id(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ *req;
@@ -1412,16 +1412,16 @@ send_get_device_locator_record_id(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ * )pkt->req;	
+	req = ( GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_DEVICE_LOCATOR_RECORD_ID_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_DEVICE_LOCATOR_REC_ID;
 	req->picmg_id = 0;
 	req->fru_dev_id = 0;		/* FRU Device ID. */
@@ -1437,13 +1437,13 @@ send_get_device_locator_record_id(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1458,31 +1458,31 @@ send_get_device_locator_record_id(
 
 
 void
-send_get_amc_port_state( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_amc_port_state(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
-	GET_AMC_PORT_STATE_CMD_REQ *req; 
+	GET_AMC_PORT_STATE_CMD_REQ *req;
 	IPMI_IPMB_REQUEST *ipmb_req;
-	
+
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_AMC_PORT_STATE_CMD_REQ * )pkt->req;	
+	req = ( GET_AMC_PORT_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_AMC_PORT_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_AMC_PORT_STATE;
 	req->picmg_id = 0;
 	req->amc_channel_id = 0;
@@ -1501,13 +1501,13 @@ send_get_amc_port_state(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1522,16 +1522,16 @@ send_get_amc_port_state(
 
 
 void
-send_set_amc_port_state( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_set_amc_port_state(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
-	SET_AMC_PORT_STATE_CMD_REQ *req; 
+	SET_AMC_PORT_STATE_CMD_REQ *req;
 	IPMI_IPMB_REQUEST *ipmb_req;
 
 	if( !( req_ws = ws_alloc() ) ) {
@@ -1541,12 +1541,12 @@ send_set_amc_port_state(
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( SET_AMC_PORT_STATE_CMD_REQ * )pkt->req;	
+	req = ( SET_AMC_PORT_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( SET_AMC_PORT_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_SET_AMC_PORT_STATE;
 	req->picmg_id = 0;
 	req->link_grp_id = 0;		/* Link Grouping ID */
@@ -1558,11 +1558,11 @@ send_set_amc_port_state(
 	req->lane_0_bit_flag = 0;	/* Lane 0 Bit Flag */
 	req->amc_channel_id = 0;	/* AMC Channel ID */
 	req->state = 0;			/* 00h = Disable, 01h = Enable */
-	req->on_carrier_dev_id = 0;	/* On-Carrier device ID. 
+	req->on_carrier_dev_id = 0;	/* On-Carrier device ID.
 					   Identifies the on-Carrier device
 					   to which the described AMC Channel
 					   is connected. */
-	
+
 	ipmb_req->requester_slave_addr = module_get_i2c_address( I2C_ADDRESS_LOCAL );
 	ipmb_req->netfn = NETFN_PICMG_REQ;
 	ipmb_req->requester_lun = 0;
@@ -1574,13 +1574,13 @@ send_set_amc_port_state(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1595,31 +1595,31 @@ send_set_amc_port_state(
 
 
 void
-send_set_amc_clock_state( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_set_amc_clock_state(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	SET_CLOCK_STATE_CMD_REQ	*req;
 	IPMI_IPMB_REQUEST *ipmb_req;
-	
+
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( SET_CLOCK_STATE_CMD_REQ * )pkt->req;	
+	req = ( SET_CLOCK_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( SET_CLOCK_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_SET_CLOCK_STATE;
 	req->picmg_id = 0;
 	req->clock_id = 0;
@@ -1643,13 +1643,13 @@ send_set_amc_clock_state(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1663,13 +1663,13 @@ send_set_amc_clock_state(
 }
 
 void
-send_get_amc_clock_state( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
+send_get_amc_clock_state(
+		uchar ipmi_ch,
+		uchar dev_addr,
 		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	GET_CLOCK_STATE_CMD_REQ	*req;
@@ -1678,16 +1678,16 @@ send_get_amc_clock_state(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( GET_CLOCK_STATE_CMD_REQ * )pkt->req;	
+	req = ( GET_CLOCK_STATE_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( GET_CLOCK_STATE_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_GET_CLOCK_STATE;
 	req->picmg_id = 0;
 	req->clock_id = 0;
@@ -1704,13 +1704,13 @@ send_get_amc_clock_state(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1724,13 +1724,13 @@ send_get_amc_clock_state(
 }
 
 void
-send_get_fru_control_capabilities( 
-		uchar ipmi_ch, 
-		uchar dev_addr, 
-		void( *completion_function )( void *, int ) ) 
+send_get_fru_control_capabilities(
+		uchar ipmi_ch,
+		uchar dev_addr,
+		void( *completion_function )( void *, int ) )
 {
 	IPMI_PKT *pkt;
-	IPMI_WS *req_ws;	
+	IPMI_WS *req_ws;
 	uchar seq;
 	uchar responder_slave_addr;
 	FRU_CONTROL_CAPABILITIES_CMD_REQ *req;
@@ -1739,16 +1739,16 @@ send_get_fru_control_capabilities(
 	if( !( req_ws = ws_alloc() ) ) {
 		return;
 	}
-	
+
 	pkt = &( req_ws->pkt );
 	ipmb_req = ( IPMI_IPMB_REQUEST * )&( req_ws->pkt_out );
 	pkt->req = ( IPMI_CMD_REQ * )&( ipmb_req->command ) ;
-	req = ( FRU_CONTROL_CAPABILITIES_CMD_REQ * )pkt->req;	
+	req = ( FRU_CONTROL_CAPABILITIES_CMD_REQ * )pkt->req;
 	ipmi_get_next_seq( &seq );
 
 	pkt->hdr.ws = (char *)req_ws;
 	pkt->hdr.req_data_len = sizeof( FRU_CONTROL_CAPABILITIES_CMD_REQ ) - 1;
-	
+
 	req->command = ATCA_CMD_FRU_CONTROL_CAPABILITIES;
 	req->picmg_id = 0;
 	req->fru_dev_id = 0;		/* FRU Device ID. */
@@ -1764,13 +1764,13 @@ send_get_fru_control_capabilities(
 	/* The location of data_checksum field is bogus.
 	 * It's used as a placeholder to indicate that a checksum follows the data field.
 	 * The location of the data_checksum depends on the size of the data preceeding it.*/
-	ipmb_req->data_checksum = 
-		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr, 
-			pkt->hdr.req_data_len + 3 ); 
-	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST ) 
+	ipmb_req->data_checksum =
+		ipmi_calculate_checksum( &ipmb_req->requester_slave_addr,
+			pkt->hdr.req_data_len + 3 );
+	req_ws->len_out = sizeof( IPMI_IPMB_REQUEST )
 				- IPMB_REQ_MAX_DATA_LEN  +  pkt->hdr.req_data_len;
 	/* Assign the checksum to it's proper location */
-	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum; 
+	*( ( uchar * )ipmb_req + req_ws->len_out - 1 ) = ipmb_req->data_checksum;
 
 	req_ws->ipmi_completion_function = completion_function;
 	req_ws->addr_out = dev_addr;
@@ -1786,8 +1786,8 @@ send_get_fru_control_capabilities(
 
 /*
  * cmd_complete()
- * 
- * Completion function 
+ *
+ * Completion function
  */
 void
 cmd_complete( IPMI_WS *ws, int status )
@@ -1804,50 +1804,50 @@ cmd_complete( IPMI_WS *ws, int status )
  * FRU CONTROL
  *==============================================================*/
 /*
-The ìFRU Controlî command provides base level control over the Modules 
-to the Carrier IPMC. Through this command, the Modules can be reset, 
+The ‚ÄúFRU Control‚Äù command provides base level control over the Modules
+to the Carrier IPMC. Through this command, the Modules can be reset,
 rebooted, instructed to quiesce, or have its diagnostics initiated. The
-implementation of these commands will vary, and allcommand variants with 
-the exception of the ìFRU Control (Cold Reset)î and ìFRU Control
-(Quiesce)î are optional. The ìFRU Controlî command does not directly change the
+implementation of these commands will vary, and allcommand variants with
+the exception of the ‚ÄúFRU Control (Cold Reset)‚Äù and ‚ÄúFRU Control
+(Quiesce)‚Äù are optional. The ‚ÄúFRU Control‚Äù command does not directly change the
 operational state of the Module as represented by the Carrier IPMC (which is typically M4 or
 FRU Active).
 
 Table 3-46 provides specifics for the FRU Control command.
 
 Requirements
-REQ 3.194 An MMC shall respond to the ìFRU Control Capabilitiesî command 
-defined in Table 3-24 of the PICMG3.0 specification by identifying the 
-optional capabilities of the ìFRU Controlî command that the Module supports.
+REQ 3.194 An MMC shall respond to the ‚ÄúFRU Control Capabilities‚Äù command
+defined in Table 3-24 of the PICMG3.0 specification by identifying the
+optional capabilities of the ‚ÄúFRU Control‚Äù command that the Module supports.
 
-REQ 3.100 The ìFRU Controlî command should not directly change Modulesí 
+REQ 3.100 The ‚ÄúFRU Control‚Äù command should not directly change Modules‚Äô
 FRU states.
 
-REQ 3.101 Receipt of a ìFRU Control (Cold Reset)î command shall
+REQ 3.101 Receipt of a ‚ÄúFRU Control (Cold Reset)‚Äù command shall
 cause a hardware reset to its Payload, similar to a power on reset.
 
-REQ 3.102 Receipt of a ìFRU Control (Warm Reset)î command on a Module 
-which supports this command shall cause the Moduleís Payload to be reset
+REQ 3.102 Receipt of a ‚ÄúFRU Control (Warm Reset)‚Äù command on a Module
+which supports this command shall cause the Module‚Äôs Payload to be reset
 to a stable condition, attempting to preserve its operational state. If
-this command variant is unsupported, the MMC shall return the ìInvalid 
-data field in Request (CCh)î Completion Code.
+this command variant is unsupported, the MMC shall return the ‚ÄúInvalid
+data field in Request (CCh)‚Äù Completion Code.
 
-REQ 3.103 Receipt of a ìFRU Control (Graceful Reboot)î command on a Module 
-which supports this command shall initiate a graceful shutdown and reboot 
-of its Payload operating system. If this command variant is unsupported, 
-the MMC shall return the ìInvalid data field in Request (CCh)î Completion Code.
+REQ 3.103 Receipt of a ‚ÄúFRU Control (Graceful Reboot)‚Äù command on a Module
+which supports this command shall initiate a graceful shutdown and reboot
+of its Payload operating system. If this command variant is unsupported,
+the MMC shall return the ‚ÄúInvalid data field in Request (CCh)‚Äù Completion Code.
 
-REQ 3.104 Receipt of a ìFRU Control (Issue Diagnostic Interrupt)î command
+REQ 3.104 Receipt of a ‚ÄúFRU Control (Issue Diagnostic Interrupt)‚Äù command
 on a Module which supports this command shall trigger a diagnostic interrupt
-to the Moduleís Payload. If this command variant is unsupported, the MMC 
-shall return the ìInvalid data field in Request (CCh)î Completion Code.
+to the Module‚Äôs Payload. If this command variant is unsupported, the MMC
+shall return the ‚ÄúInvalid data field in Request (CCh)‚Äù Completion Code.
 
-REQ 3.105b On receipt of the ìFRU Control (Quiesce)î command, the MMC shall
+REQ 3.105b On receipt of the ‚ÄúFRU Control (Quiesce)‚Äù command, the MMC shall
 take appropriate action (implementation specific) to bring the Payload to
 a quiesced state and shall send a Module Hot Swap (Quiesced) event messag
 e to the Carrier IPMC.
 */
-/* 
+/*
  * The following are called by picmg_fru_control()
  */
 
@@ -1871,19 +1871,19 @@ send_amc_issue_diag_int( uchar dev_id )
 {
 }
 
-/* 
+/*
  * module_quiesce()
- * 
+ *
  * called by picmg_fru_control()
- * When the Carrier IPMC has transitioned the Module to M6 state, the Carrier 
- * IPMC sends a ìFRU Control (Quiesce)î command to the Module and awaits a 
+ * When the Carrier IPMC has transitioned the Module to M6 state, the Carrier
+ * IPMC sends a ‚ÄúFRU Control (Quiesce)‚Äù command to the Module and awaits a
  * Module Hot Swap (Quiesced) event message from the MMC.
  */
 
 void
 send_amc_quiesce( uchar dev_id )
 {
-	
+
 }
 
 void
@@ -1907,7 +1907,7 @@ enable_payload( uchar dev_id )
 and Backend Power Failure) to enable the Carrier IPMC to perform Hot Swap management
 for the Modules it represents.
 
-A Moduleís Backend Power includes all the power supplies on a Module derived from
+A Module‚Äôs Backend Power includes all the power supplies on a Module derived from
 Payload Power. Module Backend Power could be disabled by a Module as an
 implementation defined option. How a Module Payload communicates with the MMC to
 indicate it has Quiesced, has requested that its Module Backend Power be shut down, or to
@@ -1915,27 +1915,27 @@ indicate a Module Backend Power Failure is implementation defined.
 
 REQ 3.52 A Module Hot Swap sensor shall be implemented in the MMC.
 
-REQ 3.158 MMCs on Modules implementing local on/ off switching control of 
+REQ 3.158 MMCs on Modules implementing local on/ off switching control of
 power derived from Payload Power shall set the Backend Power Shut Down bit
 in the Module Hot Swap sensor Current State Mask field to 1b when the MMC
 has turned off its Module Backend Power. MMCs on Modules implementing local
-on/ off switching control of power derived from Payload Power shall clear 
-the Backend Power Shut Down bit to 0b when Payload Power from the Carrier 
+on/ off switching control of power derived from Payload Power shall clear
+the Backend Power Shut Down bit to 0b when Payload Power from the Carrier
 transitions from disabled to enabled.
 
-REQ 3.159 MMCs on Modules implementing local on/ off switching control 
+REQ 3.159 MMCs on Modules implementing local on/ off switching control
 of power derived from Payload Power shall set the Backend Power Failure
 bit in the Module Hot Swap sensor Current State Mask field to 1b when
-the Module Backend Power fails. MMCs on Modules implementing local on/ 
-off switching control of power derived from Payload Power shall clear 
+the Module Backend Power fails. MMCs on Modules implementing local on/
+off switching control of power derived from Payload Power shall clear
 the Backend Power Failure bit to 0b when Payload Power from the Carrier
 transitions from disabled to enabled.
 
-REQ 3.160 MMCs shall set the Quiesced bit in the Module Hot Swap sensor 
-Current State Mask field to 1b after the Module Payload has quiesced. 
-The MMC shall clear the Quiesced bit to 0b upon reception of the ìFRU
-Control (Quiesce)î request just prior to  the Module Payload being quiesced. 
-MMCs with Payload Power monitoring capability should clear the Quiesced 
+REQ 3.160 MMCs shall set the Quiesced bit in the Module Hot Swap sensor
+Current State Mask field to 1b after the Module Payload has quiesced.
+The MMC shall clear the Quiesced bit to 0b upon reception of the ‚ÄúFRU
+Control (Quiesce)‚Äù request just prior to  the Module Payload being quiesced.
+MMCs with Payload Power monitoring capability should clear the Quiesced
 bit to 0b when Payload Power from the Carrier transitions from disabled
 to enabled.
 
@@ -1950,16 +1950,16 @@ this information to manage the cooling.
 
 Every Carrier and every Module must contain at least two temperature sensors and
 appropriate Sensor Data Records (SDRs) to describe the sensors. See Section 5.3,
-ìTemperatureî for functional requirements regarding these sensors.
+‚ÄúTemperature‚Äù for functional requirements regarding these sensors.
 
 Requirements
-REQ 3.164 The Module and the Carrier shall implement the SDRs for the 
-temperature sensors required by Section†5, ìThermal.î 
+REQ 3.164 The Module and the Carrier shall implement the SDRs for the
+temperature sensors required by Section¬†5, ‚ÄúThermal.‚Äù
 
-REQ 3.80 The Module shall generate temperature sensor events in accordance 
-with Section 3.9.3.2 ìAbnormal Event Messageî of the PICMG 3.0 specification.
+REQ 3.80 The Module shall generate temperature sensor events in accordance
+with Section 3.9.3.2 ‚ÄúAbnormal Event Message‚Äù of the PICMG 3.0 specification.
 
-REQ 3.165For each on-Module temperature sensor, Modules shall provide the 
+REQ 3.165For each on-Module temperature sensor, Modules shall provide the
 warning operating temperature (upper non critical threshold) and the maximum
 operating temperature (Upper critical threshold) in the SDR information.
 
@@ -1967,17 +1967,17 @@ operating temperature (Upper critical threshold) in the SDR information.
 
 3.11.1 Module SDR requirements
 
-REQ 3.106 The MMC shall support IPMI commands ìGet Device SDR Infoî, ìGet Device SDRî 
-and ìReserve Device SDR Repositoryî. (See Chapter 29 of the IPMI specification.)
+REQ 3.106 The MMC shall support IPMI commands ‚ÄúGet Device SDR Info‚Äù, ‚ÄúGet Device SDR‚Äù
+and ‚ÄúReserve Device SDR Repository‚Äù. (See Chapter 29 of the IPMI specification.)
 
-REQ 3.107 The MMC Device SDR shall have a static sensor population. (See 
-Table 29-2 of the IPMI specification.) The number of MMC SDRs is fixed. 
+REQ 3.107 The MMC Device SDR shall have a static sensor population. (See
+Table 29-2 of the IPMI specification.) The number of MMC SDRs is fixed.
 All MMC sensors shall be assigned to LUN 0.
 
 REQ 3.108 The MMC shall use AdvancedMC Module entity ID C1h for all device SDRs.
 
 REQ 3.109 The MMC shall use its own Site Number + 60h as a device-relative
-entity instance number. 
+entity instance number.
 
 REQ 3.110Each MMC shall have one management controller device locator (SDR type 12h).
 
@@ -1986,49 +1986,49 @@ one FRU may be represented by one MMC.
 
 REQ 3.112 The MMC shall not expect any Init Agent action from the Carrier IPMC.
 
-REQ 3.113 The MMC shall initialize its sensors, set the event receiver address 
+REQ 3.113 The MMC shall initialize its sensors, set the event receiver address
 to 20h and event receiver LUN to 0 on reset.
 
 3.12 FRU Information
 
-All Carriers and Modules must contain a FRU Information storage device 
-(for instance, an SEEPROM) that contains information about capabilities 
+All Carriers and Modules must contain a FRU Information storage device
+(for instance, an SEEPROM) that contains information about capabilities
 (e.g. E-Keying) and inventory data. The format of the FRU Information follows
 the requirements set forth in Section 3.6.3, IPM Controller FRU Information,
-in the PICMG 3.0 Specification. In addition to this basic information, 
+in the PICMG 3.0 Specification. In addition to this basic information,
 additional records are required to support functions unique to the Modules.
 
 3.12.1.2 MMC requirements
 
-REQ 3.138 The MMC shall support the ìFRU Inventory Deviceî commands specified
+REQ 3.138 The MMC shall support the ‚ÄúFRU Inventory Device‚Äù commands specified
 in Chapter 28 of the IPMI specification.
 
 REQ 3.139Module FRU Information shall be available when MP is available.
 
-REQ 3.140The entity updating the Module FRU Information shall be responsible 
+REQ 3.140The entity updating the Module FRU Information shall be responsible
 for updating all appropriate checksums as well.
 
-REQ 3.141 The MMC may write protect data in the Module storage area and 
-return a Completion Code of ìwrite protected offset (80h)î for a command
+REQ 3.141 The MMC may write protect data in the Module storage area and
+return a Completion Code of ‚Äúwrite protected offset (80h)‚Äù for a command
 that attempts to change such data.
-	
+
 REQ 3.142If an MMC implements write protected data, it shall do it by areas
 (Board Info, Product Info, etc.) with the exception of the multi-record area
 where it shall implement write protection at the record level.
 
 REQ 3.143 If an MMC implements write protected multi-record data, it shall
 allow moving a record to a new offset (without any change to the data). That
-is, the size or number of records prior to a particular record may change 
-and it may be necessary for system management software to move a record 
+is, the size or number of records prior to a particular record may change
+and it may be necessary for system management software to move a record
 without changing its contents. The MMC shall allow this, but may confirm
 that the data has not been changed.
 
 REQ 3.144 MMC FRU Information shall meet the requirements in Chapter 3.6.3
-of the IPMI specification.REQ 3.145The MMC shall implement the relevant 
-records defined in Section†3.7, ìPower managementî and Section†3.9, ìE-Keying.î 
+of the IPMI specification.REQ 3.145The MMC shall implement the relevant
+records defined in Section¬†3.7, ‚ÄúPower management‚Äù and Section¬†3.9, ‚ÄúE-Keying.‚Äù
 
 REQ 3.146 All Modules that are sold as independent products shall fill
-in all predefined fields in Product Info Area record, as this is the 
+in all predefined fields in Product Info Area record, as this is the
 only location where product version number is defined.
 
 REQ 3.147Every MMC shall place the MultiRecords defined by this specification
@@ -2038,17 +2038,17 @@ REQ 3.148Any MMC may place private data in the Internal Use Area and/or MultiRec
 */
 
 /*==============================================================
- * MODULE RECORDS 
+ * MODULE RECORDS
  *==============================================================*/
 /*
 3.7.1 Module Current Requirements record
-Each Module defines its maximum current requirement even if that 
+Each Module defines its maximum current requirement even if that
 value is required for only a transitional amount of time (for all components
 on the Module). The Module FRU Information structure described below informs
 the Carrier of these requirements. Table 3-10 Module Current Requirements record
 
 The capabilities of an AdvancedMC Module to communicate over point-to-point
-connections are described in the Moduleís FRU Information.
+connections are described in the Module‚Äôs FRU Information.
 
 */
 
@@ -2066,7 +2066,7 @@ lookup_dev_id( uchar dev_addr )
 }
 
 /* given the slot number, lookup the i2c addr */
-uchar 
+uchar
 lookup_dev_addr( uchar dev_id )
 {
 	if( dev_id < IPMBL_TABLE_SIZE )	// assuming slot enumeration starts from 0, TODO check
@@ -2076,20 +2076,20 @@ lookup_dev_addr( uchar dev_id )
 }
 
 // handle events from the AMC modules
-/* 
- read the Moduleís Module Current Requirements record and 
+/*
+ read the Module‚Äôs Module Current Requirements record and
 AdvancedMC Point-to-Point Connectivity record.
 
 If the Module FRU Information is invalid or if the Carrier cannot provide the
 necessary Payload Power then:
 
-The Carrier IPMC sends a ìSet FRU LED Stateî command to the MMC requesting the
-ìonî state for the BLUE LED. The FRU remains in M1.
+The Carrier IPMC sends a ‚ÄúSet FRU LED State‚Äù command to the MMC requesting the
+‚Äúon‚Äù state for the BLUE LED. The FRU remains in M1.
 
-On receipt of the ìSet FRU Activation (Activate FRU)î command by the Carrier 
-IPMC, designating a particular Module, the Carrier IPMC sends an M2 to M3 
+On receipt of the ‚ÄúSet FRU Activation (Activate FRU)‚Äù command by the Carrier
+IPMC, designating a particular Module, the Carrier IPMC sends an M2 to M3
 transition event message to the Shelf Manager on behalf of the Module and sends
-a ìset FRU LED Stateî command to the MMC with a request to turn off the BLUE LED.
+a ‚Äúset FRU LED State‚Äù command to the MMC with a request to turn off the BLUE LED.
 
 The Carrier IPMC enables Payload Power (PWR) for the Module.
 */
@@ -2127,9 +2127,9 @@ module_event_handler( IPMI_PKT *pkt )
 	GENERIC_EVENT_MSG *evt_msg = ( GENERIC_EVENT_MSG * )&( req->EvMRev );
 
 	uchar dev_id, dev_addr = (( IPMI_WS * )(pkt->hdr.ws))->incoming_channel;
-	
+
 	dev_id = lookup_dev_id( dev_addr );
-	
+
 	if( evt_msg->sensor_type == IPMI_SENSOR_HOT_SWAP ) {
 		switch( evt_msg->evt_data1 ) {
 			case MODULE_HANDLE_CLOSED:
@@ -2172,11 +2172,11 @@ mcmc_mmc_event( uchar dev_id, uchar event )
 	uchar dev_addr;
 
 	dev_addr = lookup_dev_addr( dev_id );
-	
+
 	switch( event ) {
 		case	AMC_EVT_HANDLE_CLOSED_MSG_RCVD:
 			/* Send set LED state long blink cmd */
-			/* send a ìSet FRU LED Stateî command to the MMC
+			/* send a ‚ÄúSet FRU LED State‚Äù command to the MMC
 			 * with a request to perform long blinks of the
 			 * BLUE LED, indicating to the operator that the
 			 * new Module is waiting to be activated. */
@@ -2209,7 +2209,7 @@ mcmc_mmc_event( uchar dev_id, uchar event )
 		case	AMC_EVT_READ_CURRENT_REQ_CMD_OK:
 			/* Send read p2p connectivity record cmd */
 			amc[dev_id].state = AMC_STATE_M2_READ_P2P_RECORD_REQ_SENT;
-			break;			
+			break;
 		case	AMC_EVT_READ_P2P_RECORD_CMD_OK:
 			/* Send FRU activation req msg to SHM */
 			amc[dev_id].state = AMC_STATE_M2_SHM_ACT_REQ_SENT;
@@ -2324,8 +2324,8 @@ discovery_cmd_retry( uchar *arg )
 #define FRU_READ_LEN	16
 /*
  * discovery_cmd_complete()
- * 
- * Completion function for discovery commands 
+ *
+ * Completion function for discovery commands
  */
 void
 discovery_cmd_complete( IPMI_WS *ws, int status )
@@ -2342,7 +2342,7 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 		// add to timeout queue to retry in a few secs
 		timer_add_callout_queue( (void *)&discovery_cmd_retry_timer_handle,
 	       		10*HZ, discovery_cmd_retry,( uchar * )ws ); /* 10 sec timeout */
-		
+
 		// TODO we should prevent other commands being issued to this device
 		// or cancel the discovery process at some point if we want to do something
 		// else with the device.
@@ -2384,7 +2384,7 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 			break;
 		case NVSTORE_CMD_GET_FRU_INVENTORY_AREA_INFO: {
 			GET_FRU_INVENTORY_AREA_CMD_RESP *resp = ( GET_FRU_INVENTORY_AREA_CMD_RESP * )(pkt->resp);
-			amc[dev_id].fru_data.fru_inventory_area_size = 
+			amc[dev_id].fru_data.fru_inventory_area_size =
 				( resp->fru_inventory_area_size_msb << 8 ) | resp->fru_inventory_area_size_lsb;
 			// read header first
 			amc[dev_id].current_fru_offset = 0;
@@ -2397,13 +2397,13 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 			READ_FRU_DATA_CMD_RESP *resp = ( READ_FRU_DATA_CMD_RESP * )(pkt->resp);
 			FRU_COMMON_HEADER *fru_hdr = ( FRU_COMMON_HEADER * )&amc[dev_id].fru_data.fru[0];
 			MULTIRECORD_AREA_HEADER *mr_hdr;
-			
+
 			unsigned short offset;
-			
+
 			// Calculate the offset value we used for requesting the data
 			offset = ( ( READ_FRU_DATA_CMD_REQ * )( pkt->req ) )->fru_inventory_offset_lsb;
 			offset |= ( ( ( READ_FRU_DATA_CMD_REQ * )( pkt->req ) )->fru_inventory_offset_msb ) << 8;
-			
+
 			// TODO offset sanity checking
 			// Copy the retrieved data
 			memcpy( &amc[dev_id].fru_data + offset, &(resp->data), resp->count_returned );
@@ -2417,9 +2417,9 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 					amc[dev_id].current_fru_offset = offset;
 					amc[dev_id].current_read_len = sizeof( MULTIRECORD_AREA_HEADER );
 					if( offset )
-						send_read_fru_data( ipmi_ch, dev_addr, 
-								offset, 
-								sizeof( MULTIRECORD_AREA_HEADER ), 
+						send_read_fru_data( ipmi_ch, dev_addr,
+								offset,
+								sizeof( MULTIRECORD_AREA_HEADER ),
 								discovery_cmd_complete );
 					break;
 
@@ -2428,27 +2428,27 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 				case FRU_READ_ST_READING_BOARD_AREA:
 				case FRU_READ_ST_READING_PRODUCT_INFO:
 					break;
-					
+
 				case FRU_READ_ST_READING_MULTIRECORD_AREA:
 					if( fru_hdr->multirecord_offset == amc[dev_id].current_fru_offset ) {
 						// We've read the header of the first record, get the record len
 						mr_hdr = ( MULTIRECORD_AREA_HEADER * )
 							( &amc[dev_id].fru_data + offset );
 						amc[dev_id].current_record_len = mr_hdr->record_len;
-					} 
+					}
 					amc[dev_id].record_read += amc[dev_id].current_read_len;
-					
-					if( amc[dev_id].record_read >= amc[dev_id].current_record_len ) { 
+
+					if( amc[dev_id].record_read >= amc[dev_id].current_record_len ) {
 						discovery_state[dev_id] = DISC_ST_READ_FRU_DATA_COMPLETE;
 						mcmc_mmc_event( dev_id, AMC_EVT_DEVICE_DISCOVERY_OK );
 						break;
 					}
-					if( ( amc[dev_id].current_read_len = 
+					if( ( amc[dev_id].current_read_len =
 					    amc[dev_id].current_record_len - amc[dev_id].record_read ) > 16 ) {
 						amc[dev_id].current_read_len = 16;
 					}
-					send_read_fru_data( ipmi_ch, dev_addr, 
-						amc[dev_id].current_fru_offset, 
+					send_read_fru_data( ipmi_ch, dev_addr,
+						amc[dev_id].current_fru_offset,
 						amc[dev_id].current_read_len, discovery_cmd_complete );
 					break;
 			}
@@ -2456,7 +2456,7 @@ discovery_cmd_complete( IPMI_WS *ws, int status )
 		}
 		break;
 	}
-	ws_free( ws );			
+	ws_free( ws );
 }
 
 #define NUM_FRU_ENTRIES 5 // int_use_offset, chassis_info_offset, board_offset, product_info_offset, multirecord_offset
@@ -2504,8 +2504,8 @@ get_fru_index( uchar dev_id, uchar offset )
 	}
 	return 0xff;
 }
-		
-	
+
+
 
 void
 module_cold_reset( uchar dev_id )
@@ -2545,13 +2545,13 @@ module_term_process( uchar * ptr )
 	dev_id = lookup_dev_id( dev_addr );
 
 	// Set dev id to use
-	if( ( strncmp( ( const char * )ptr, "DEVID", 5 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "DEVID", 5 ) == 0 )
 			|| ( strncmp( ptr, "devid", 5 ) == 0 ) ) {
 
 		cptr = ptr + 5;
 		digit_count = 0;
 		buf_len = strlen( ( const char * )cptr );
-		
+
 		while( cptr < ptr + buf_len ) {
 			if( ( ( *cptr >= '0' ) && ( *cptr <= '9' ) ) &&
 			    ( digit_count < 2 ) ) {
@@ -2561,7 +2561,7 @@ module_term_process( uchar * ptr )
 				if( digit_count == 2 ) {
 					val = ( digit[0] - 48 ) << 4;
 					val += ( digit[1] - 48 );
-				} 
+				}
 			} else if ( *cptr == ' ' ) {
 				digit_count = 0;
 				putchar( *cptr++ );
@@ -2585,23 +2585,23 @@ module_term_process( uchar * ptr )
 		putstr( "[ERR]\n" );
 		return;
 	}
-	
+
 	// get port state
-	if( ( strncmp( ( const char * )ptr, "GPS]", 4 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "GPS]", 4 ) == 0 )
 			|| ( strncmp( ptr, "gps]", 4 ) == 0 ) ) {
 		putstr( "sending get port state cmd\n" );
 		send_get_amc_port_state( ipmi_ch, dev_addr, cmd_complete );
 		return;
 	}
 	// set port state
-	if( ( strncmp( ( const char * )ptr, "SPS]", 4 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SPS]", 4 ) == 0 )
 			|| ( strncmp( ptr, "sps]", 4 ) == 0 ) ) {
 		putstr( "sending set port state cmd\n" );
 		send_set_amc_port_state( ipmi_ch, dev_addr, cmd_complete );
 		return;
 	}
 	// set led on
-	if( ( strncmp( ( const char * )ptr, "LEDON]", 6 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDON]", 6 ) == 0 )
 			|| ( strncmp( ptr, "ledon]", 6 ) == 0 ) ) {
 		putstr( "sending set fru LED state cmd\n" );
 		send_set_fru_led_state( ipmi_ch, dev_addr, LED_ON, cmd_complete );
@@ -2609,7 +2609,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// set led off
-	if( ( strncmp( ( const char * )ptr, "LEDOFF]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDOFF]", 7 ) == 0 )
 			|| ( strncmp( ptr, "ledoff]", 7 ) == 0 ) ) {
 		putstr( "sending set fru LED state cmd\n" );
 		send_set_fru_led_state( ipmi_ch, dev_addr, LED_OFF, cmd_complete );
@@ -2617,7 +2617,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// led long blink
-	if( ( strncmp( ( const char * )ptr, "LEDLONG]", 6 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDLONG]", 6 ) == 0 )
 			|| ( strncmp( ptr, "ledlong]", 6 ) == 0 ) ) {
 		putstr( "sending set fru LED state cmd\n" );
 		send_set_fru_led_state( ipmi_ch, dev_addr, LED_LONG_BLINK, cmd_complete );
@@ -2625,7 +2625,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// led short blink
-	if( ( strncmp( ( const char * )ptr, "LEDSHORT]", 6 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDSHORT]", 6 ) == 0 )
 			|| ( strncmp( ptr, "ledshort]", 6 ) == 0 ) ) {
 		putstr( "sending set fru LED state cmd\n" );
 		send_set_fru_led_state( ipmi_ch, dev_addr, LED_SHORT_BLINK, cmd_complete );
@@ -2633,7 +2633,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// get device ID
-	if( ( strncmp( ( const char * )ptr, "GDI]", 4 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "GDI]", 4 ) == 0 )
 			|| ( strncmp( ptr, "gdi]", 4 ) == 0 ) ) {
 		putstr( "sending get device id cmd\n" );
 		for( i = 0; i < 6; i++)
@@ -2642,7 +2642,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// get fru inventory area info
-	if( ( strncmp( ( const char * )ptr, "FRUINV]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "FRUINV]", 7 ) == 0 )
 			|| ( strncmp( ptr, "fruinv]", 7 ) == 0 ) ) {
 		putstr( "sending get fru inventory area info cmd\n" );
 		send_get_fru_inventory_area_info( ipmi_ch, dev_addr, cmd_complete );
@@ -2650,15 +2650,15 @@ module_term_process( uchar * ptr )
 	}
 
 	// read FRU data
-	if( ( strncmp( ( const char * )ptr, "FRUDATA]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "FRUDATA]", 8 ) == 0 )
 			|| ( strncmp( ptr, "frudata]", 8 ) == 0 ) ) {
 		putstr( "sending read fru data cmd\n" );
 		send_read_fru_data( ipmi_ch, dev_addr, 0, sizeof( FRU_COMMON_HEADER ), cmd_complete );
 		return;
 	}
-	
+
 	// read FRU Power data
-	if( ( strncmp( ( const char * )ptr, "PWRDATA]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "PWRDATA]", 8 ) == 0 )
 			|| ( strncmp( ptr, "pwrdata]", 8 ) == 0 ) ) {
 		putstr( "sending read fru power data cmd\n" );
 		send_read_fru_data( ipmi_ch, dev_addr, 0x16, 0x10, cmd_complete );
@@ -2666,7 +2666,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// FRU cold reset
-	if( ( strncmp( ( const char * )ptr, "FRUCRST]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "FRUCRST]", 8 ) == 0 )
 			|| ( strncmp( ptr, "frucrst]", 8 ) == 0 ) ) {
 		putstr( "sending fru control (cold reset) cmd\n" );
 		send_fru_control( ipmi_ch, dev_addr, FRU_CONTROL_COLD_RESET, cmd_complete );
@@ -2674,7 +2674,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// FRU warm reset
-	if( ( strncmp( ( const char * )ptr, "FRUWRST]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "FRUWRST]", 8 ) == 0 )
 			|| ( strncmp( ptr, "fruwrst]", 8 ) == 0 ) ) {
 		putstr( "sending fru control (warm reset) cmd\n" );
 		send_fru_control( ipmi_ch, dev_addr, FRU_CONTROL_WARM_RESET, cmd_complete );
@@ -2682,7 +2682,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get PICMG Properties
-	if( ( strncmp( ( const char * )ptr, "PICPROP]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "PICPROP]", 8 ) == 0 )
 			|| ( strncmp( ptr, "picprop]", 8 ) == 0 ) ) {
 		putstr( "sending get picmg properties cmd\n" );
 		send_get_picmg_properties( ipmi_ch, dev_addr, cmd_complete );
@@ -2690,7 +2690,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get sensor reading
-	if( ( strncmp( ( const char * )ptr, "SENSOR]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SENSOR]", 7 ) == 0 )
 			|| ( strncmp( ptr, "sensor]", 7 ) == 0 ) ) {
 		putstr( "sending get sensor reading cmd\n" );
 		send_get_sensor_reading( ipmi_ch, dev_addr, 0, cmd_complete );
@@ -2698,23 +2698,23 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get Device SDR Info
-	if( ( strncmp( ( const char * )ptr, "SDRINFO]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SDRINFO]", 8 ) == 0 )
 			|| ( strncmp( ptr, "sdrinfo]", 8 ) == 0 ) ) {
 		putstr( "sending get device sdr info cmd\n" );
 		send_get_device_sdr_info( ipmi_ch, dev_addr, 0, cmd_complete );
 		return;
 	}
-	
+
 	// Get Device SDR
-	if( ( strncmp( ( const char * )ptr, "SDR]", 4 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SDR]", 4 ) == 0 )
 			|| ( strncmp( ptr, "sdr]", 4 ) == 0 ) ) {
 		putstr( "sending get device sdr cmd\n" );
 		send_get_device_sdr( ipmi_ch, dev_addr, rec_id, cmd_complete );
 		return;
 	}
-	
+
 	// Reserve Device SDR Repository
-	if( ( strncmp( ( const char * )ptr, "RSDR]", 5 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "RSDR]", 5 ) == 0 )
 			|| ( strncmp( ptr, "rsdr]", 5 ) == 0 ) ) {
 		putstr( "sending reserve device sdr repository cmd\n" );
 		send_reserve_device_sdr_repository( ipmi_ch, dev_addr, cmd_complete );
@@ -2722,7 +2722,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get FRU LED Properties
-	if( ( strncmp( ( const char * )ptr, "LEDPROP]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDPROP]", 8 ) == 0 )
 			|| ( strncmp( ptr, "ledprop]", 8 ) == 0 ) ) {
 		putstr( "sending get FRU LED properties cmd\n" );
 		send_get_fru_led_properties( ipmi_ch, dev_addr, cmd_complete );
@@ -2730,7 +2730,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get LED Color Capabilities
-	if( ( strncmp( ( const char * )ptr, "LEDCOLOR]", 9 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDCOLOR]", 9 ) == 0 )
 			|| ( strncmp( ptr, "ledcolor]", 9 ) == 0 ) ) {
 		putstr( "sending get LED color capabilities cmd\n" );
 		send_get_led_color_capabilities( ipmi_ch, dev_addr, 0, cmd_complete );
@@ -2738,7 +2738,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get FRU LED State
-	if( ( strncmp( ( const char * )ptr, "LEDSTATE]", 9 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "LEDSTATE]", 9 ) == 0 )
 			|| ( strncmp( ptr, "ledstate]", 9 ) == 0 ) ) {
 		putstr( "sending get FRU LED state cmd\n" );
 		send_get_fru_led_state( ipmi_ch, dev_addr, cmd_complete );
@@ -2746,7 +2746,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get Device Locator Record ID
-	if( ( strncmp( ( const char * )ptr, "DEVLOC]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "DEVLOC]", 7 ) == 0 )
 			|| ( strncmp( ptr, "devloc]", 7 ) == 0 ) ) {
 		putstr( "sending get device locator record id cmd\n" );
 		send_get_device_locator_record_id( ipmi_ch, dev_addr, cmd_complete );
@@ -2754,7 +2754,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// FRU Control Capabilities
-	if( ( strncmp( ( const char * )ptr, "FRUCAP]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "FRUCAP]", 7 ) == 0 )
 			|| ( strncmp( ptr, "frucap]", 7 ) == 0 ) ) {
 		putstr( "sending get FRU control capabilities cmd\n" );
 		send_get_fru_control_capabilities( ipmi_ch, dev_addr, cmd_complete );
@@ -2762,7 +2762,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Set AMC Port State
-	if( ( strncmp( ( const char * )ptr, "SETPORT]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SETPORT]", 8 ) == 0 )
 			|| ( strncmp( ptr, "setport]", 8 ) == 0 ) ) {
 		putstr( "sending set AMC port state cmd\n" );
 		send_set_amc_port_state( ipmi_ch, dev_addr, cmd_complete );
@@ -2770,7 +2770,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get AMC Port State
-	if( ( strncmp( ( const char * )ptr, "GETPORT]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "GETPORT]", 8 ) == 0 )
 			|| ( strncmp( ptr, "getport]", 8 ) == 0 ) ) {
 		putstr( "sending get AMC port state cmd\n" );
 		send_get_amc_port_state( ipmi_ch, dev_addr, cmd_complete );
@@ -2778,7 +2778,7 @@ module_term_process( uchar * ptr )
 	}
 
 	// Set Clock State
-	if( ( strncmp( ( const char * )ptr, "SETCLOCK]", 9 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "SETCLOCK]", 9 ) == 0 )
 			|| ( strncmp( ptr, "setclock]", 9 ) == 0 ) ) {
 		putstr( "sending set clock state cmd\n" );
 		send_set_amc_clock_state( ipmi_ch, dev_addr, cmd_complete );
@@ -2786,31 +2786,31 @@ module_term_process( uchar * ptr )
 	}
 
 	// Get Clock State
-	if( ( strncmp( ( const char * )ptr, "GETCLOCK]", 9 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "GETCLOCK]", 9 ) == 0 )
 			|| ( strncmp( ptr, "getclock]", 9 ) == 0 ) ) {
 		putstr( "sending get clock state cmd\n" );
 		send_get_amc_clock_state( ipmi_ch, dev_addr, cmd_complete );
 		return;
 	}
-	
+
 	// Start device discovery
-	if( ( strncmp( ( const char * )ptr, "DISC]", 5 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "DISC]", 5 ) == 0 )
 			|| ( strncmp( ptr, "disc]", 5 ) == 0 ) ) {
 		putstr( "starting device discovery\n" );
 		device_discovery( dev_id );
 		return;
 	}
-	
+
 	// Get device state
-	if( ( strncmp( ( const char * )ptr, "DSTATE]", 7 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "DSTATE]", 7 ) == 0 )
 			|| ( strncmp( ptr, "dstate]", 7 ) == 0 ) ) {
 		putstr( "retrieving discovery state\n" );
 		dump_discovery_state( dev_id );
 		return;
 	}
-	
+
 	// Get AMC info
-	if( ( strncmp( ( const char * )ptr, "AMCINFO]", 8 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "AMCINFO]", 8 ) == 0 )
 			|| ( strncmp( ptr, "amcinfo]", 8 ) == 0 ) ) {
 		putstr( "dumping AMC INFO struct\n" );
 		dump_amc_info( dev_id );
@@ -2819,7 +2819,7 @@ module_term_process( uchar * ptr )
 }
 
 
-void 
+void
 module_process_response( IPMI_WS *req_ws, uchar seq, uchar completion_code )
 {
 
@@ -2850,7 +2850,7 @@ dump_amc_info( uchar dev_id )
 {
 	int i, len = sizeof( AMC_INFO );
 	uchar *ptr = ( uchar * )&amc[dev_id];
-	
+
 	putstr( "\n[" );
 	for( i = 0; i < len; i++ ) {
 		puthex( ptr[i] );
@@ -2874,7 +2874,7 @@ dump_discovery_state( uchar dev_id )
  * Given an "ipmi channel number" i.e IPMI_CH_NUM_PRIMARY_IPMB
  * return the interface number i.e. i2c-0 to use.
  *
- * Arguments: 
+ * Arguments:
  * 	IPMI_CH_NUM_PRIMARY_IPMB
  * 	IPMI_CH_NUM_CONSOLE
  * 	IPMI_CH_NUM_IPMBL

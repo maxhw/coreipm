@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -433,7 +433,7 @@ support and contact details.
 /* ---- RTC: Miscellaneous Register Group ------------------ */
 #define RTC_ILR         (*(REG32 (0xE0024000)))
 #define RTC_CTC         (*(REG32 (0xE0024004)))
-#define RTC_CCR         (*(REG32 (0xE0024008)))  
+#define RTC_CCR         (*(REG32 (0xE0024008)))
 #define RTC_CIIR        (*(REG32 (0xE002400C)))
 #define RTC_AMR         (*(REG32 (0xE0024010)))
 #define RTC_CTIME0      (*(REG32 (0xE0024014)))
@@ -474,7 +474,7 @@ support and contact details.
 #define CTIME1          RTC_CTIME1
 #define CTIME2          RTC_CTIME2
 
-#define SEC             RTC_SEC 
+#define SEC             RTC_SEC
 #define MIN             RTC_MIN
 #define HOUR            RTC_HOUR
 #define DOM             RTC_DOM

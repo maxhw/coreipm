@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2009 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -357,7 +357,7 @@ void kbd_settings( void )
 					g_bridging_enabled = 1;
 				else if( user_input == 'N' || user_input == 'n' )
 					g_bridging_enabled = 0;
-				else					
+				else
 					printf( "Invalid selection %c\n", user_input );
 				break;
 			case KBD_RESPONDER_I2C_ADDR:
@@ -391,10 +391,10 @@ void current_settings( void )
 	printf(
 		" +----------------SETTINGS------------------------------------------------------------+\n"
 		" |  Bridging enabled      : %c              |  Channel number        : %1d               |\n"
-		" |  Responder i2c address : %2d             |  Outgoing protocol     : %1d               |\n"		
-		" +------------------------------------------------------------------------------------+\n", 
-		g_bridging_enabled ? 'Y':'N', g_channel_number, 
-		g_responder_i2c_address, g_outgoing_protocol ); 
+		" |  Responder i2c address : %2d             |  Outgoing protocol     : %1d               |\n"
+		" +------------------------------------------------------------------------------------+\n",
+		g_bridging_enabled ? 'Y':'N', g_channel_number,
+		g_responder_i2c_address, g_outgoing_protocol );
 
 }
 
@@ -410,7 +410,7 @@ void settings_menu( void )
 		" SETTINGS MENU        \n"
 		" =====================================\n");
 	current_settings();
-	printf(	
+	printf(
 		"%2d - %-34s"
 		"%2d - %-34s\n"
 		"%2d - %-34s"
@@ -502,9 +502,9 @@ void kbd_app_cmds( void )
 /*------------------------------------------------------------------------------
 
 	Fill in the ws structure and set state.
-	It will get picked up and forwarded to the 
+	It will get picked up and forwarded to the
 	proper interface
-	
+
 	Preconditions:
 	Postconditions:
  *----------------------------------------------------------------------------*/
@@ -513,9 +513,9 @@ void app_cmd_get_device_id( void )
 {
 	IPMI_WS		*ws;
 	IPMI_CMD_REQ	cmd_req;
-	
+
 	ws = ws_alloc();
-	
+
 	if( !ws ) {
 		printf( "app_cmd_get_device_id: ws allocation failed\n" );
 		return;
@@ -525,10 +525,10 @@ void app_cmd_get_device_id( void )
 
 	fill_pkt_out( ws, &cmd_req, 0, NETFN_APP_REQ );
 	/* the completion function will be called by the transport layer
-	 * completion routine after the xfer has completed. It is up to the 
-	 * test framework to keep track of request/response pairs using the 
+	 * completion routine after the xfer has completed. It is up to the
+	 * test framework to keep track of request/response pairs using the
 	 * sequence numbers */
-	ws->ipmi_completion_function = 0; // none at this moment 
+	ws->ipmi_completion_function = 0; // none at this moment
 
 	/* change ws state, work list processing will do the rest */
 	ws_set_state( ws, WS_ACTIVE_MASTER_WRITE );
@@ -540,9 +540,9 @@ void app_cmd_get_self_test_results( void )
 {
 	IPMI_WS		*ws;
 	IPMI_CMD_REQ	cmd_req;
-	
+
 	ws = ws_alloc();
-	
+
 	if( !ws ) {
 		printf( "app_cmd_get_device_id: ws allocation failed\n" );
 		return;
@@ -551,7 +551,7 @@ void app_cmd_get_self_test_results( void )
 	cmd_req.command = IPMI_CMD_GET_SELF_TEST_RESULTS;
 
 	fill_pkt_out( ws, &cmd_req, 0, NETFN_APP_REQ );
-	ws->ipmi_completion_function = 0; // none at this moment 
+	ws->ipmi_completion_function = 0; // none at this moment
 
 	/* change ws state, work list processing will do the rest */
 	ws_set_state( ws, WS_ACTIVE_MASTER_WRITE );
@@ -563,9 +563,9 @@ void app_cmd_reset_watchdog_timer( void )
 {
 	IPMI_WS		*ws;
 	IPMI_CMD_REQ	cmd_req;
-	
+
 	ws = ws_alloc();
-	
+
 	if( !ws ) {
 		printf( "app_cmd_get_device_id: ws allocation failed\n" );
 		return;
@@ -574,7 +574,7 @@ void app_cmd_reset_watchdog_timer( void )
 	cmd_req.command = IPMI_CMD_RESET_WATCHDOG_TIMER;
 
 	fill_pkt_out( ws, &cmd_req, 0, NETFN_APP_REQ );
-	ws->ipmi_completion_function = 0; // none at this moment 
+	ws->ipmi_completion_function = 0; // none at this moment
 
 	/* change ws state, work list processing will do the rest */
 	ws_set_state( ws, WS_ACTIVE_MASTER_WRITE );
@@ -818,11 +818,11 @@ void atca_cmd_get_picmg_properties( void )
 {
 	IPMI_WS		*ws;
 	GET_PICMG_PROPERTIES_CMD_REQ	cmd_req;
-	
+
 	printf( "app_cmd_get_device_id:\n" );
 
 	ws = ws_alloc();
-	
+
 	if( !ws ) {
 		printf( "app_cmd_get_device_id: ws allocation failed\n" );
 		return;
@@ -830,13 +830,13 @@ void atca_cmd_get_picmg_properties( void )
 
 	cmd_req.command = ATCA_CMD_GET_PICMG_PROPERTIES;
 	cmd_req.picmg_id = 0;
-	
+
 	fill_pkt_out( ws, ( IPMI_CMD_REQ * )&cmd_req, 1, NETFN_PICMG_REQ );
 	/* the completion function will be called by the transport layer
-	 * completion routine after the xfer has completed. It is up to the 
-	 * test framework to keep track of request/response pairs using the 
+	 * completion routine after the xfer has completed. It is up to the
+	 * test framework to keep track of request/response pairs using the
 	 * sequence numbers */
-	ws->ipmi_completion_function = 0; // none at this moment 
+	ws->ipmi_completion_function = 0; // none at this moment
 
 	/* change ws state, work list processing will do the rest */
 	ws_set_state( ws, WS_ACTIVE_MASTER_WRITE );
@@ -856,20 +856,20 @@ void i2c_master_read( IPMI_WS *ws )
 /*----------------------------------------------------------------------------*/
 {
 	printf( "i2c_master_read\n" );
-	
+
 }
 
 void i2c_master_write( IPMI_WS *ws )
 /*----------------------------------------------------------------------------*/
 {
 	printf( "i2c_master_write\n" );
-	
+
 }
 
 // retrieve data from all AMC cards in the system and fill the AMC_INFO struct
 void
 get_amc_data( void )
 {
-	
+
 }
 

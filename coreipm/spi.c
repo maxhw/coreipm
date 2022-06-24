@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -59,9 +59,9 @@ spi_initialize( void )
 	13:12    P0.6    01     MOSI0 (SPI0)
 	15:14    P0.7    01	SSEL0 (SPI0)
                          00	GPIO Port 0.7
-			 
+
 	On the LPC2141/2/4/6/8 (unlike earlier Philips ARM devices) the SSEL0
-       	pin can be used for a different function when the SPI0 interface is 
+       	pin can be used for a different function when the SPI0 interface is
 	only used in Master mode. For example, pin hosting the SSEL0 function
        	can be configured as an output digital GPIO pin and used to select one
        	of the SPI0 slaves.
@@ -79,7 +79,7 @@ spi_initialize( void )
 		PINSEL0 |= 0x00001500;
 		IO0DIR = 0x80; // pin P0.7 configured as output
 		IOSET0 = 0x80; 	// drive the SSEL line high
-	
+
 		/* Set the SPI control register */
 		S0SPCR = SPI_CTRL_MASTER_MODE_SELECT | SPI_CTRL_BITS_8;
 	} else { // Slave mode operation
@@ -88,8 +88,8 @@ spi_initialize( void )
 
 		VICIntEnable = IER_SPI0; /* enable SPI0 interrupts */
 
-		VICVectCntl6 = 0x20 | IS_SPI0; /* This vectored IRQ slot is enabled | The 
-					    number of the interrupt request assigned 
+		VICVectCntl6 = 0x20 | IS_SPI0; /* This vectored IRQ slot is enabled | The
+					    number of the interrupt request assigned
 					    to this vectored IRQ slot.*/
 		VICVectAddr6 = ( unsigned long )SPI_ISR_0;
 
@@ -106,7 +106,7 @@ spi_initialize( void )
 
 #endif
 
-	
+
 	/* TODO: Fix - select an unused eint pin, this one is used by SPI1 SSEL
 	Select an external interrupt pin EINT3 for SPI use
 
@@ -133,7 +133,7 @@ spi_initialize( void )
 
 	0b0000 0000 0000 0000 0000 0010 1010 1000 = 0x000002A8
 	*/
-	
+
 	PINSEL1 |= 0x000002A0;
 }
 
@@ -141,30 +141,30 @@ spi_initialize( void )
  * The device ID determines which chip select line is enabled
  */
 int
-spi_master( 
+spi_master(
 	unsigned spi_device,
 	SG *sg, 		// scatter/gather list
 	unsigned char *rcvd,  	// data returned from device copied here
-	unsigned rcv_len,	// length of rcv_buffer, don't exceed this 
+	unsigned rcv_len,	// length of rcv_buffer, don't exceed this
 	unsigned *xmit_len )	// actual bytes transferred (either direction)
 {
 	int i, j, k = 0;
 	int retval = ENOERR;
 	unsigned char status, tmp;
-	
+
 	spi_select( spi_device );
 
 	for( i = 0; i < sg->elements; i++ )
 	{
-		
+
 	    for( j = 0 ; j < sg->e[i].len ; j++ ) {
-		/* Write the data to transmitted to the SPI data register. 
+		/* Write the data to transmitted to the SPI data register.
 		 * This write starts the SPI data transfer. */
 		S0SPDR = sg->e[i].ptr[j];
-		
+
 		/* Wait for the SPIF bit in the SPI status register to be set to 1. */
 		while( !( S0SPSR & SPI_STAT_XFER_COMPLETE ) );
-		
+
 		/* Read the SPI status register. */
 		status = S0SPSR;
 
@@ -180,7 +180,7 @@ spi_master(
 
 		/* Check for Mode Fault. The SSEL signal must always be inactive
 		 * when the SPI block is a master. If the SSEL signal goes active,
-		 * when the SPI block is a master, this indicates another master 
+		 * when the SPI block is a master, this indicates another master
 		 * has selected the device to be a slave. This condition is known
 		 * as a mode fault. When a mode fault is detected, the mode fault
 		 * (MODF) bit in the status register will be activated, the SPI
@@ -190,10 +190,10 @@ spi_master(
 			retval = EIO;
 		}
 
-		/* Check for a read overrun. A read overrun occurs when the SPI 
+		/* Check for a read overrun. A read overrun occurs when the SPI
 		 * block internal read buffer contains data that has not been
 		 * read by the processor, and a new transfer has completed. The
-		 * read buffer containing valid data is indicated by the SPIF 
+		 * read buffer containing valid data is indicated by the SPIF
 		 * bit in the status register being active. When a transfer
 		 * completes, the SPI block needs to move the received data to
 		 * the read buffer. If the SPIF bit is active (the read buffer
@@ -209,26 +209,26 @@ spi_master(
 		 * As a result, data must not be written to the SPI data register
 		 * when an SPI data transfer is currently in progress. The time
 		 * frame where data cannot be written to the SPI data register
-		 * is from when the transfer starts, until after the status 
-		 * register has been read when the SPIF status is active. If 
-		 * the SPI data register is written in this time frame, the 
+		 * is from when the transfer starts, until after the status
+		 * register has been read when the SPIF status is active. If
+		 * the SPI data register is written in this time frame, the
 		 * write data will be lost, and the write collision (WCOL) bit
 		 * in the status register will be activated. */
 		if( status & SPI_STAT_WRITE_COLL ) {
 			retval = EIO;
 		}
 
-		/* Read the received data from the SPI data register. 
+		/* Read the received data from the SPI data register.
 		   Note that a read or write of the SPI data register is required
-		   in order to clear the SPIF status bit. Therefore, if the 
+		   in order to clear the SPIF status bit. Therefore, if the
 		   optional read of the SPI data register does not take place, a
 		   write to this register is required in order to clear the SPIF
 		   status bit. */
-		if( k < rcv_len ) 
+		if( k < rcv_len )
 			rcvd[k++] = S0SPDR;
 		else
 			tmp = S0SPDR;
-		
+
 		if( retval != ESUCCESS )
 			break;
 	    }
@@ -249,40 +249,40 @@ void SPI_ISR_0( void )
 	unsigned char data_in, error = 0;
 	unsigned spin_count = 0;
 	unsigned char status;
-	
-	/* In slave mode, how we respond is dependent on what the master 
+
+	/* In slave mode, how we respond is dependent on what the master
 	 * expects from us, this is usually indicated by a command frame
-	 * that is transferred from the master at the begining of the 
-	 * transaction. The command can indicate that this is a write 
+	 * that is transferred from the master at the begining of the
+	 * transaction. The command can indicate that this is a write
 	 * operation where we should be accepting and processing incoming
 	 * bytes or a read operation where we should be responding by writing
 	 * data to the data register. */
 
 	/* Set the SPI control register to disable SPI0 interrupts */
 	S0SPCR = 0;
-	
+
 	while( !error ) {
 		while( !( S0SPSR & SPI_STAT_XFER_COMPLETE ) ) {
 			if( spin_count++ > 1000000 ) {
 				error = 1;
 				break;
 			}
-		}	
+		}
 
 		/* Read the SPI status register. */
 		status = S0SPSR;
 
-		if( status & 
-			( SPI_STAT_SLAVE_ABORT | SPI_STAT_MODE_FAULT 
+		if( status &
+			( SPI_STAT_SLAVE_ABORT | SPI_STAT_MODE_FAULT
 			  | SPI_STAT_READ_OVERRUN | SPI_STAT_WRITE_COLL ) )
 			error = 1;
 
-		/* For testing purposes we take the incoming data, do a bitwise 
+		/* For testing purposes we take the incoming data, do a bitwise
 		 * invert and return it */
 		data_in = S0SPDR;
 		S0SPDR = ~data_in;
 	}
-	
+
 	/* Set the SPI control register to enable SPI0 interrupts */
 	S0SPCR = SPI_CTRL_INTERRUPT_ENABLE;
 
@@ -334,19 +334,19 @@ spi_signal_test( void )
 	unsigned char status;
 
 	spi_select( 0 );
-	
+
 	for( i = 0; i < 10000000 ; i++ ) {
-		/* Write the data to transmitted to the SPI data register. 
+		/* Write the data to transmitted to the SPI data register.
 		 * This write starts the SPI data transfer. */
 		S0SPDR = 55;
-		
+
 		/* Wait for the SPIF bit in the SPI status register to be set to 1. */
 		while( !( S0SPSR & SPI_STAT_XFER_COMPLETE ) );
-		
+
 		/* Read the SPI status register. */
 		status = S0SPSR;
 
-		if( status & ( SPI_STAT_SLAVE_ABORT | SPI_STAT_MODE_FAULT 
+		if( status & ( SPI_STAT_SLAVE_ABORT | SPI_STAT_MODE_FAULT
 			  | SPI_STAT_READ_OVERRUN | SPI_STAT_WRITE_COLL ) ) {
 			putstr( "spi_signal_test: status error\n" );
 			break;

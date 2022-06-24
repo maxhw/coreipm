@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -63,7 +63,7 @@ void hardclock( void ) __attribute__ ((interrupt));
  *==============================================================*/
 /* Timer Counter 0 Interrupt executes each 100ms */
 #if defined (__CA__) || defined (__CC_ARM)
-void hardclock( void ) __irq  
+void hardclock( void ) __irq
 #elif defined (__GNUC__)
 void hardclock( void )
 #endif
@@ -78,7 +78,7 @@ void hardclock( void )
  *==============================================================*/
 /* Setup the Timer Counter 0 Interrupt */
 void
-timer_initialize( void ) 
+timer_initialize( void )
 {
 //	T0MR0 = 5999999;				/* 60MHz clk - 100mSec = 6,000,000-1 counts */
 //	T0MR0 = 1199999;				/* 12MHz clk - 100mSec = 1,200,000-1 counts */
@@ -96,10 +96,10 @@ timer_initialize( void )
  * timer_add_callout_queue()
  *==============================================================*/
 int
-timer_add_callout_queue( 
+timer_add_callout_queue(
 	void *handle,
-	unsigned long ticks, 
-	void(*func)(unsigned char *), 
+	unsigned long ticks,
+	void(*func)(unsigned char *),
 	unsigned char *arg )
 {
 	CQE *cqe;
@@ -117,7 +117,7 @@ timer_add_callout_queue(
 
 /*==============================================================
  * timer_remove_callout_queue()
- * 	Search the callout queue using the handle and remove the 
+ * 	Search the callout queue using the handle and remove the
  * 	entry if found.
  *==============================================================*/
 void
@@ -126,7 +126,7 @@ timer_remove_callout_queue(
 {
 	CQE *ptr;
 	unsigned i;
-	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
@@ -141,7 +141,7 @@ timer_remove_callout_queue(
 }
 
 /*==============================================================
- * timer_reset_callout_queue() 
+ * timer_reset_callout_queue()
  * 	Search the callout queue using the handle and reset the
  * 	timeout value with the new value passed in ticks.
  *==============================================================*/
@@ -152,9 +152,9 @@ timer_reset_callout_queue(
 {
 	CQE *cqe;
 	unsigned i;
-	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-	DISABLE_INTERRUPTS;	
+	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cqe = &cq_array[i];
@@ -168,18 +168,18 @@ timer_reset_callout_queue(
 
 
 /*==============================================================
- * timer_get_expiration_time() 
+ * timer_get_expiration_time()
  * 	Get ticks to expiration.
- * 
+ *
  *==============================================================*/
 unsigned long
 timer_get_expiration_time(
-	void *handle ) 
+	void *handle )
 {
 	CQE *cqe;
 	unsigned i;
 	unsigned long ticks = 0;
-	
+
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cqe = &cq_array[i];
@@ -191,7 +191,7 @@ timer_get_expiration_time(
 	}
 	return( 0 );
 }
-		
+
 
 /*==============================================================
  * timer_process_callout_queue()
@@ -202,7 +202,7 @@ void
 timer_process_callout_queue( void )
 {
 	CQE *cqe;
-	
+
 	if( ( cqe = cq_get_expired_elem( lbolt ) ) ) {
 		cq_set_cqe_state( cqe, CQE_PENDING );
 		(*cqe->func)( cqe->arg );
@@ -218,11 +218,11 @@ timer_process_callout_queue( void )
  * cq_init()
  *==============================================================*/
 /* initialize cq structures */
-void 
+void
 cq_init( void )
 {
 	unsigned i;
-	
+
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
 	{
 		cq_array[i].state = CQE_FREE;
@@ -240,7 +240,7 @@ cq_alloc( void )
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i;
-	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )
@@ -261,7 +261,7 @@ cq_alloc( void )
  * cq_free()
  *==============================================================*/
 /* set cqe state to free */
-void 
+void
 cq_free( CQE *cqe )
 {
 	cqe->state = CQE_FREE;
@@ -276,7 +276,7 @@ cq_get_expired_elem( unsigned long current_tick )
 	CQE *cqe = 0;
 	CQE *ptr = cq_array;
 	unsigned i;
-	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 	DISABLE_INTERRUPTS;
 	for ( i = 0; i < CQ_ARRAY_SIZE; i++ )

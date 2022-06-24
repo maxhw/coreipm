@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -140,7 +140,7 @@ support and contact details.
 #define PCB_PINSEL9     (*(REG32 (0xE002C024)))
 #define PCB_PINSEL10    (*(REG32 (0xE002C028)))
 
-			
+
 #define PINSEL0         PCB_PINSEL0
 #define PINSEL1         PCB_PINSEL1
 #define PINSEL2         PCB_PINSEL2
@@ -225,7 +225,7 @@ support and contact details.
 #define IO_INT_STAT     (*(REG32 (0xE0028080)))
 
 // 23xx specific: PARTCFG
-#define PARTCFG         (*(REG32 (0x3FFF8000))) 
+#define PARTCFG         (*(REG32 (0x3FFF8000)))
 
 
 // Fast IO
@@ -385,7 +385,7 @@ support and contact details.
 #define UART3_FDR       (*(REG32 (0xE007C028)))
 #define UART3_TER       (*(REG32 (0xE007C030)))
 
-#define U3RBR           UART3_RBR 
+#define U3RBR           UART3_RBR
 #define U3THR           UART3_THR
 #define U3DLL           UART3_DLL
 #define U3DLM           UART3_DLM
@@ -632,23 +632,23 @@ support and contact details.
 #define T3_EMR          (*(REG32 (0xE007403C)))
 #define T3_CTCR         (*(REG32 (0xE0074070)))
 
-#define T3IR            T3_IR 
-#define T3TCR           T3_TCR 
-#define T3TC            T3_TC 
-#define T3PR            T3_PR 
-#define T3PC            T3_PC 
-#define T3MCR           T3_MCR 
-#define T3MR0           T3_MR0 
-#define T3MR1           T3_MR1 
-#define T3MR2           T3_MR2 
-#define T3MR3           T3_MR3 
-#define T3CCR           T3_CCR 
-#define T3CR0           T3_CR0 
-#define T3CR1           T3_CR1 
-#define T3CR2           T3_CR2 
-#define T3CR3           T3_CR3 
-#define T3EMR           T3_EMR 
-#define T3CTCR          T3_CTCR 
+#define T3IR            T3_IR
+#define T3TCR           T3_TCR
+#define T3TC            T3_TC
+#define T3PR            T3_PR
+#define T3PC            T3_PC
+#define T3MCR           T3_MCR
+#define T3MR0           T3_MR0
+#define T3MR1           T3_MR1
+#define T3MR2           T3_MR2
+#define T3MR3           T3_MR3
+#define T3CCR           T3_CCR
+#define T3CR0           T3_CR0
+#define T3CR1           T3_CR1
+#define T3CR2           T3_CR2
+#define T3CR3           T3_CR3
+#define T3EMR           T3_EMR
+#define T3CTCR          T3_CTCR
 
 /*##############################################################################
 ## PWM
@@ -740,7 +740,7 @@ support and contact details.
 #define PWM0LER         PWM_LER
 #define PWM0CTCR        PWM_CTCR
 
-// PWM1  23xx specific 
+// PWM1  23xx specific
 #define PWM1_BASE_ADDR		0xE0018000
 #define PWM1_IR         (*(REG32 (0xE0018000)))
 #define PWM1_TCR        (*(REG32 (0xE0018004)))
@@ -796,7 +796,7 @@ support and contact details.
 /* ---- RTC: Miscellaneous Register Group ------------------ */
 #define RTC_ILR         (*(REG32 (0xE0024000)))
 #define RTC_CTC         (*(REG32 (0xE0024004)))
-#define RTC_CCR         (*(REG32 (0xE0024008)))  
+#define RTC_CCR         (*(REG32 (0xE0024008)))
 #define RTC_CIIR        (*(REG32 (0xE002400C)))
 #define RTC_AMR         (*(REG32 (0xE0024010)))
 #define RTC_CTIME0      (*(REG32 (0xE0024014)))
@@ -837,7 +837,7 @@ support and contact details.
 #define CTIME1          RTC_CTIME1
 #define CTIME2          RTC_CTIME2
 
-#define SEC             RTC_SEC 
+#define SEC             RTC_SEC
 #define MIN             RTC_MIN
 #define HOUR            RTC_HOUR
 #define DOM             RTC_DOM
@@ -1020,7 +1020,7 @@ support and contact details.
 #define AHBCFG1        SCB_AHBCFG1
 #define AHBCFG2        SCB_AHBCFG2
 
-/* MPMC(EMC) registers, note: all the external memory controller(EMC) registers 
+/* MPMC(EMC) registers, note: all the external memory controller(EMC) registers
 are for LPC24xx only. */
 #define STATIC_MEM0_BASE		0x80000000
 #define STATIC_MEM1_BASE		0x81000000
@@ -1102,10 +1102,10 @@ are for LPC24xx only. */
 /* TODO move this to lpc23nn.h - recheck fields */
 /* PINSEL2 register setting flags */
 
-#define PS2_P1_0_GPIO 		0x00000000 // GPIO Port 1.0 [1:0] 
+#define PS2_P1_0_GPIO 		0x00000000 // GPIO Port 1.0 [1:0]
 #define PS2_P1_0_ENET_TXD0	0x00000001 // ENET_TXD0
 
-#define PS2_P1_1_GPIO		0x00000000 // GPIO Port 1.1 [3:2] 
+#define PS2_P1_1_GPIO		0x00000000 // GPIO Port 1.1 [3:2]
 #define PS2_P1_1_ENET_TXD1	0x00000004 // ENET_TXD1
 
 #define PS2_P1_4_GPIO		0x00000000 // GPIO Port 1.4 [9:8]
@@ -1167,7 +1167,7 @@ description
 #define PCSSP1		0x00000400 // 10 The SSP1 interface power/clock control bit. 1
 #define PCEMC		0x00000800 // 11 External Memory Controller 1
 #define PCAD		0x00001000 // 12 A/D converter (ADC) power/clock control bit.
-/* Note: Clear the PDN bit in the AD0CR (see Section 27–6.1) before
+/* Note: Clear the PDN bit in the AD0CR (see Section 27â€“6.1) before
    clearing this bit, and set this bit before setting PDN.0 */
 
 #define PCAN1		0x00002000 // 13 CAN Controller 1 power/clock control bit. 0
@@ -1229,12 +1229,12 @@ ENET_MDIO	Input/Output MI data input and output
 #define ETH_SA2  (*(REG32 (0xFFE00048))) // R/W Station Address 2 register.
 
 #define MAC_MAC1 ETH_MAC1
-#define MAC_MAC2 ETH_MAC2    
-#define MAC_IPGT ETH_IPGT    
-#define MAC_IPGR ETH_IPGR 
-#define MAC_CLRT ETH_CLRT 
+#define MAC_MAC2 ETH_MAC2
+#define MAC_IPGT ETH_IPGT
+#define MAC_IPGR ETH_IPGR
+#define MAC_CLRT ETH_CLRT
 #define MAC_MAXF ETH_MAXF
-#define MAC_SUPP ETH_SUPP 
+#define MAC_SUPP ETH_SUPP
 #define MAC_TEST ETH_TEST
 #define MAC_MCFG ETH_MCFG
 #define MAC_MCMD ETH_MCMD

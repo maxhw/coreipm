@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -30,20 +30,20 @@ support and contact details.
  *=============================================================================*/
 /*
 
-The Write Enable Latch (WEL) bit must be set prior to each WRITE and WRSR 
+The Write Enable Latch (WEL) bit must be set prior to each WRITE and WRSR
 instruction. The only way to do this is to send a Write Enable (WREN) instruction
 to the device.
 
 The Write Enable Latch (WEL) bit is returned to its reset state by the following
 events:
 
-  – Power-up
-  – Write Disable (WRDI) instruction completion
-  – Write Status Register (WRSR) instruction completion
-  – Write (WRITE) instruction completion
+  â€“ Power-up
+  â€“ Write Disable (WRDI) instruction completion
+  â€“ Write Status Register (WRSR) instruction completion
+  â€“ Write (WRITE) instruction completion
 
 NOTE: For any instruction to be accepted, and executed, Chip Select (S) must be
-driven High after the rising edge of Serial Clock (C) for the last bit of the 
+driven High after the rising edge of Serial Clock (C) for the last bit of the
 instruction, and before the next rising edge of Serial Clock (C).
 
 Write Enable (WREN)
@@ -68,19 +68,19 @@ the Status Register. Before it can be accepted, a Write Enable (WREN) instructio
 must previously have been executed. After the Write Enable (WREN) instruction has
 been decoded and executed, the device sets the Write Enable Latch (WEL).
 
-The Write Status Register (WRSR) instruction is entered by driving Chip Select 
+The Write Status Register (WRSR) instruction is entered by driving Chip Select
 (S) Low, followed by the instruction code and the data byte on Serial Data Input (D).
 
-The Write Status Register (WRSR) instruction has no effect on b6, b5, b4, b1 
+The Write Status Register (WRSR) instruction has no effect on b6, b5, b4, b1
 and b0 of the Status Register. b6, b5 and b4 are always read as 0.
 
 Chip Select (S) must be driven High after the rising edge of Serial Clock (C)
-that latches in the eighth bit of the data byte, and before the next rising edge 
+that latches in the eighth bit of the data byte, and before the next rising edge
 of Serial Clock (C). Otherwise, the Write Status Register (WRSR) instruction is
-not executed. As soon as Chip Select (S) is driven High, the self-timed Write 
+not executed. As soon as Chip Select (S) is driven High, the self-timed Write
 Status Register cycle (whose duration is tW) is initiated. While the Write Status
 Register cycle is in progress, the Status Register may still be read to check the
-value of the Write In Progress (WIP) bit. The Write In Progress (WIP) bit is 1 
+value of the Write In Progress (WIP) bit. The Write In Progress (WIP) bit is 1
 during the self-timed Write Status Register cycle, and is 0 when it is completed.
 When the cycle is completed, the Write Enable Latch (WEL) is reset.
 
@@ -92,19 +92,19 @@ Serial Data Input (D). The address is loaded into an internal address register,
 and the byte of data at that address is shifted out, on Serial Data Output (Q).
 
 If Chip Select (S) continues to be driven Low, the internal address register is
-automatically incremented, and the byte of data at the new address is shifted 
+automatically incremented, and the byte of data at the new address is shifted
 out.
 
-When the highest address is reached, the address counter rolls over to zero, 
-allowing the Read cycle to be continued indefinitely. The whole memory can, 
+When the highest address is reached, the address counter rolls over to zero,
+allowing the Read cycle to be continued indefinitely. The whole memory can,
 therefore, be read with a single READ instruction.
 
-The Read cycle is terminated by driving Chip Select (S) High. The rising edge 
+The Read cycle is terminated by driving Chip Select (S) High. The rising edge
 of the Chip Select (S) signal can occur at any time during the cycle.
 
 The first byte addressed can be any byte within any page.
 
-The instruction is not accepted, and is not executed, if a Write cycle is 
+The instruction is not accepted, and is not executed, if a Write cycle is
 currently in progress.
 
 Write to Memory Array (WRITE)
@@ -114,27 +114,27 @@ The bits of the instruction byte, address byte, and at least one data byte are
 then shifted in, on Serial Data Input (D).
 
 The instruction is terminated by driving Chip Select (S) High at a byte boundary
-of the input data. In the case of Figure 12, this occurs after the eighth bit 
+of the input data. In the case of Figure 12, this occurs after the eighth bit
 of the data byte has been latched in, indicating that the instruction is being
 used to write a single byte. The self-timed Write cycle starts, and continues
 for a period tWC (as specified in Table 14), at the end of which the Write in
 Progress (WIP) bit is reset to 0.
 
 If, though, Chip Select (S) continues to be driven Low, as shown in Figure 13,
-the next byte of input data is shifted in, so that more than a single byte, 
+the next byte of input data is shifted in, so that more than a single byte,
 starting from the given address towards the end of the same page, can be written
 in a single internal Write cycle. The selftimed Write cycle starts, and continues,
 for a period tWC (as specified in Table 14), at the end of which the Write in
 Progress (WIP) bit is reset to 0.
 
 Each time a new data byte is shifted in, the least significant bits of the
-internal address counter are incremented. If the number of data bytes sent to 
+internal address counter are incremented. If the number of data bytes sent to
 the device exceeds the page boundary, the internal address counter rolls over
 to the beginning of the page, and the previous data there are overwritten with
 the incoming data. (The page size of these devices is 128/256 bytes depending
 on the device type).
 
-The instruction is not accepted, and is not executed, under the following 
+The instruction is not accepted, and is not executed, under the following
 conditions:
 
   - if the Write Enable Latch (WEL) bit has not been set to 1 (by executing a
@@ -143,10 +143,10 @@ conditions:
   - if a Write cycle is already in progress
 
   - if the device has not been deselected, by Chip Select (S) being driven High,
-    at a byte boundary (after the eighth bit, b0, of the last data byte that has 
+    at a byte boundary (after the eighth bit, b0, of the last data byte that has
     been latched in)
 
-  - if the addressed page is in the region protected by the Block Protect (BP1 
+  - if the addressed page is in the region protected by the Block Protect (BP1
     and BP0) bits.
 
 Some devices offer an ECC (Error Correction Code) logic which compares each
@@ -174,7 +174,7 @@ also 128 or 256 bytes depending on the device. 1+ Mbit devices have 256 byte pag
 /*=============================================================================
  * SPI EEPROM REGISTERS
  *=============================================================================*/
-/* 
+/*
 
 The status and control bits of the Status Register are as follows:
 
@@ -229,7 +229,7 @@ prom_write( addr, uchar *data, int len )
 	uchar buf[4], spi_device = SPI_DEVICE_PROM;
 	uchar rcvd[128];
 	int rcvd_len, xmit_len;
-	
+
 	/* The Write Enable Latch (WEL) bit must be set prior to each WRITE and
 	 * WRSR instruction. The only way to do this is to send a Write Enable
 	 * (WREN) instruction to the device. */
@@ -257,14 +257,14 @@ prom_write( addr, uchar *data, int len )
 
 	spi_master( spi_device, &sg, rcvd, &xmit_len, &rcvd_len );
 }
-	
+
 void
 prom_read( addr, uchar *data, int len )
 {
 	Sg sg;
 	uchar buf[4], spi_device = SPI_DEVICE_PROM;
 	int rcvd_len, xmit_len;
-	
+
 	/* read data */
 	sg.elements = 1;
 	sg.e[0].ptr = buf;

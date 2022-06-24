@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -40,11 +40,11 @@ IPMI_WS	ws_array[WS_ARRAY_SIZE];
 
 
 /* initialize ws structures */
-void 
+void
 ws_init( void )
 {
 	unsigned i;
-	
+
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ws_array[i].ws_state = WS_FREE;
@@ -59,7 +59,7 @@ ws_alloc( void )
 	IPMI_WS *ws = 0;
 	IPMI_WS *ptr = ws_array;
 	unsigned i;
-	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
 	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
@@ -76,7 +76,7 @@ ws_alloc( void )
 }
 
 /* set ws state to free */
-void 
+void
 ws_free( IPMI_WS *ws )
 {
 	int len, i;
@@ -85,7 +85,7 @@ ws_free( IPMI_WS *ws )
 	len = sizeof( IPMI_WS );
 	for( i = 0 ; i < len ; i++ ) {
 		*ptr++ = 0;
-	}	
+	}
 	ws->incoming_protocol = IPMI_CH_PROTOCOL_NONE;
 	ws->ws_state = WS_FREE;
 }
@@ -96,22 +96,22 @@ ws_get_elem( unsigned state )
 	IPMI_WS *ws = 0;
 	IPMI_WS *ptr = ws_array;
 	unsigned i;
-	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	//unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-	//DISABLE_INTERRUPTS;	
+	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ptr = &ws_array[i];
 		if( ptr->ws_state == state ) {
 			if( ws ) {
-				if( ptr->timestamp < ws->timestamp ) 
+				if( ptr->timestamp < ws->timestamp )
 					ws = ptr;
 			} else {
 				ws = ptr;
 			}
 		}
 	}
-	
+
 	if( ws )
 		ws->timestamp = lbolt;
 
@@ -125,9 +125,9 @@ ws_get_elem_seq( uchar seq, IPMI_WS *ws_ignore )
 	IPMI_WS *ws = 0;
 	IPMI_WS *ptr = ws_array;
 	unsigned i;
-	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;	
+	unsigned int interrupt_mask = CURRENT_INTERRUPT_MASK;
 
-	//DISABLE_INTERRUPTS;		
+	//DISABLE_INTERRUPTS;
 	for ( i = 0; i < WS_ARRAY_SIZE; i++ )
 	{
 		ptr = &ws_array[i];
@@ -150,10 +150,10 @@ ws_set_state( IPMI_WS * ws, unsigned state )
 
 /*==============================================================
  * ws_process_work_list()
- * 	Go through the active list, calling the ipmi handler for 
+ * 	Go through the active list, calling the ipmi handler for
  * 	incoming entries and transport handler for outgoing entries.
  *==============================================================*/
-void ws_process_work_list( void ) 
+void ws_process_work_list( void )
 {
 	IPMI_WS *ws;
 
@@ -172,13 +172,13 @@ void ws_process_work_list( void )
 		ws_set_state( ws, WS_ACTIVE_MASTER_WRITE_PENDING );
 		switch( ws->outgoing_medium ) {
 			case IPMI_CH_MEDIUM_IPMB:
-				i2c_master_write( ws );			
+				i2c_master_write( ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_SERIAL:	/* Asynch. Serial/Modem (RS-232) 	*/
 				serial_tm_send( ( unsigned char * )ws );
 				break;
-				
+
 			case IPMI_CH_MEDIUM_ICMB10:	/* ICMB v1.0 				*/
 			case IPMI_CH_MEDIUM_ICMB09:	/* ICMB v0.9 				*/
 			case IPMI_CH_MEDIUM_LAN:	/* 802.3 LAN 				*/

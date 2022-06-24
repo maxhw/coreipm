@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -34,17 +34,17 @@ contains a number of programmable bits used to control the function of the SPI
 block. The settings for this register must be set up prior to a given data
 transfer taking place. All values default to zero.
 
-Bit Symbol    Value Description 
+Bit Symbol    Value Description
 -----------------------------------------
 1:0 - Reserved
 2 BitEnable   0 The SPI controller sends and receives 8 bits of data per transfer.
               1 The SPI controller sends and receives the number of bits
 	        selected by bits 11:8.
-		
+
 3 CPHA          Clock phase control determines the relationship between the data
                 and the clock on SPI transfers, and controls when a slave transfer
 	        is defined as starting and ending.
-		
+
 	      0 Data is sampled on the first clock edge of SCK. A transfer starts
 	        and ends with activation and deactivation of the SSEL signal.
               1 Data is sampled on the second clock edge of the SCK. A transfer
@@ -55,7 +55,7 @@ Bit Symbol    Value Description
 
               0 SCK is active high.
               1 SCK is active low.
-	      
+
 5 MSTR          Master mode select.
 
               0 The SPI operates in Slave mode.
@@ -63,16 +63,16 @@ Bit Symbol    Value Description
 
 6 LSBF          LSB First controls which direction each byte is shifted
                 when transferred.
-		
+
 	      0 SPI data is transferred MSB (bit 7) first.
 	      1 SPI data is transferred LSB (bit 0) first.
-	      
+
 7 SPIE          Serial peripheral interrupt enable.
 
               0 SPI interrupts are inhibited.
               1 A hardware interrupt is generated each time the SPIF or
                 MODF bits are activated.
-		
+
 11:8 BITS       When bit 2 of the control register is 1, this field controls the
                 number of bits per transfer:
 
@@ -87,7 +87,7 @@ Bit Symbol    Value Description
            0000 16 bits per transfer
 
 15:12 - Reserved
-	      
+
 */
 #define SPI_CTRL_BIT_ENABLE		0x004
 #define SPI_CTRL_CLK_PHASE_SECOND_EDGE	0x008
@@ -137,9 +137,9 @@ bit. The remaining bits in the register are exception condition indicators.
 3) SPI data register (S0SPDR)
 Is used to provide the transmit and receive data bytes. An internal shift register
 in the SPI block logic is used for the actual transmission and reception of the
-serial data. Data is written to the SPI data register for the transmit case. 
+serial data. Data is written to the SPI data register for the transmit case.
 
-There is no buffer between the data register and the internal shift register. 
+There is no buffer between the data register and the internal shift register.
 A write to the data register goes directly into the internal shift register.
 Therefore, data should only be written to this register when a transmit is not
 currently in progress. Read data is buffered. When a transfer is complete, the

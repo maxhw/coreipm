@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -30,16 +30,16 @@ support and contact details.
 /*
 Time is an unsigned 32-bit value representing the local time as the number of
 seconds from 00:00:00, January 1, 1970. This format is sufficient to maintain
-timestamping with 1-second resolution past the year 2100. 
-The timestamps used for SDR and SEL records are assumed to be specified in 
-relative local time. 
+timestamping with 1-second resolution past the year 2100.
+The timestamps used for SDR and SEL records are assumed to be specified in
+relative local time.
 
 0xFFFFFFFF indicates an invalid or unspecified time value.
 
 0x00000000 through 0x20000000 are used for timestamping events that occur after
-the initialization of the System Event Log device up to the time that the 
+the initialization of the System Event Log device up to the time that the
 timestamp is set with the system time value. Thus, these timestamp values are
-relative to the completion of the SEL device’s initialization, not 1/1/1970.
+relative to the completion of the SEL deviceâ€™s initialization, not 1/1/1970.
 */
 
 typedef struct tm {
@@ -60,12 +60,12 @@ void
 rtc_init( void )
 {
 	/* Set the prescaler. The prescaler divides the peripheral clock (PCLK)
-	 * by a value which contains both an integer portion and a fractional 
-	 * portion. */ 
+	 * by a value which contains both an integer portion and a fractional
+	 * portion. */
 	RTC_PREINT = ( PCLK/32768 ) - 1;			// 13 bits valid
 	RTC_PREFRAC = PCLK - ( (PREINT + 1) * 32768 );	// 15 bits valid
 }
-	
+
 unsigned int
 rtc_get_timestamp( void )
 {
@@ -142,7 +142,7 @@ unsigned mktime( TM *tptr )
 	result += tptr->tm_min;
 	result *= 60;
 	result += tptr->tm_sec;
-	
+
 	if( tptr->tm_isdst > 0 )
 		result -= 3600;
 	return(result);

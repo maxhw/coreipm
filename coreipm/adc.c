@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -38,7 +38,7 @@ void
 adc_ch0_read( SENSOR_DATA *sensor )
 {
 	unsigned int val;
-	
+
 	/* Setup the A/D converter */
 //	VPBDIV = 0x02;		               /*Set the Pclk to 30 Mhz              */
 	AD0CR   = 0x00210601;                   /* Setup A/D: 10-bit AIN0 @ 3MHz */
@@ -64,13 +64,13 @@ adc_init_sensor_record( void )
 	adsr.owner_id = 0;	/* 7-bit system software ID */
 	adsr.id_type = 1;	/* System software type */
 	adsr.channel_num = 0;
-	adsr.sensor_owner_lun = 0; 
+	adsr.sensor_owner_lun = 0;
 	adsr.sensor_number = 1;
 	adsr.entity_id = ENTITY_ID_POWER_SUPPLY; /* physical entity the sensor is monitoring */
 
 	adsr.entity_type = 0;	/* treat entity as a physical entity */
 	adsr.entity_instance_num = 0;
-	adsr.init_scanning = 1;	/* the sensor accepts the ‘enable/disable scanning’ bit in the 
+	adsr.init_scanning = 1;	/* the sensor accepts the â€˜enable/disable scanningâ€™ bit in the
 				   Set Sensor Event Enable command). */
 	adsr.init_events = 0;
 	adsr.init_thresholds = 0;
@@ -84,13 +84,13 @@ adc_init_sensor_record( void )
 
 	/* Sensor Auto Re-arm Support */
 	adsr.sensor_manual_support = 1;		/* automatically rearms itself when the event clears */
-				    
+
 	/* Sensor Hysteresis Support */
 	adsr.sensor_hysteresis_support = 0; 	/* No hysteresis */
-					
+
 	/* Sensor Threshold Access Support */
 	adsr.sensor_threshold_access = 0;	/* no thresholds */
-				     
+
 	/* Sensor Event Message Control Support */
 	adsr.event_msg_control = 1;			/* entire sensor only (implies that global
 						   disable is also supported) */
@@ -107,7 +107,7 @@ adc_init_sensor_record( void )
 	adsr.sensor_units2 = SENSOR_UNIT_VOLTS;	/*  Base Unit */
 	adsr.sensor_units3 = 0;		/* no modifier unit */
 	adsr.linearization = 0;		/* Linear */
-	adsr.M = 0;		
+	adsr.M = 0;
 	adsr.M_tolerance = 0;
 	adsr.B = 0;
 	adsr.B_accuracy = 0;
@@ -122,7 +122,7 @@ adc_init_sensor_record( void )
 	adsr.upper_non_recoverable_threshold = 0;
 	adsr.upper_critical_threshold = 0;
 	adsr.upper_non_critical_threshold = 0;
-	adsr.lower_non_recoverable_threshold = 0;	
+	adsr.lower_non_recoverable_threshold = 0;
 	adsr.lower_critical_threshold = 0;
 	adsr.lower_non_critical_threshold;
 	adsr.positive_going_threshold_hysteresis_value;
@@ -130,7 +130,7 @@ adc_init_sensor_record( void )
 	adsr.reserved2 = 0;
 	adsr.reserved3 = 0;
 	adsr.oem = 0;
-	adsr.id_string_type = 3;	/* 11 = 8-bit ASCII + Latin 1. */ 
+	adsr.id_string_type = 3;	/* 11 = 8-bit ASCII + Latin 1. */
 	adsr.id_string_length = 11; /* length of following data, in characters */
 	memcpy( adsr.id_string_bytes, "PSU voltage", 11 ); /* Sensor ID String bytes. */
 

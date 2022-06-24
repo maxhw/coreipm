@@ -7,20 +7,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2009 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -41,7 +41,7 @@ support and contact details.
 
 
 
-void 
+void
 *get_in_addr( struct sockaddr *sa )
 {
 	if( sa->sa_family == AF_INET ) {
@@ -50,7 +50,7 @@ void
 	return &( ( ( struct sockaddr_in6 * )sa )->sin6_addr );
 }
 
-int 
+int
 rmcpd_init_listener( void )
 {
 	int sockfd;
@@ -67,10 +67,10 @@ rmcpd_init_listener( void )
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_flags = AI_PASSIVE; // use my IP
 	if( ( rv = getaddrinfo( NULL, MYPORT, &hints, &servinfo ) ) != 0 ) {
-		fprintf( stderr, "getaddrinfo: %s\n", gai_strerror( rv ) );	
+		fprintf( stderr, "getaddrinfo: %s\n", gai_strerror( rv ) );
 		return 1;
 	}
-	
+
 	// loop through all the results and bind to the first we can
 	for( p = servinfo; p != NULL; p = p->ai_next ) {
 		if( ( sockfd = socket(p->ai_family, p->ai_socktype,
@@ -85,7 +85,7 @@ rmcpd_init_listener( void )
 		}
 		break;
 	}
-	
+
 	if( p == NULL ) {
 		fprintf( stderr, "listener: failed to bind socket\n" );
 		return 2;

@@ -6,20 +6,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2009 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -40,7 +40,7 @@ support and contact details.
 #define FALSE 0
 #define TRUE 1
 
-volatile int STOP=FALSE; 
+volatile int STOP=FALSE;
 
 void tty_signal_handler( int status );   /* definition of signal handler */
 int wait_flag = TRUE;       /* TRUE while no signal received */
@@ -57,7 +57,7 @@ tty_init( void )
 	/* open the device to be non-blocking (read will return immediatly) */
 	fd = open( MODEMDEVICE, O_RDWR | O_NOCTTY | O_NONBLOCK );
 	if ( fd < 0 ) {
-		perror( MODEMDEVICE ); 
+		perror( MODEMDEVICE );
 		exit( -1 );
 	}
 
@@ -67,11 +67,11 @@ tty_init( void )
 	saio.sa_flags = 0;
 	saio.sa_restorer = NULL;
 	sigaction( SIGIO, &saio, NULL );
-  
+
 	/* allow the process to receive SIGIO */
 	fcntl( fd, F_SETOWN, getpid() );
-	
-	/* Make the file descriptor asynchronous (the manual page says only 
+
+	/* Make the file descriptor asynchronous (the manual page says only
 	   O_APPEND and O_NONBLOCK, will work with F_SETFL...) */
 	fcntl( fd, F_SETFL, FASYNC );
 
@@ -97,7 +97,7 @@ tty_signal_handler( int status )
 {
 	int res;
 	char buf[255];
-	
+
  	/* after receiving SIGIO, set wait_flag = FALSE, input is available
 	 * and can be read */
 	printf( "received SIGIO signal.\n" );
@@ -115,14 +115,14 @@ tty_restore( void )
 	tcsetattr( fd, TCSANOW, &oldtio);
 }
 
-void 
+void
 serial_tm_send_debug( IPMI_WS *ws )
 /*----------------------------------------------------------------------------*/
 {
 	int i;
-	
+
 	printf( "[" );
-	for( i = 0; i < ws->len_out; i++ ) { 
+	for( i = 0; i < ws->len_out; i++ ) {
 		printf( "%2.2x", ws->pkt_out[i] );
 		if( i < ( ws->len_out - 1 ) )
 			printf( " " );
@@ -131,7 +131,7 @@ serial_tm_send_debug( IPMI_WS *ws )
 	ws_free( ws );
 }
 
-void 
+void
 serial_tm_send( IPMI_WS *ws )
 /*----------------------------------------------------------------------------*/
 {
@@ -139,12 +139,12 @@ serial_tm_send( IPMI_WS *ws )
 	char buf[128];
 	char *ptr = buf;
 	int pos = 0;
-	
+
 	pos = sprintf( ptr, "[" );
-	ptr += pos;	
+	ptr += pos;
 	for( i = 0; i < ws->len_out; i++ ) {
 		pos = sprintf( ptr, "%2.2x", ws->pkt_out[i] );
-		ptr += pos;	
+		ptr += pos;
 		if( i < ( ws->len_out - 1 ) ) {
 			pos = sprintf( ptr, " " );
 			ptr += pos;

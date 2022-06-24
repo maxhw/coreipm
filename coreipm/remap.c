@@ -8,7 +8,7 @@
 extern int  sendchar(int ch);  /* in serial.c */
 
 
-struct __FILE { 
+struct __FILE {
 	int handle;
 };
 
@@ -16,29 +16,29 @@ FILE __stdout;
 
 
 int
-fputc( 	int ch, 
-	FILE *f ) 
+fputc( 	int ch,
+	FILE *f )
 {
 	return( sendchar( ch ) );
 }
 
 
-int 
-ferror( FILE *f ) 
+int
+ferror( FILE *f )
 {
 	return EOF;
 }
 
 
-void 
-_ttywrch( int ch ) 
+void
+_ttywrch( int ch )
 {
 	sendchar(ch);
 }
 
 
-void 
-_sys_exit( int return_code ) 
+void
+_sys_exit( int return_code )
 {
 	label:  goto label;  /* endless loop */
 }

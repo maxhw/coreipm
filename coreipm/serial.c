@@ -7,20 +7,20 @@ Author: Gokhan Sozmen
 -------------------------------------------------------------------------------
 Copyright (C) 2007-2008 Gokhan Sozmen
 -------------------------------------------------------------------------------
-coreIPM is free software; you can redistribute it and/or modify it under the 
+coreIPM is free software; you can redistribute it and/or modify it under the
 terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later 
+Foundation; either version 2 of the License, or (at your option) any later
 version.
 
 coreIPM is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with 
+You should have received a copy of the GNU General Public License along with
 coreIPM; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 -------------------------------------------------------------------------------
-See http://www.coreipm.com for documentation, latest information, licensing, 
+See http://www.coreipm.com for documentation, latest information, licensing,
 support and contact details.
 -------------------------------------------------------------------------------
 */
@@ -30,40 +30,40 @@ support and contact details.
 /*
 UART0 UART1
 ----- -----
-U0RBR U1RBR  Receiver Buffer Register  
-U0THR U1THR  Transmit Holding Register  
-U0IER U1IER  Interrupt Enable Register 
-U0IIR U1IIR  Interrupt Identification Register  
-U0FCR U1FCR  FIFO Control Register 
+U0RBR U1RBR  Receiver Buffer Register
+U0THR U1THR  Transmit Holding Register
+U0IER U1IER  Interrupt Enable Register
+U0IIR U1IIR  Interrupt Identification Register
+U0FCR U1FCR  FIFO Control Register
 U0LCR U1LCR  Line Control Register
-U0MCR U1MCR  Modem control reg 
+U0MCR U1MCR  Modem control reg
 U0LSR U1LSR  Line Status Register
-U0MSR U1MSR  Modem status reg  
-U0SCR U1SCR  Scratch pad register 
-U0DLL U1DLL  Divisor Latch Registers (LSB) 
-U0DLM U1DLM  Divisor Latch Registers (MSB) 
+U0MSR U1MSR  Modem status reg
+U0SCR U1SCR  Scratch pad register
+U0DLL U1DLL  Divisor Latch Registers (LSB)
+U0DLM U1DLM  Divisor Latch Registers (MSB)
 U0ACR U1ACR  Auto-baud Control Register
 U0FDR U1FDR  Fractional Divider Register
 U0TER U1TER  Transmit Enable Register
 */
 
-/* 
+/*
 GENERAL OPERATION
 -----------------
 The UART0 receiver block, U0RX, monitors the serial input line, RXD0, for valid
-input. The UART0 RX Shift Register (U0RSR) accepts valid characters via RXD0. 
+input. The UART0 RX Shift Register (U0RSR) accepts valid characters via RXD0.
 
-After a valid character is assembled in the U0RSR, it is passed to the UART0 
-RX Buffer Register FIFO to await access by the CPU or host via the generic 
+After a valid character is assembled in the U0RSR, it is passed to the UART0
+RX Buffer Register FIFO to await access by the CPU or host via the generic
 host interface.
 
 The UART0 transmitter block, U0TX, accepts data written by the CPU or host and
-buffers the data in the UART0 TX Holding Register FIFO (U0THR). The UART0 TX 
+buffers the data in the UART0 TX Holding Register FIFO (U0THR). The UART0 TX
 Shift Register (U0TSR) reads the data stored in the U0THR and assembles the data
 to transmit via the serial output pin, TXD0.
 
-The UARTn Baud Rate Generator block, U0BRG, generates the timing enables used 
-by the UART0 TX block. The U0BRG clock input source is the VPB clock (PCLK). 
+The UARTn Baud Rate Generator block, U0BRG, generates the timing enables used
+by the UART0 TX block. The U0BRG clock input source is the VPB clock (PCLK).
 The main clock is divided down per the divisor specified in the U0DLL and U0DLM
 registers. This divided down clock is a 16x oversample clock, NBAUDOUT.
 
@@ -103,7 +103,7 @@ typedef struct port_info {
 	uchar port_name;  // UART_DEBUG or UART_ITLA which map to UART0 or UART1
 	uchar filter_type;
 	void(*callback_fn)( uchar * );
-	uchar buf[80]; 
+	uchar buf[80];
 } PORT_INFO;
 
 PORT_INFO serial_port[2];
@@ -127,16 +127,16 @@ void term_process( uchar *buf );
 int putchar_0( int ch );
 int putchar_1( int ch );
 
-void serial_dbg_port_msg_send( unsigned char *buf ); 
+void serial_dbg_port_msg_send( unsigned char *buf );
 
 /*
- 
+
 +-----------------------------------------------------------------------------+
 UART0 Receiver Buffer Register (U0RBR, when DLAB = 0, Read Only)
 +-----------------------------------------------------------------------------+
 The U0RBR is the top byte of the UART0 Rx FIFO. The top byte of the Rx FIFO contains
 the oldest character received and can be read via the bus interface. The LSB (bit 0)
-represents the “oldest” received data bit. If the character received is less than 8 bits, the
+represents the â€œoldestâ€ received data bit. If the character received is less than 8 bits, the
 unused MSBs are padded with zeroes.
 
 The Divisor Latch Access Bit (DLAB) in U0LCR must be zero in order to access the
@@ -152,7 +152,7 @@ register, and then to read a byte from the U0RBR.
 +-----------------------------------------------------------------------------+
 Interrupt Identification Register (U0IIR, Read Only)
 +-----------------------------------------------------------------------------+
-Provides a status code that denotes the priority and source of a pending 
+Provides a status code that denotes the priority and source of a pending
 interrupt. The interrupts are frozen during an U0IIR access. If an interrupt
 occurs during an U0IIR access, the interrupt is recorded for the next U0IIR
 access.
@@ -189,7 +189,7 @@ Bit	Meaning
 
 Interrupts are handled as described in Table 105. Given the status of U0IIR[3:0], an
 interrupt handler routine can determine the cause of the interrupt and how to clear the
-active interrupt. The U0IIR must be read in order to clear the interrupt prior to exiting 
+active interrupt. The U0IIR must be read in order to clear the interrupt prior to exiting
 the Interrupt Service Routine.
 
 RLS interrupt (U0IIR[3:1] = 011)
@@ -246,23 +246,23 @@ U0IIR Priority  Interrupt Type 	      Interrupt Source 	       Interrupt Reset
 				      in FIFO (U0FCR0=1)       below trigger level
 
 1100  Second	Character Time-out    Minimum of one character U0RBR Read[3]
-		indication	      in the Rx FIFO and no 
-				      character input or 
-				      removed during a time 
+		indication	      in the Rx FIFO and no
+				      character input or
+				      removed during a time
 				      period depending on how
-				      many characters are in 
+				      many characters are in
 				      FIFO and what the trigger
 				      level is set at (3.5 to 4.5
 				      character times).
 				      The exact time will be:
-				      [(word length) × 7 - 2] × 8 + 
-				      [(trigger level - number of 
-				      characters) × 8 + 1] RCLKs
+				      [(word length) Ã— 7 - 2] Ã— 8 +
+				      [(trigger level - number of
+				      characters) Ã— 8 + 1] RCLKs
 
 0010 	Third 	THRE 		      THRE[2]		       U0IIR Read (if source
-	       						       of interrupt) or THR 
+	       						       of interrupt) or THR
 							       write
-							       
+
 0000	Fourth 	Modem Status 	      CTS or DSR or RI or DCD  MSR Read
         (UART1 only)
 +-----------------------------------------------------------------------------+
@@ -311,10 +311,10 @@ RBR FIFO.
 1 Framing error status is active.
 
 [4] Break Interrupt (BI)
-When RXD0 is held in the spacing state (all 0’s) for one full character
+When RXD0 is held in the spacing state (all 0â€™s) for one full character
 transmission (start, data, parity, stop), a break interrupt occurs. Once the
 break condition has been detected, the receiver goes idle until RXD0 goes to
-marking state (all 1’s). An U0LSR read clears this status bit. The time of break
+marking state (all 1â€™s). An U0LSR read clears this status bit. The time of break
 detection is dependent on U0FCR[0].
 Note: The break interrupt is associated with the character at the top of the
 UART0 RBR FIFO.
@@ -327,7 +327,7 @@ cleared on a U0THR write.
 0 U0THR contains valid data.
 1 U0THR is empty.
 
-[6] Transmitter Empty (TEMT) 
+[6] Transmitter Empty (TEMT)
 TEMT is set when both U0THR and U0TSR are empty; TEMT is cleared when
 either the U0TSR or the U0THR contain valid data.
 0 U0THR and/or the U0TSR contains valid data.
@@ -346,7 +346,7 @@ FIFO.
 #define UARTINT_MODEM		0x00	// Modem interrupt
 #define UARTINT_ERROR		0x06	// RX Line Status/Error
 #define UARTINT_RX_DATA_AVAIL	0x04	// Rx data avail or trig level in FIFO
-#define UARTINT_CHAR_TIMEOUT	0x0C	// Character Time-out indication	      
+#define UARTINT_CHAR_TIMEOUT	0x0C	// Character Time-out indication
 #define UARTINT_THRE		0x02	// Transmit Holding Register Empty
 
 #define UARTINT_ENABLE_RX_DATA	0x001	// Enable the RDA interrupts.
@@ -379,17 +379,17 @@ FIFO.
 /*==============================================================
  * uart_initialize()
  *==============================================================*/
-void 
-uart_initialize( void ) 
+void
+uart_initialize( void )
 {
 	/* Initialize VIC */
-	/* Interrupt Select register (VICIntSelect) is a read/write accessible 
+	/* Interrupt Select register (VICIntSelect) is a read/write accessible
 	 * register. This register classifies each of the 32 interrupt requests
 	 * as contributing to FIQ or IRQ.
 	 * 0 The interrupt request with this bit number is assigned to the IRQ category.
 	 * 1 The interrupt request with this bit number is assigned to the FIQ category. */
 	VICIntSelect = 0x0; /* assign all interrupt reqs to the IRQ category */
-	
+
 	/* Symbol  Function  PINSEL0 bit
 	   P0.0  = TxD0      [1:0]
 	   P0.1  = RxD0      [3:2] */
@@ -404,7 +404,7 @@ uart_initialize( void )
 	VICVectAddr5 = ( unsigned long )UART_ISR_0;	/* set interrupt vector in 5 */
 	VICVectCntl5 = 0x20 | IS_UART0;			/* use it for UART0 interrupt */
 	VICIntEnable = IER_UART0;			/* enable UART1 interrupt */
-	   
+
 	/* P0.8  = TxD1      [17:16]
 	   P0.9  = RxD1      [19:18]
 	   P0.10 = RTS1      [21:20] (NC on connector, avail on board)
@@ -421,11 +421,11 @@ uart_initialize( void )
 	VICVectCntl4 = 0x20 | IS_UART1;			/* use it for UART1 interrupt */
 	VICIntEnable = IER_UART1;			/* enable UART1 interrupt */
 
-	serial_port[0].port_name = UART_DEBUG; 
+	serial_port[0].port_name = UART_DEBUG;
 	serial_port[0].filter_type = UART_FILTER_TERM;
 	serial_port[0].callback_fn = term_process;
 
-	serial_port[1].port_name = UART_ITLA; 
+	serial_port[1].port_name = UART_ITLA;
 	serial_port[1].filter_type = UART_FILTER_RAW;
 	serial_port[1].callback_fn = 0;
 
@@ -433,7 +433,7 @@ uart_initialize( void )
 
 
 #if defined (__CA__) || defined (__CC_ARM)
-void UART_ISR_1( void ) __irq 
+void UART_ISR_1( void ) __irq
 #elif defined (__GNUC__)
 void UART_ISR_1( void )
 #endif
@@ -441,22 +441,22 @@ void UART_ISR_1( void )
 	uchar int_reg;
 	uchar rx_char;
 	unsigned char temp;
-	
+
 	int_reg = U1IIR;	// read U1IIR to clear UART interrupt flag
 
 	switch( int_reg & 0x0f )
 	{
 		case UARTINT_ERROR:		// TODO: error handling
 	  		temp = U1LSR;		// clear interrupt
-	   		break;							
+	   		break;
 		case UARTINT_RX_DATA_AVAIL:	// Rx char available
 		case UARTINT_CHAR_TIMEOUT:	// Character Time-out indication
 #ifdef USE_FIFO
-		    while( U1LSR & UART_LSR_RX_DATA_RDY ) 
+		    while( U1LSR & UART_LSR_RX_DATA_RDY )
 #endif
 		    {
 			rx_char = U1RBR;	// get char and reset int
-			
+
 			serial_port[1].buf[buf_index_1++] = rx_char;
 			if( serial_port[1].filter_type == UART_FILTER_RAW ) {
 				if( buf_index_1 >= 32 ) {
@@ -479,13 +479,13 @@ void UART_ISR_1( void )
 		case UARTINT_MODEM:
 			temp = U1MSR;		// clear interrupt
 			break;
-	} 
-	
+	}
+
 	VICVectAddr = 0;          		// Acknowledge Interrupt
 }
 
 #if defined (__CA__) || defined (__CC_ARM)
-void UART_ISR_0( void ) __irq 
+void UART_ISR_0( void ) __irq
 #elif defined (__GNUC__)
 void UART_ISR_0( void )
 #endif
@@ -493,22 +493,22 @@ void UART_ISR_0( void )
 	uchar int_reg;
 	uchar rx_char;
 	unsigned char temp;
-	
+
 	int_reg = U0IIR;	// read U0IIR to clear UART interrupt flag
 
 	switch( int_reg & 0x0f)
 	{
 		case UARTINT_ERROR:		// TODO: error handling
 	  		temp = U0LSR;		// clear interrupt
-	   		break;							
+	   		break;
 		case UARTINT_RX_DATA_AVAIL:	// Rx char available
 		case UARTINT_CHAR_TIMEOUT:	// Character Time-out indication
 #ifdef USE_FIFO
-		    while( U0LSR & UART_LSR_RX_DATA_RDY ) 
+		    while( U0LSR & UART_LSR_RX_DATA_RDY )
 #endif
 		    {
 			rx_char = U0RBR;	// get char and reset int
-						
+
 			serial_port[0].buf[buf_index_0++] = rx_char;
 			if( serial_port[0].filter_type == UART_FILTER_RAW ) {
 				if( buf_index_0 >= 32 ) {
@@ -531,8 +531,8 @@ void UART_ISR_0( void )
 		case UARTINT_MODEM:
 			temp = U0MSR;		// clear interrupt
 			break;
-	} 
-	
+	}
+
 	VICVectAddr = 0;          		// Acknowledge Interrupt
 }
 
@@ -542,19 +542,19 @@ void UART_ISR_0( void )
 putchar()
 
 Parameters
-	ch - Character to be written. The character is passed as its int promotion. 
+	ch - Character to be written. The character is passed as its int promotion.
 
 Return Value
 	If there are no errors, the same character that has been written is returned.
 	If an error occurs, EOF is returned.
 */
- 
-int 
+
+int
 #if defined (__CA__) || defined ( __GNUC__ )
-putchar( int ch )	// Write character to the debug serial port 
-#elif defined (__CC_ARM)  
-sendchar( int ch )	// Write character to the debug serial port 
-#endif	
+putchar( int ch )	// Write character to the debug serial port
+#elif defined (__CC_ARM)
+sendchar( int ch )	// Write character to the debug serial port
+#endif
 {
 	switch( UART_DEBUG ) {
 		case UART_0:
@@ -575,7 +575,7 @@ If an error occurs, EOF is returned and the error indicator is set.
 */
 /*
 int
-putc( int ch, int handle ) 
+putc( int ch, int handle )
 {
 	if ( !(( handle !=  0) || ( handle != 1 ) ) ) {
 		return( EOF );
@@ -592,7 +592,7 @@ putc( int ch, int handle )
 			return( EOF );
 			break;
 	}
-	return( ch );		
+	return( ch );
 }
 */
 
@@ -603,11 +603,11 @@ On success, a non-negative value is returned.
 On error, the function returns EOF.
 */
 /*
-int 
+int
 fputs ( const char * str, int handle )
 {
 	int i, len, ret;
-	
+
 	len = strlen( str );
 	for( i = 0; i < len; i++ ) {
 		ret = putc( str[i], handle );
@@ -636,18 +636,18 @@ fflush( int handle )
 			buf_index_1 = 0;
 			break;
 		default:
-			return( EOF );			
+			return( EOF );
 	}
 	return( ESUCCESS );
-}	
+}
 */
 
-int 
-putchar_1( int ch )	// Write character to Serial Port 1   
+int
+putchar_1( int ch )	// Write character to Serial Port 1
 {
 	if ( ch == '\n' )  {
 		while ( !( U1LSR & 0x20 ) );	// spin while Transmitter Holding Register not Empty
-		U1THR = CR;			// output CR 
+		U1THR = CR;			// output CR
 	}
 
 	while ( !( U1LSR & 0x20 ) );
@@ -655,12 +655,12 @@ putchar_1( int ch )	// Write character to Serial Port 1
 	return ( U1THR = ch );
 }
 
-int 
-putchar_0( int ch )	// Write character to Serial Port 0  
+int
+putchar_0( int ch )	// Write character to Serial Port 0
 {
 	if ( ch == '\n' )  {
 		while ( !( U0LSR & 0x20 ) );	// spin while Transmitter Holding Register not Empty
-		U0THR = CR;			// output CR 
+		U0THR = CR;			// output CR
 	}
 
 	while ( !( U0LSR & 0x20 ) );
@@ -668,8 +668,8 @@ putchar_0( int ch )	// Write character to Serial Port 0
 	return ( U0THR = ch );
 }
 /*
-int 
-getchar( void )		// Read character from the debug sSerial port 
+int
+getchar( void )		// Read character from the debug sSerial port
 {
 	switch( UART_DEBUG ) {
 		case UART_0:
@@ -680,17 +680,17 @@ getchar( void )		// Read character from the debug sSerial port
 
 }
 */
-int 
-getchar_1( void )		// Read character from Serial Port 
-{	
+int
+getchar_1( void )		// Read character from Serial Port
+{
 	while ( !( U1LSR & 0x01 ) );	// wait until RBR contains valid data
 
 	return (U1RBR);
 }
 
-int 
-getchar_0( void )		// Read character from Serial Port 
-{	
+int
+getchar_0( void )		// Read character from Serial Port
+{
 	while ( !( U0LSR & 0x01 ) );	// wait until RBR contains valid data
 
 	return (U0RBR);
@@ -708,7 +708,7 @@ The Terminal Mode Request Message field definitions follow those used for the Ba
 is no Slave address / Software ID field or LUN information for the requester. The software ID and LUN for the
 remote console are fixed and implied by the command. The SWID for messages to the remote console is always
 40h, and the LUN is 00b.
-Instead, there is a ‘bridge’ field that is used to identify whether the message should be routed to the BMC’s
+Instead, there is a â€˜bridgeâ€™ field that is used to identify whether the message should be routed to the BMCâ€™s
 bridged message tracking functionality or not.
 messages to and from the system interface are transferred using the BMC SMS LUN,
 10b, with the bridge field set to 00b.
@@ -740,7 +740,7 @@ term_process( uchar *buf )
 	}
 
 	/* if not prefixed by SYS, check if this is an ipmi message */
-	if( strncmp( ( const char * )ptr, "SYS", 3 ) && strncmp( ( const char * )ptr, "sys", 3 ) ) 
+	if( strncmp( ( const char * )ptr, "SYS", 3 ) && strncmp( ( const char * )ptr, "sys", 3 ) )
 		goto message_process;
 
 	if( ptr = ( unsigned char * )strchr( ( const char * )ptr, ' ' ) ) {
@@ -751,7 +751,7 @@ term_process( uchar *buf )
 		return;
 	}
 
-	if( ( strncmp( ( const char * )ptr, "POWER", 5 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "POWER", 5 ) == 0 )
 			|| ( strncmp( ( const char * )ptr, "power", 5 ) == 0 ) ) {
 
 		if( ptr = ( unsigned char * )strchr( ( const char * )ptr, ' ' ) ) {
@@ -760,11 +760,11 @@ term_process( uchar *buf )
 		else
 			return;
 
-		if( ( strncmp( ( const char * )ptr, "OFF]", 4 ) == 0 ) 
+		if( ( strncmp( ( const char * )ptr, "OFF]", 4 ) == 0 )
 				|| ( strncmp( ( const char * )ptr, "off]", 4 ) == 0 ) ) {
 			putstr( "[OK]\n" );
 			gpio_power_off();
-		} else if( ( strncmp( ( const char * )ptr, "ON]", 3 ) == 0 ) 
+		} else if( ( strncmp( ( const char * )ptr, "ON]", 3 ) == 0 )
 				|| (strncmp( ( const char * )ptr, "on]", 3 ) == 0) ) {
 			putstr( "[OK]\n" );
 			gpio_power_on();
@@ -774,33 +774,33 @@ term_process( uchar *buf )
 		return;
 	}
 
-	if( ( strncmp( ( const char * )ptr, "TMODE]", 6 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "TMODE]", 6 ) == 0 )
 			|| ( strncmp( ptr, "tmode]", 6 ) == 0 ) ) {
 		putstr( "[OK TMODE]\n" );
 		return;
 	}
 
-	if( ( strncmp( ( const char * )ptr, "RESET]", 6 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "RESET]", 6 ) == 0 )
 			|| ( strncmp( ptr, "reset]", 6 ) == 0 ) ) {
 		putstr( "[OK]\n" );
 		return;
 	}
 
-	if( ( strncmp( ( const char * )ptr, "IDENTIFY]", 9 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "IDENTIFY]", 9 ) == 0 )
 			|| ( strncmp( ( const char * )ptr, "identify]", 9 ) == 0 ) ) {
 		gpio_led_blink( GPIO_IDENTIFY_LED, 5, 5, 0 );
 		putstr( "[OK]\n" );
 		return;
 	}
 
-	if( ( strncmp( ( const char * )ptr, "HEALTH QUERY]", 13 ) == 0 ) 
+	if( ( strncmp( ( const char * )ptr, "HEALTH QUERY]", 13 ) == 0 )
 			|| ( strncmp( ( const char * )ptr, "health query]", 13 ) == 0 ) ) {
 
 		/*
-		Return a high level version of the system health status in ‘terse’
-		format. The BMC returns a string with the following format if 
+		Return a high level version of the system health status in â€˜terseâ€™
+		format. The BMC returns a string with the following format if
 		command is accepted.
-		
+
 		PWR:zzz H:xx T:xx V:xx PS:xx C:xx D:xx S:xx O:xx
 
 		Where:
@@ -814,23 +814,23 @@ term_process( uchar *buf )
 			S is physical Security
 			O is Other (OEM)
 
-			zzz is: “ON”, 
-				“OFF” (soft-off or mechanical off), 
-				“SLP” (sleep - used when can’t distinguish sleep level), 
-				“S4”, 
-				“S3”, 
-				“S2”, 
-				“S1”, 
-				“??” (unknown)
+			zzz is: â€œONâ€,
+				â€œOFFâ€ (soft-off or mechanical off),
+				â€œSLPâ€ (sleep - used when canâ€™t distinguish sleep level),
+				â€œS4â€,
+				â€œS3â€,
+				â€œS2â€,
+				â€œS1â€,
+				â€œ??â€ (unknown)
 
 			and xx is: ok, nc, cr, nr, uf, or ?? where:
 
-			“ok” = OK (monitored parameters within normal operating ranges)
-			“nc” = non-critical (‘warning’: hardware outside normal operating range)
-			“cr” = critical (‘fatal’ :hardware exceeding specified ratings)
-			“nr” = non-recoverable (‘potential damage’: system hardware in jeopardy or damaged)
-			“uf” = unspecified fault (fault detected, but severity unspecified)
-			“??” = status not available/unknown (typically because system power is OFF)
+			â€œokâ€ = OK (monitored parameters within normal operating ranges)
+			â€œncâ€ = non-critical (â€˜warningâ€™: hardware outside normal operating range)
+			â€œcrâ€ = critical (â€˜fatalâ€™ :hardware exceeding specified ratings)
+			â€œnrâ€ = non-recoverable (â€˜potential damageâ€™: system hardware in jeopardy or damaged)
+			â€œufâ€ = unspecified fault (fault detected, but severity unspecified)
+			â€œ??â€ = status not available/unknown (typically because system power is OFF)
 		*/
 
 		unsigned power_state = gpio_get_power_state();
@@ -861,15 +861,15 @@ term_process( uchar *buf )
 				putstr( "[OK PWR:?? " );
 				break;
 		}
-		
-		/* the rest can be filled once we determine which parameters to monitor */		
+
+		/* the rest can be filled once we determine which parameters to monitor */
 		putstr( "H:?? T:?? V:?? PS:?? C:?? D:?? S:?? O:??]\n" );
 		return;
 	}
-	
+
 	/* perform any module specific processing */
 	module_term_process( ptr );
-	
+
 	putstr( "[ERR]\n" );
 	return;
 
@@ -909,7 +909,7 @@ message_process:
 				//printf( "val = %d\n", val );
 				*req_ptr++ = val;
 				count++;
-			} 
+			}
 		} else if ( *ptr == ' ' ) {
 			nibble_count = 0;
 			putchar( *ptr++ );
@@ -917,78 +917,78 @@ message_process:
 			putstr( "\n" );
 
 			dprintf( DBG_SERIAL | DBG_LVL1, "        netfn = 0x%2.2x  %2d  ", tm_hdr.netfn, tm_hdr.netfn );
-			switch( tm_hdr.netfn ) { 
-				case NETFN_CHASSIS_REQ: 
-					putstr("NETFN_CHASSIS_REQ\n"); 
-					cmd_str = string_find( chassis_str, tm_hdr.command ); 
+			switch( tm_hdr.netfn ) {
+				case NETFN_CHASSIS_REQ:
+					putstr("NETFN_CHASSIS_REQ\n");
+					cmd_str = string_find( chassis_str, tm_hdr.command );
 					break;
-				case NETFN_CHASSIS_RESP: 
-					putstr("NETFN_CHASSIS_RESP\n"); 
-					cmd_str = string_find( chassis_str, tm_hdr.command ); 
+				case NETFN_CHASSIS_RESP:
+					putstr("NETFN_CHASSIS_RESP\n");
+					cmd_str = string_find( chassis_str, tm_hdr.command );
 					break;
-				case NETFN_BRIDGE_REQ: 
-					putstr("NETFN_BRIDGE_REQ\n"); 
-					cmd_str = string_find( bridge_str, tm_hdr.command ); 
+				case NETFN_BRIDGE_REQ:
+					putstr("NETFN_BRIDGE_REQ\n");
+					cmd_str = string_find( bridge_str, tm_hdr.command );
 					break;
-				case NETFN_BRIDGE_RESP: 
-					putstr("NETFN_BRIDGE_RESP\n"); 
-					cmd_str = string_find( bridge_str, tm_hdr.command ); 
+				case NETFN_BRIDGE_RESP:
+					putstr("NETFN_BRIDGE_RESP\n");
+					cmd_str = string_find( bridge_str, tm_hdr.command );
 					break;
-				case NETFN_EVENT_REQ: 
-					putstr("NETFN_EVENT_REQ\n"); 
-					cmd_str = string_find( event_str, tm_hdr.command ); 
+				case NETFN_EVENT_REQ:
+					putstr("NETFN_EVENT_REQ\n");
+					cmd_str = string_find( event_str, tm_hdr.command );
 					break;
 				case NETFN_EVENT_RESP:
-					putstr("NETFN_EVENT_RESP\n"); 
-					cmd_str = string_find( event_str, tm_hdr.command ); 
+					putstr("NETFN_EVENT_RESP\n");
+					cmd_str = string_find( event_str, tm_hdr.command );
 					break;
-				case NETFN_APP_REQ: 
-					putstr("NETFN_APP_REQ\n"); 
-					cmd_str = string_find( app_str, tm_hdr.command ); 
+				case NETFN_APP_REQ:
+					putstr("NETFN_APP_REQ\n");
+					cmd_str = string_find( app_str, tm_hdr.command );
 					break;
-				case NETFN_APP_RESP: 
-					putstr("NETFN_APP_RESP\n"); 
-					cmd_str = string_find( app_str, tm_hdr.command ); 
+				case NETFN_APP_RESP:
+					putstr("NETFN_APP_RESP\n");
+					cmd_str = string_find( app_str, tm_hdr.command );
 					break;
-				case NETFN_FW_REQ: 
-					putstr("NETFN_FW_REQ\n"); 
-					cmd_str = string_find( firmware_str, tm_hdr.command ); 
+				case NETFN_FW_REQ:
+					putstr("NETFN_FW_REQ\n");
+					cmd_str = string_find( firmware_str, tm_hdr.command );
 					break;
-				case NETFN_FW_RESP: 
-					putstr("NETFN_FW_RESP\n"); 
-					cmd_str = string_find( firmware_str, tm_hdr.command ); 
+				case NETFN_FW_RESP:
+					putstr("NETFN_FW_RESP\n");
+					cmd_str = string_find( firmware_str, tm_hdr.command );
 					break;
-				case NETFN_NVSTORE_REQ: 
-					putstr("NETFN_NVSTORE_REQ\n"); 
-					cmd_str = string_find( nvstore_str, tm_hdr.command ); 
+				case NETFN_NVSTORE_REQ:
+					putstr("NETFN_NVSTORE_REQ\n");
+					cmd_str = string_find( nvstore_str, tm_hdr.command );
 					break;
-				case NETFN_NVSTORE_RESP: 
-					putstr("NETFN_NVSTORE_RESP\n"); 
-					cmd_str = string_find( nvstore_str, tm_hdr.command ); 
+				case NETFN_NVSTORE_RESP:
+					putstr("NETFN_NVSTORE_RESP\n");
+					cmd_str = string_find( nvstore_str, tm_hdr.command );
 					break;
-				case NETFN_MEDIA_SPECIFIC_REQ: 
-					putstr("NETFN_MEDIA_SPECIFIC_REQ\n"); 
-					cmd_str = string_find( media_specific_str, tm_hdr.command ); 
+				case NETFN_MEDIA_SPECIFIC_REQ:
+					putstr("NETFN_MEDIA_SPECIFIC_REQ\n");
+					cmd_str = string_find( media_specific_str, tm_hdr.command );
 					break;
-				case NETFN_MEDIA_SPECIFIC_RESP: 
-					putstr("NETFN_MEDIA_SPECIFIC_RESP\n"); 
-					cmd_str = string_find( media_specific_str, tm_hdr.command ); 
+				case NETFN_MEDIA_SPECIFIC_RESP:
+					putstr("NETFN_MEDIA_SPECIFIC_RESP\n");
+					cmd_str = string_find( media_specific_str, tm_hdr.command );
 					break;
-				case NETFN_GROUP_EXTENSION_REQ: 
-					putstr("NETFN_GROUP_EXTENSION_REQ\n"); 
-					cmd_str = string_find( group_extension_str, tm_hdr.command ); 
+				case NETFN_GROUP_EXTENSION_REQ:
+					putstr("NETFN_GROUP_EXTENSION_REQ\n");
+					cmd_str = string_find( group_extension_str, tm_hdr.command );
 					break;
-				case NETFN_GROUP_EXTENSION_RESP: 
-					putstr("NETFN_GROUP_EXTENSION_RESP\n"); 
-					cmd_str = string_find( group_extension_str, tm_hdr.command ); 
+				case NETFN_GROUP_EXTENSION_RESP:
+					putstr("NETFN_GROUP_EXTENSION_RESP\n");
+					cmd_str = string_find( group_extension_str, tm_hdr.command );
 					break;
-				case NETFN_OEM_REQ: 
-					putstr("NETFN_OEM_REQ\n"); 
-					cmd_str = string_find( oem_str, tm_hdr.command ); 
+				case NETFN_OEM_REQ:
+					putstr("NETFN_OEM_REQ\n");
+					cmd_str = string_find( oem_str, tm_hdr.command );
 					break;
-				case NETFN_OEM_RESP: 
-					putstr("NETFN_OEM_RESP\n"); 
-					cmd_str = string_find( oem_str, tm_hdr.command ); 
+				case NETFN_OEM_RESP:
+					putstr("NETFN_OEM_RESP\n");
+					cmd_str = string_find( oem_str, tm_hdr.command );
 					break;
 				default: putstr("UNKNOWN\n"); break;
 			}
@@ -997,18 +997,18 @@ message_process:
 			dprintf( DBG_SERIAL | DBG_LVL1, "          seq = 0x%2.2x  %2d\n", tm_hdr.seq, tm_hdr.seq );
 			dprintf( DBG_SERIAL | DBG_LVL1, "       bridge = 0x%2.2x  %2d\n", tm_hdr.bridge, tm_hdr.bridge );
 			if( cmd_str )
-				dprintf( DBG_SERIAL | DBG_LVL1, "      command = 0x%2.2x  %2d  %s\n", 
+				dprintf( DBG_SERIAL | DBG_LVL1, "      command = 0x%2.2x  %2d  %s\n",
 						tm_hdr.command, tm_hdr.command, cmd_str );
 			else
-				dprintf( DBG_SERIAL | DBG_LVL1, "      command = 0x%2.2x  %2d  Unknown\n", 
+				dprintf( DBG_SERIAL | DBG_LVL1, "      command = 0x%2.2x  %2d  Unknown\n",
 						tm_hdr.command, tm_hdr.command );
-				
+
 			if( ws = ws_alloc() ) {
 				ws->incoming_protocol = IPMI_CH_PROTOCOL_TMODE;
 				ws->incoming_medium = IPMI_CH_MEDIUM_SERIAL;
 				ws->incoming_channel = IPMI_CH_NUM_CONSOLE;
 				ws->len_in = count;
-				memcpy( ws->pkt_in, &tm_hdr, count ); 
+				memcpy( ws->pkt_in, &tm_hdr, count );
 				ws_set_state( ws, WS_ACTIVE_IN );
 			} else {
 				dputstr( DBG_SERIAL | DBG_LVL1, "Insufficient resources to complete command\n");
@@ -1038,18 +1038,18 @@ terminal_process_work_list( void )
 		if( serial_port[1].callback_fn )
 			(*serial_port[1].callback_fn)( serial_port[1].buf );
 	}
-	
-}	
+
+}
 
 char hex_chars[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 
 void
-serial_tm_send( unsigned char *ws ) 
+serial_tm_send( unsigned char *ws )
 {
 	int i, hi_nibble, lo_nibble;
-	
+
 	putstr( "[" );
-	for( i = 0; i < ((IPMI_WS *)ws)->len_out; i++ ) { 
+	for( i = 0; i < ((IPMI_WS *)ws)->len_out; i++ ) {
 		//printf( "%2.2x", ((IPMI_WS *)ws)->pkt_out[i] );
 		hi_nibble = ((IPMI_WS *)ws)->pkt_out[i] >> 4;
 		lo_nibble = ((IPMI_WS *)ws)->pkt_out[i] & 0x0f;
@@ -1063,31 +1063,31 @@ serial_tm_send( unsigned char *ws )
 
 
 void
-puthex( unsigned char ch ) 
+puthex( unsigned char ch )
 {
 	int hi_nibble, lo_nibble;
-	
+
 	hi_nibble = ch >> 4;
 	lo_nibble = ch & 0x0f;
 	putchar( hex_chars[hi_nibble] );
 	putchar( hex_chars[lo_nibble] );
 }
 
-	
 
 
-/* Using a port: 
- 
-  - aquire a handle to the port 
-	
+
+/* Using a port:
+
+  - aquire a handle to the port
+
       SERIAL_PORT *port_handle;
       port_handle = serial_get_handle( [UART_DEBUG | UART_ITLA] );
-	
+
   - set filter type
 
       serial_config_port_filter( port_handle, [UART_FILTER_RAW | UART_FILTER_TERM] );
-       	
-  - set data handler callback function. The scheduler will call the serial 
+
+  - set data handler callback function. The scheduler will call the serial
     handler which will call this function
 
       serial_config_port_callback( port_handle, callback_fn );
@@ -1097,18 +1097,18 @@ puthex( unsigned char ch )
       putc( int ch, int handle )
 */
 int
-serial_get_handle( uchar port_name ) 
+serial_get_handle( uchar port_name )
 {
 	int i;
-	
+
 	for( i = 0 ; i < UART_PORT_COUNT; i++ ) {
-		if( serial_port[i].port_name == port_name ) 
+		if( serial_port[i].port_name == port_name )
 			return( i );
 	}
 	return( -1 );
 }
 
-/* 	
+/*
 	serial_config_port_filter()
 
  set filter type
@@ -1117,24 +1117,24 @@ On error, the function returns EOF.
  filter type = 	UART_FILTER_RAW | UART_FILTER_TERM
 */
 int
-serial_config_port_filter( 
-	int port_handle, 
+serial_config_port_filter(
+	int port_handle,
 	unsigned filter_type )  	// [UART_FILTER_RAW | UART_FILTER_TERM] );
 {
 	// TODO Error checking
 	serial_port[port_handle].filter_type = filter_type;
 	return( ESUCCESS );
-}       
+}
 
-/*	
-  - set data handler callback function. The scheduler will call the serial 
+/*
+  - set data handler callback function. The scheduler will call the serial
     handler which will call this function
 */
 int
-serial_config_port_callback( 
-	int port_handle, 
+serial_config_port_callback(
+	int port_handle,
 	void ( *callback_fn )( uchar * ) )
-{					   
+{
 	//TODO error checking
 	serial_port[port_handle].callback_fn = callback_fn;
 	return( ESUCCESS );
